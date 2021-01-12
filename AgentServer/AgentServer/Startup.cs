@@ -1,3 +1,5 @@
+using AgentServer.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -21,6 +23,7 @@ namespace AgentServer
         {
             Configuration = configuration;
         }
+        readonly string MyAllowSpecificOrigins = "AllowSpecificOrigins";
 
         public IConfiguration Configuration { get; }
 
@@ -34,6 +37,18 @@ namespace AgentServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AgentServer", Version = "v1" });
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.AllowAnyHeader()
+                                    .AllowAnyMethod()
+                                    .SetIsOriginAllowed((host) => true)
+                                    .AllowCredentials();
+                    });
+            });
+
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -42,6 +57,24 @@ namespace AgentServer
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/hub")))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -52,7 +85,15 @@ namespace AgentServer
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", "api1");
                 });
+
+                options.AddPolicy("Game", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "game");
+                });
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,9 +106,10 @@ namespace AgentServer
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AgentServer v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -75,6 +117,7 @@ namespace AgentServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/hub");
             });
         }
     }
