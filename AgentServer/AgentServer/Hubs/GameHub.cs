@@ -13,50 +13,52 @@ namespace AgentServer.Hubs
     [Authorize(Policy = "Game")]
     public class GameHub : Hub
     {
-        private readonly GrpcChannel channel;
-        private readonly Mailer.MailerClient client;
-        private readonly AsyncDuplexStreamingCall<ForwardMailMessage, MailboxMessage> call;
-        private  Task responseTask;
+        private readonly GrpcChannel _channel;
+        private readonly Mailer.MailerClient _client;
+        private readonly AsyncDuplexStreamingCall<ForwardMailMessage, MailboxMessage> _call;
+        private readonly Task _responseTask;
         private readonly IHubContext<GameHub> _hubContext;
 
         public GameHub(IHubContext<GameHub> hubContext)
         {
-            channel = GrpcChannel.ForAddress("https://localhost:5005");
-            client = new Mailer.MailerClient(channel);
-            call = client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent") });
+            _channel = GrpcChannel.ForAddress("https://localhost:5005");
+            _client = new Mailer.MailerClient(_channel);
+            _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent") });
 
             _hubContext = hubContext;
+            _responseTask = Task.Run(ResponseTask);
+        }
+
+        private async Task ResponseTask()
+        {
+            await foreach (var message in _call.ResponseStream.ReadAllAsync())
+            {
+                Console.ForegroundColor = message.Reason == MailboxMessage.Types.Reason.Received ? ConsoleColor.White : ConsoleColor.Green;
+                Console.WriteLine();
+                Console.WriteLine(message.Reason == MailboxMessage.Types.Reason.Received ? "Mail received" : "Mail forwarded");
+                Console.WriteLine($"New mail: {message.New}, Forwarded mail: {message.Forwarded}");
+                Console.ResetColor();
+
+                await _hubContext.Clients.All.SendAsync("StoCMessage", message.ToString());
+            }
         }
 
         public override async Task OnConnectedAsync()
         {
             await base.OnConnectedAsync();
-            responseTask = Task.Run(async () =>
-            {
-                await foreach (var message in call.ResponseStream.ReadAllAsync())
-                {
-                    Console.ForegroundColor = message.Reason == MailboxMessage.Types.Reason.Received ? ConsoleColor.White : ConsoleColor.Green;
-                    Console.WriteLine();
-                    Console.WriteLine(message.Reason == MailboxMessage.Types.Reason.Received ? "Mail received" : "Mail forwarded");
-                    Console.WriteLine($"New mail: {message.New}, Forwarded mail: {message.Forwarded}");
-                    Console.ResetColor();
-
-                    await _hubContext.Clients.All.SendAsync("StoCMessage", message.ToString());
-                }
-            });
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await call.RequestStream.CompleteAsync();
-            await responseTask;
+            await _call.RequestStream.CompleteAsync();
+            await _responseTask;
 
             await base.OnDisconnectedAsync(exception);
         }
 
         public async Task CtoSMessage(string message)
         {
-            await call.RequestStream.WriteAsync(new ForwardMailMessage());
+            await _call.RequestStream.WriteAsync(new ForwardMailMessage());
             //return Clients.All.SendAsync("StoCMessage", message);
         }
     }
