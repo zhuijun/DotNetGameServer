@@ -16,4 +16,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Protobuf Include="..\..\Proto\mail.proto" GrpcServices="Client" Link="Protos\mail.proto" />
+	</ItemGroup>
+	
 </Project>
