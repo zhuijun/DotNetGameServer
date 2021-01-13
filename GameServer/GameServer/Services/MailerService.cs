@@ -36,9 +36,9 @@ namespace GameServer.Services
                 {
                     var request = requestStream.Current;
 
-                    var mail = new Mail(1, request.ConnectionId);
+                    var mail = new Mail(request.Id, request.Content.ToByteArray());
                     await mailQueue.WriteAsync(mail);
-                    _logger.LogInformation($"request mail: {request.ConnectionId}");
+                    _logger.LogInformation($"request mail: {request.Id}");
                 }
             }
             finally

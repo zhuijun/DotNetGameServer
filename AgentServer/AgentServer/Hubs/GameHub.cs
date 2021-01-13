@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Mail;
 using Microsoft.AspNetCore.Authorization;
@@ -34,15 +35,11 @@ namespace AgentServer.Hubs
             {
                 await foreach(var message in _call.ResponseStream.ReadAllAsync())
                 {
-                    Console.ForegroundColor = message.Reason == MailboxMessage.Types.Reason.Received ? ConsoleColor.White : ConsoleColor.Green;
-                    Console.WriteLine();
-                    Console.WriteLine(message.Reason == MailboxMessage.Types.Reason.Received ? "Mail received" : "Mail forwarded");
-                    Console.WriteLine($"New mail: {message.New}, Forwarded mail: {message.Forwarded}");
-                    Console.ResetColor();
-
-                    await _hubContext.Clients.Client(ConnectionId).SendAsync("StoCMessage", message.ToString());
+                    await _hubContext.Clients.Client(ConnectionId).SendAsync("StoCMessage", message.Id, message.Content.ToBase64());
                 }
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("!!!end");
+                Console.ResetColor();
             });
             Context.Items.Add("_task", responseTask);
 
@@ -60,12 +57,13 @@ namespace AgentServer.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task CtoSMessage(string message)
+        public async Task CtoSMessage(int id, string message)
         {
             var _call = Context.Items["_call"] as AsyncDuplexStreamingCall<ForwardMailMessage, MailboxMessage>;
             var forward = new ForwardMailMessage
             {
-                ConnectionId = Context.ConnectionId
+                Id = id,
+                Content = ByteString.FromBase64(message)
             };
             await _call.RequestStream.WriteAsync(forward);
             //return Clients.All.SendAsync("StoCMessage", message);

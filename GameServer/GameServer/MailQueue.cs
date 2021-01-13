@@ -28,14 +28,14 @@ namespace GameServer
 {
     public class Mail
     {
-        public Mail(int id, string content)
+        public Mail(int id, byte[] content)
         {
             Id = id;
             Content = content;
         }
 
         public int Id { get; }
-        public string Content { get; }
+        public byte[] Content { get; }
     }
 
     public class MailQueue

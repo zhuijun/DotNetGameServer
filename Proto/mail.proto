@@ -22,17 +22,11 @@ service Mailer {
 }
 
 message ForwardMailMessage {
-    string connectionId = 1;
+    int32 id = 1;
+    bytes content = 2;
 }
 
 message MailboxMessage {
-  int32 new = 1;
-  int32 forwarded = 2;
-  Reason reason = 3;
-  string connectionId = 4;
-
-  enum Reason {
-    Received = 0;
-    Forwarded = 1;
-  }
+    int32 id = 1;
+    bytes content = 2;
 }
