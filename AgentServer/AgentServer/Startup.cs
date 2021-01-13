@@ -56,6 +56,7 @@ namespace AgentServer
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        ValidateIssuer = false,
                         ValidateAudience = false
                     };
 
@@ -117,7 +118,7 @@ namespace AgentServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/hub");
+                endpoints.MapHub<GameHub>("/hub");
             });
         }
     }

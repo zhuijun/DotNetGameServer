@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AgentServer.Hubs
 {
     [Authorize(Policy = "Game")]
-    public class ChatHub : Hub
+    public class GameHub : Hub
     {
         public Task NewMessage(string message)
         {

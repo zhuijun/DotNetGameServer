@@ -21,7 +21,7 @@ namespace AccountServer
         {
             Configuration = configuration;
         }
-
+        readonly string MyAllowSpecificOrigins = "AllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -31,6 +31,18 @@ namespace AccountServer
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AccountServer", Version = "v1" });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.AllowAnyHeader()
+                                    .AllowAnyMethod()
+                                    .SetIsOriginAllowed((host) => true)
+                                    .AllowCredentials();
+                    });
             });
 
             var builder = services.AddIdentityServer(options =>
@@ -60,9 +72,17 @@ namespace AccountServer
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AccountServer v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.Use(async (context, next) =>
+            //{
+            //    // Do work that doesn't write to the Response.
+            //    await next.Invoke();
+            //    // Do logging or other work that doesn't write to the Response.
+            //});
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseIdentityServer();
 
