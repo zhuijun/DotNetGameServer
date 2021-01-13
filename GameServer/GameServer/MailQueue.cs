@@ -52,21 +52,22 @@ namespace GameServer
             Name = name;
 
             _incomingMail = Channel.CreateUnbounded<Mail>();
+            _totalMailCount = 0;
 
-            //Task.Run(async () =>
-            //{
-            //    var random = new Random();
+            Task.Run(async () =>
+            {
+                var random = new Random();
 
-            //    while (true)
-            //    {
-            //        _totalMailCount++;
-            //        var mail = new Mail(_totalMailCount, $"Message #{_totalMailCount}");
-            //        await _incomingMail.Writer.WriteAsync(mail);
-            //        OnChange(MailboxMessage.Types.Reason.Received);
+                while (true)
+                {
+                    _totalMailCount++;
+                    var mail = new Mail(_totalMailCount, $"Message #{_totalMailCount}");
+                    await _incomingMail.Writer.WriteAsync(mail);
+                    OnChange(MailboxMessage.Types.Reason.Received);
 
-            //        await Task.Delay(TimeSpan.FromSeconds(random.Next(5, 15)));
-            //    }
-            //});
+                    await Task.Delay(TimeSpan.FromSeconds(random.Next(5, 15)));
+                }
+            });
         }
 
         public bool TryForwardMail([NotNullWhen(true)] out Mail? message)

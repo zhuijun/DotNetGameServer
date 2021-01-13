@@ -22,11 +22,13 @@ namespace GameServer
 {
     public class MailQueueRepository
     {
-        private ConcurrentDictionary<string, MailQueue> _mailQueues = new ConcurrentDictionary<string, MailQueue>();
+        //private ConcurrentDictionary<string, MailQueue> _mailQueues = new ConcurrentDictionary<string, MailQueue>();
 
+        MailQueue _mailQueue = new MailQueue("agent");
         public MailQueue GetMailQueue(string name)
         {
-            return _mailQueues.GetOrAdd(name, (n) => new MailQueue(n));
+            //return _mailQueues.GetOrAdd(name, (n) => new MailQueue(n));
+            return _mailQueue;
         }
     }
 }
