@@ -42,50 +42,34 @@ namespace GameServer
     {
         private readonly Channel<Mail> _incomingMail;
         private int _totalMailCount;
-        private int _forwardedMailCount;
 
         public string Name { get; }
-        public event Func<(int totalCount, int newCount, MailboxMessage.Types.Reason reason), Task>? Changed;
+        //public event Func<(int totalCount, int newCount, MailboxMessage.Types.Reason reason), Task>? Changed;
 
         public MailQueue(string name)
         {
             Name = name;
-
             _incomingMail = Channel.CreateUnbounded<Mail>();
             _totalMailCount = 0;
-
-            Task.Run(async () =>
-            {
-                var random = new Random();
-
-                while (true)
-                {
-                    _totalMailCount++;
-                    var mail = new Mail(_totalMailCount, $"Message #{_totalMailCount}");
-                    await _incomingMail.Writer.WriteAsync(mail);
-                    OnChange(MailboxMessage.Types.Reason.Received);
-
-                    await Task.Delay(TimeSpan.FromSeconds(random.Next(5, 15)));
-                }
-            });
         }
 
-        public bool TryForwardMail([NotNullWhen(true)] out Mail? message)
+        public bool TryReadMail([NotNullWhen(true)] out Mail? message)
         {
             if (_incomingMail.Reader.TryRead(out message))
             {
-                Interlocked.Increment(ref _forwardedMailCount);
-                OnChange(MailboxMessage.Types.Reason.Forwarded);
+                Interlocked.Decrement(ref _totalMailCount);
 
                 return true;
             }
 
             return false;
         }
-
-        private void OnChange(MailboxMessage.Types.Reason reason)
+        
+        public async ValueTask WriteAsync(Mail message)
         {
-            Changed?.Invoke((_totalMailCount, _forwardedMailCount, reason));
+            await _incomingMail.Writer.WriteAsync(message);
+            Interlocked.Increment(ref _totalMailCount);
         }
+
     }
 }

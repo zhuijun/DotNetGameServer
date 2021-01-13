@@ -28,38 +28,35 @@ namespace GameServer.Services
 
             _logger.LogInformation($"Connected to {mailboxName}");
 
-            mailQueue.Changed += ReportChanges;
+            //mailQueue.Changed += ReportChanges;
 
             try
             {
                 while (await requestStream.MoveNext())
                 {
-                    if (mailQueue.TryForwardMail(out var message))
-                    {
-                        _logger.LogInformation($"Forwarded mail: {message.Content}");
-                    }
-                    else
-                    {
-                        _logger.LogWarning("No mail to forward.");
-                    }
+                    var request = requestStream.Current;
+
+                    var mail = new Mail(1, request.ConnectionId);
+                    await mailQueue.WriteAsync(mail);
+                    _logger.LogInformation($"request mail: {request.ConnectionId}");
                 }
             }
             finally
             {
-                mailQueue.Changed -= ReportChanges;
+                //mailQueue.Changed -= ReportChanges;
             }
 
             _logger.LogInformation($"{mailboxName} disconnected");
 
-            async Task ReportChanges((int totalCount, int fowardCount, MailboxMessage.Types.Reason reason) state)
-            {
-                await responseStream.WriteAsync(new MailboxMessage
-                {
-                    Forwarded = state.fowardCount,
-                    New = state.totalCount - state.fowardCount,
-                    Reason = state.reason
-                });
-            }
+            //async Task ReportChanges((int totalCount, int fowardCount, MailboxMessage.Types.Reason reason) state)
+            //{
+            //    await responseStream.WriteAsync(new MailboxMessage
+            //    {
+            //        Forwarded = state.fowardCount,
+            //        New = state.totalCount - state.fowardCount,
+            //        Reason = state.reason
+            //    });
+            //}
         }
     }
 }
