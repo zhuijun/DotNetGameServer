@@ -13,13 +13,10 @@ namespace GameServer.Services
     public class MainHostedService : IHostedService, IDisposable
     {
         private readonly ILogger<MainHostedService> _logger;
-        private readonly IServiceProvider _services;
         private readonly Dispatcher _dispatcher;
-
-        public MainHostedService(IServiceProvider services, ILogger<MainHostedService> logger,
+        public MainHostedService(ILogger<MainHostedService> logger,
             Dispatcher dispatcher)
         {
-            _services = services;
             _logger = logger;
             _dispatcher = dispatcher;
         }

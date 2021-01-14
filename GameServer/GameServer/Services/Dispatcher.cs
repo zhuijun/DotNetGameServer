@@ -12,6 +12,7 @@ namespace GameServer.Services
     public class Dispatcher
     {
         private readonly MailQueueRepository _messageQueueRepository;
+        private readonly MailDispatcher _mailDispatcher;
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
         private readonly DateTime _centuryBegin = new DateTime(1970, 1, 1, 8, 0, 0);
 
@@ -26,10 +27,13 @@ namespace GameServer.Services
 
         private DateTime DateTimeCache { get; set; }
         
+        
 
-        public Dispatcher(MailQueueRepository messageQueueRepository)
+        public Dispatcher(MailQueueRepository messageQueueRepository
+            , MailDispatcher mailDispatcher)
         {
             _messageQueueRepository = messageQueueRepository;
+            _mailDispatcher = mailDispatcher;
         }
 
         public void Dispatch(CancellationToken stoppingToken)
@@ -53,7 +57,7 @@ namespace GameServer.Services
 
                 while (TryReadMail(out var mail))
                 {
-                    TryWriteMail(mail);
+                    _mailDispatcher.OnReadMail(mail);
                 }
             }
         }
