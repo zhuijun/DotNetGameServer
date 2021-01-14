@@ -29,6 +29,7 @@ namespace GameServer
         {
             services.AddGrpc();
             services.AddSingleton<MailQueueRepository>();
+            services.AddHostedService<MainHostedService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

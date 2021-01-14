@@ -34,15 +34,9 @@ namespace GameServer.Services
                 {
                     var request = requestStream.Current;
 
-                    var mail = new Mail(request.Id, request.Content.ToByteArray());
+                    var mail = new Mail(clientId, request.Id, request.Content.ToByteArray());
                     await incomeMailQueue.WriteAsync(mail);
                     _logger.LogInformation($"request mail: {request.Id}");
-
-                    //test
-                    if (incomeMailQueue.TryReadMail(out var mail1))
-                    {
-                        outgoMailQueue.TryWriteMail(mail1);
-                    }
                 }
             }
             finally
