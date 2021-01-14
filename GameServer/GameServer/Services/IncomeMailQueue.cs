@@ -26,49 +26,34 @@ using Mail;
 
 namespace GameServer.Services
 {
-    public class Mail
+    public class IncomeMailQueue
     {
-        public Mail(int id, byte[] content)
-        {
-            Id = id;
-            Content = content;
-        }
-
-        public int Id { get; }
-        public byte[] Content { get; }
-    }
-
-    public class MailQueue
-    {
-        private readonly Channel<Mail> _incomingMail;
+        private readonly Channel<Mail> _mailChannel;
         private int _totalMailCount;
 
-        public string Name { get; }
+        public long Key { get; }
 
-        public MailQueue(string name)
+        public IncomeMailQueue(long key)
         {
-            Name = name;
-            _incomingMail = Channel.CreateUnbounded<Mail>();
+            Key = key;
+            _mailChannel = Channel.CreateUnbounded<Mail>();
             _totalMailCount = 0;
         }
 
-        public bool TryReadMail([NotNullWhen(true)] out Mail? message)
+        public bool TryReadMail([NotNullWhen(true)] out Mail? mail)
         {
-            if (_incomingMail.Reader.TryRead(out message))
+            if (_mailChannel.Reader.TryRead(out mail))
             {
                 Interlocked.Decrement(ref _totalMailCount);
-
                 return true;
             }
-
             return false;
         }
         
-        public async ValueTask WriteAsync(Mail message)
+        public async ValueTask WriteAsync(Mail mail)
         {
-            await _incomingMail.Writer.WriteAsync(message);
+            await _mailChannel.Writer.WriteAsync(mail);
             Interlocked.Increment(ref _totalMailCount);
         }
-
     }
 }

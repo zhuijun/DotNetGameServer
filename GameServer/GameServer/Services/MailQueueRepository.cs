@@ -17,18 +17,30 @@
 #endregion
 
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace GameServer.Services
 {
     public class MailQueueRepository
     {
-        //private ConcurrentDictionary<string, MailQueue> _mailQueues = new ConcurrentDictionary<string, MailQueue>();
+        private readonly ConcurrentDictionary<long, OutcomeMailQueue> _outcomeMailQueues = new ConcurrentDictionary<long, OutcomeMailQueue>();
+        private long _clientIdSeed = 0;
 
-        MailQueue _mailQueue = new MailQueue("agent");
-        public MailQueue GetMailQueue(string name)
+        private readonly IncomeMailQueue _incomeMailQueue = new IncomeMailQueue(0);
+        public IncomeMailQueue GetIncomeMailQueue()
         {
-            //return _mailQueues.GetOrAdd(name, (n) => new MailQueue(n));
-            return _mailQueue;
+            return _incomeMailQueue;
         }
+
+        public OutcomeMailQueue GetOutcomeMailQueue(long clientId)
+        {
+            return _outcomeMailQueues.GetOrAdd(clientId, (n) => new OutcomeMailQueue(n));
+        }
+
+        public long CreateClientId()
+        {
+            return Interlocked.Increment(ref _clientIdSeed);
+        }
+
     }
 }

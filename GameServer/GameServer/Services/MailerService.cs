@@ -22,11 +22,7 @@ namespace GameServer.Services
             IServerStreamWriter<MailboxMessage> responseStream,
             ServerCallContext context)
         {
-            var mailboxName = context.RequestHeaders.Single(e => e.Key == "mailbox-name").Value;
-
-            var mailQueue = _messageQueueRepository.GetMailQueue(mailboxName);
-
-            _logger.LogInformation($"Connected to {mailboxName}");
+            var mailQueue = _messageQueueRepository.GetIncomeMailQueue();
 
             try
             {
@@ -42,8 +38,6 @@ namespace GameServer.Services
             finally
             {
             }
-
-            _logger.LogInformation($"{mailboxName} disconnected");
         }
     }
 }
