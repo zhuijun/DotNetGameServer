@@ -23,8 +23,8 @@ namespace GameServer.Services
             ServerCallContext context)
         {
             long clientId = _messageQueueRepository.CreateClientId();
-            var outcomeMailQueue = _messageQueueRepository.GetOutcomeMailQueue(clientId);
-            outcomeMailQueue.OnRead += DoWrite;
+            var outgoMailQueue = _messageQueueRepository.GetOutgoMailQueue(clientId);
+            outgoMailQueue.OnRead += DoWrite;
 
             var incomeMailQueue = _messageQueueRepository.GetIncomeMailQueue();
 
@@ -41,14 +41,14 @@ namespace GameServer.Services
                     //test
                     if (incomeMailQueue.TryReadMail(out var mail1))
                     {
-                        outcomeMailQueue.TryWriteMail(mail1);
+                        outgoMailQueue.TryWriteMail(mail1);
                     }
                 }
             }
             finally
             {
-                outcomeMailQueue.OnRead -= DoWrite;
-                _messageQueueRepository.RemoveOutcomeMailQueue(clientId);
+                outgoMailQueue.OnRead -= DoWrite;
+                _messageQueueRepository.RemoveOutgoMailQueue(clientId);
             }
 
             async Task DoWrite(Mail mail)

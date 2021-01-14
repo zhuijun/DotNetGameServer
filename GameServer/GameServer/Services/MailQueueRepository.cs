@@ -23,7 +23,7 @@ namespace GameServer.Services
 {
     public class MailQueueRepository
     {
-        private readonly ConcurrentDictionary<long, OutcomeMailQueue> _outcomeMailQueues = new ConcurrentDictionary<long, OutcomeMailQueue>();
+        private readonly ConcurrentDictionary<long, OutgoMailQueue> _outgoMailQueues = new ConcurrentDictionary<long, OutgoMailQueue>();
         private long _clientIdSeed = 0;
 
         private readonly IncomeMailQueue _incomeMailQueue = new IncomeMailQueue();
@@ -32,14 +32,14 @@ namespace GameServer.Services
             return _incomeMailQueue;
         }
 
-        public OutcomeMailQueue GetOutcomeMailQueue(long clientId)
+        public OutgoMailQueue GetOutgoMailQueue(long clientId)
         {
-            return _outcomeMailQueues.GetOrAdd(clientId, (n) => new OutcomeMailQueue(n));
+            return _outgoMailQueues.GetOrAdd(clientId, (n) => new OutgoMailQueue(n));
         }
 
-        public bool RemoveOutcomeMailQueue(long clientId)
+        public bool RemoveOutgoMailQueue(long clientId)
         {
-            return _outcomeMailQueues.TryRemove(clientId, out var _);
+            return _outgoMailQueues.TryRemove(clientId, out var _);
         }
 
         public long CreateClientId()

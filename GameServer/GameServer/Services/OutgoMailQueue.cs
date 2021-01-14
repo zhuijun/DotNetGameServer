@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 #nullable enable
 namespace GameServer.Services
 {
-    public class OutcomeMailQueue
+    public class OutgoMailQueue
     {
         private readonly Channel<Mail> _mailChannel;
         private int _totalMailCount;
@@ -16,7 +16,7 @@ namespace GameServer.Services
         public long Key { get; }
         public event Func<Mail, Task>? OnRead;
 
-        public OutcomeMailQueue(long key)
+        public OutgoMailQueue(long key)
         {
             Key = key;
             _mailChannel = Channel.CreateUnbounded<Mail>();
