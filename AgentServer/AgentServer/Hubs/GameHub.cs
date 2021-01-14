@@ -38,9 +38,9 @@ namespace AgentServer.Hubs
                 {
                     await _hubContext.Clients.Client(ConnectionId).SendAsync("StoCMessage", message.Id, message.Content.ToBase64());
                 }
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("!!!end");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.Green;
+                //Console.WriteLine("!!!end");
+                //Console.ResetColor();
             });
             Context.Items.Add("_task", responseTask);
 

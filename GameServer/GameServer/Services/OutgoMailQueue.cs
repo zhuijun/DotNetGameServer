@@ -29,7 +29,16 @@ namespace GameServer.Services
                     Interlocked.Decrement(ref _totalMailCount);
                     OnRead?.Invoke(mail);
                 }
+
+                //Console.ForegroundColor = ConsoleColor.Green;
+                //Console.WriteLine("OutgoMailQueue !!!end");
+                //Console.ResetColor();
             });
+        }
+
+        public void  Complete()
+        {
+            _mailChannel.Writer.Complete();
         }
 
         public bool TryWriteMail(Mail mail)

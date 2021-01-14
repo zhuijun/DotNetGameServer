@@ -39,7 +39,12 @@ namespace GameServer.Services
 
         public bool RemoveOutgoMailQueue(long clientId)
         {
-            return _outgoMailQueues.TryRemove(clientId, out var _);
+            var r = _outgoMailQueues.TryRemove(clientId, out var mailQueue);
+            if (r)
+            {
+                mailQueue.Complete();
+            }
+            return r;
         }
 
         public long CreateClientId()
