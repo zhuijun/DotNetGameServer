@@ -9,12 +9,12 @@ namespace GameServer.Services
     public class MailerService : Mailer.MailerBase
     {
         private readonly ILogger _logger;
-        private readonly MailQueueRepository _messageQueueRepository;
+        private readonly MailQueueRepository _mailQueueRepository;
 
-        public MailerService(ILoggerFactory loggerFactory, MailQueueRepository messageQueueRepository)
+        public MailerService(ILoggerFactory loggerFactory, MailQueueRepository mailQueueRepository)
         {
             _logger = loggerFactory.CreateLogger<MailerService>();
-            _messageQueueRepository = messageQueueRepository;
+            _mailQueueRepository = mailQueueRepository;
         }
 
         public async override Task Mailbox(
@@ -22,11 +22,11 @@ namespace GameServer.Services
             IServerStreamWriter<MailboxMessage> responseStream,
             ServerCallContext context)
         {
-            long clientId = _messageQueueRepository.CreateClientId();
-            var outgoMailQueue = _messageQueueRepository.GetOutgoMailQueue(clientId);
+            long clientId = _mailQueueRepository.CreateClientId();
+            var outgoMailQueue = _mailQueueRepository.GetOutgoMailQueue(clientId);
             outgoMailQueue.OnRead += DoWrite;
 
-            var incomeMailQueue = _messageQueueRepository.GetIncomeMailQueue();
+            var incomeMailQueue = _mailQueueRepository.GetIncomeMailQueue();
 
             try
             {
@@ -42,7 +42,7 @@ namespace GameServer.Services
             finally
             {
                 outgoMailQueue.OnRead -= DoWrite;
-                _messageQueueRepository.RemoveOutgoMailQueue(clientId);
+                _mailQueueRepository.RemoveOutgoMailQueue(clientId);
             }
 
             async Task DoWrite(Mail mail)

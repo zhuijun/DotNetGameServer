@@ -11,7 +11,7 @@ namespace GameServer.Services
 {
     public class Dispatcher
     {
-        private readonly MailQueueRepository _messageQueueRepository;
+        private readonly MailQueueRepository _mailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
         private readonly DateTime _centuryBegin = new DateTime(1970, 1, 1, 8, 0, 0);
@@ -29,10 +29,10 @@ namespace GameServer.Services
         
         
 
-        public Dispatcher(MailQueueRepository messageQueueRepository
+        public Dispatcher(MailQueueRepository mailQueueRepository
             , MailDispatcher mailDispatcher)
         {
-            _messageQueueRepository = messageQueueRepository;
+            _mailQueueRepository = mailQueueRepository;
             _mailDispatcher = mailDispatcher;
         }
 
@@ -64,13 +64,13 @@ namespace GameServer.Services
 
         public bool TryReadMail([NotNullWhen(true)] out Mail? mail)
         {
-            var incomeMailQueue = _messageQueueRepository.GetIncomeMailQueue();
+            var incomeMailQueue = _mailQueueRepository.GetIncomeMailQueue();
             return incomeMailQueue.TryReadMail(out mail);
         }
 
         public bool TryWriteMail(Mail mail)
         {
-            var outgoMailQueue = _messageQueueRepository.GetOutgoMailQueue(mail.ClientId);
+            var outgoMailQueue = _mailQueueRepository.GetOutgoMailQueue(mail.ClientId);
             return outgoMailQueue.TryWriteMail(mail);
         }
 
