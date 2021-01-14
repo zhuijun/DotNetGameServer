@@ -18,7 +18,7 @@
 
 using System.Collections.Concurrent;
 
-namespace GameServer
+namespace GameServer.Services
 {
     public class MailQueueRepository
     {

@@ -28,8 +28,6 @@ namespace GameServer.Services
 
             _logger.LogInformation($"Connected to {mailboxName}");
 
-            //mailQueue.Changed += ReportChanges;
-
             try
             {
                 while (await requestStream.MoveNext())
@@ -43,20 +41,9 @@ namespace GameServer.Services
             }
             finally
             {
-                //mailQueue.Changed -= ReportChanges;
             }
 
             _logger.LogInformation($"{mailboxName} disconnected");
-
-            //async Task ReportChanges((int totalCount, int fowardCount, MailboxMessage.Types.Reason reason) state)
-            //{
-            //    await responseStream.WriteAsync(new MailboxMessage
-            //    {
-            //        Forwarded = state.fowardCount,
-            //        New = state.totalCount - state.fowardCount,
-            //        Reason = state.reason
-            //    });
-            //}
         }
     }
 }

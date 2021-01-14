@@ -1,4 +1,5 @@
-﻿using Google.Protobuf;
+﻿using AgentServer.Services;
+using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Mail;
@@ -15,18 +16,18 @@ namespace AgentServer.Hubs
     public class GameHub : Hub
     {
         private readonly IHubContext<GameHub> _hubContext;
+        private GrpcChannelService ChannelService { get; }
 
-        public GameHub(IHubContext<GameHub> hubContext)
+        public GameHub(IHubContext<GameHub> hubContext, GrpcChannelService channel)
         {
             _hubContext = hubContext;
+            ChannelService = channel;
         }
 
         public override async Task OnConnectedAsync()
         {
-            var _channel = GrpcChannel.ForAddress("https://localhost:5005");
-            var _client = new Mailer.MailerClient(_channel);
+            var _client = new Mailer.MailerClient(ChannelService.Channel);
             var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent") });
-            Context.Items.Add("_channel", _channel);
             Context.Items.Add("_client", _client);
             Context.Items.Add("_call", _call);
 

@@ -24,7 +24,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mail;
 
-namespace GameServer
+namespace GameServer.Services
 {
     public class Mail
     {
@@ -44,7 +44,6 @@ namespace GameServer
         private int _totalMailCount;
 
         public string Name { get; }
-        //public event Func<(int totalCount, int newCount, MailboxMessage.Types.Reason reason), Task>? Changed;
 
         public MailQueue(string name)
         {
