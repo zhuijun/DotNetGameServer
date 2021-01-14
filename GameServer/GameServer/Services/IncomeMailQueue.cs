@@ -31,11 +31,8 @@ namespace GameServer.Services
         private readonly Channel<Mail> _mailChannel;
         private int _totalMailCount;
 
-        public long Key { get; }
-
-        public IncomeMailQueue(long key)
+        public IncomeMailQueue()
         {
-            Key = key;
             _mailChannel = Channel.CreateUnbounded<Mail>();
             _totalMailCount = 0;
         }

@@ -22,7 +22,11 @@ namespace GameServer.Services
             IServerStreamWriter<MailboxMessage> responseStream,
             ServerCallContext context)
         {
-            var mailQueue = _messageQueueRepository.GetIncomeMailQueue();
+            long clientId = _messageQueueRepository.CreateClientId();
+            var outcomeMailQueue = _messageQueueRepository.GetOutcomeMailQueue(clientId);
+            outcomeMailQueue.OnRead += DoWrite;
+
+            var incomeMailQueue = _messageQueueRepository.GetIncomeMailQueue();
 
             try
             {
@@ -31,12 +35,29 @@ namespace GameServer.Services
                     var request = requestStream.Current;
 
                     var mail = new Mail(request.Id, request.Content.ToByteArray());
-                    await mailQueue.WriteAsync(mail);
+                    await incomeMailQueue.WriteAsync(mail);
                     _logger.LogInformation($"request mail: {request.Id}");
+
+                    //test
+                    if (incomeMailQueue.TryReadMail(out var mail1))
+                    {
+                        outcomeMailQueue.TryWriteMail(mail1);
+                    }
                 }
             }
             finally
             {
+                outcomeMailQueue.OnRead -= DoWrite;
+                _messageQueueRepository.RemoveOutcomeMailQueue(clientId);
+            }
+
+            async Task DoWrite(Mail mail)
+            {
+                await responseStream.WriteAsync(new MailboxMessage
+                {
+                    Id = mail.Id,
+                    Content = Google.Protobuf.ByteString.CopyFrom(mail.Content),
+                });
             }
         }
     }

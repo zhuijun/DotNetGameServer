@@ -26,7 +26,7 @@ namespace GameServer.Services
         private readonly ConcurrentDictionary<long, OutcomeMailQueue> _outcomeMailQueues = new ConcurrentDictionary<long, OutcomeMailQueue>();
         private long _clientIdSeed = 0;
 
-        private readonly IncomeMailQueue _incomeMailQueue = new IncomeMailQueue(0);
+        private readonly IncomeMailQueue _incomeMailQueue = new IncomeMailQueue();
         public IncomeMailQueue GetIncomeMailQueue()
         {
             return _incomeMailQueue;
@@ -35,6 +35,11 @@ namespace GameServer.Services
         public OutcomeMailQueue GetOutcomeMailQueue(long clientId)
         {
             return _outcomeMailQueues.GetOrAdd(clientId, (n) => new OutcomeMailQueue(n));
+        }
+
+        public bool RemoveOutcomeMailQueue(long clientId)
+        {
+            return _outcomeMailQueues.TryRemove(clientId, out var _);
         }
 
         public long CreateClientId()
