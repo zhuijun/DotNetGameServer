@@ -15,7 +15,6 @@
 // limitations under the License.
 
 #endregion
-#nullable enable
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -24,6 +23,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mail;
 
+#nullable enable
 namespace GameServer.Services
 {
     public class IncomeMailQueue

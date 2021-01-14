@@ -29,6 +29,7 @@ namespace GameServer
         {
             services.AddGrpc();
             services.AddSingleton<MailQueueRepository>();
+            services.AddSingleton<Dispatcher>();
             services.AddHostedService<MainHostedService>();
 
             services.AddControllers();

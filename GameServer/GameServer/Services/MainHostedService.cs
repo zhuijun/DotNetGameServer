@@ -14,19 +14,19 @@ namespace GameServer.Services
     {
         private readonly ILogger<MainHostedService> _logger;
         private readonly IServiceProvider _services;
-        private readonly MailQueueRepository _messageQueueRepository;
+        private readonly Dispatcher _dispatcher;
 
-        public MainHostedService(IServiceProvider services, ILogger<MainHostedService> logger, 
-            MailQueueRepository messageQueueRepository)
+        public MainHostedService(IServiceProvider services, ILogger<MainHostedService> logger,
+            Dispatcher dispatcher)
         {
             _services = services;
             _logger = logger;
-            _messageQueueRepository = messageQueueRepository;
+            _dispatcher = dispatcher;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Timed Hosted Service running.");
+            _logger.LogInformation("MainHostedService running.");
 
             Task.Run(() => MainLoop(stoppingToken), stoppingToken);
 
@@ -35,32 +35,12 @@ namespace GameServer.Services
 
         private void MainLoop(CancellationToken stoppingToken)
         {
-            Stopwatch sw = new Stopwatch();
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                if (sw.ElapsedTicks < 25)
-                {
-                    Thread.Sleep(TimeSpan.FromTicks(sw.ElapsedTicks - 25));
-                }
-                sw.Reset();
-                sw.Start();
-
-                var incomeMailQueue = _messageQueueRepository.GetIncomeMailQueue();
-                if (incomeMailQueue.TryReadMail(out var mail))
-                {
-                    var outgoMailQueue = _messageQueueRepository.GetOutgoMailQueue(mail.ClientId);
-                    outgoMailQueue.TryWriteMail(mail);
-                }
-            }
-
-            sw.Stop();
-            _logger.LogInformation("MainLoop is stopping.");
+            _dispatcher.Dispatch(stoppingToken);
         }
 
         public Task StopAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Timed Hosted Service is stopping.");
+            _logger.LogInformation("MainHostedService is stopping.");
 
             return Task.CompletedTask;
         }
