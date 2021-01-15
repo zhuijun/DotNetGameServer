@@ -11,20 +11,11 @@ namespace GameServer.Services
 {
     public class MailDispatcher
     {
-        private readonly ILogger<MailDispatcher> _logger;
-        private readonly ManagerMediator _managerMediator;
-
-
-        public MailDispatcher(ILogger<MailDispatcher> logger,
-            ManagerMediator managerMediator)
-        {
-            _logger = logger;
-            _managerMediator = managerMediator;
-        }
+        public event Action<MailMessage>? EventAgentMail;
 
         public void OnAgentMail(MailMessage mail)
         {
-            _managerMediator.OnAgentMail(mail);
+            EventAgentMail?.Invoke(mail);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace GameServer.Game
 {
     public class ManagerMediator
     {
-        private readonly IServiceProvider _services;
-
         private readonly List<AbstractManager> _managers = new List<AbstractManager>();
+
+        public Dispatcher Dispatcher { get; }
         public RoleManager RoleManager { get; }
 
-        public ManagerMediator(IServiceProvider services, 
+        public ManagerMediator(Dispatcher dispatcher, 
             RoleManager roleManager)
         {
-            _services = services;
+            Dispatcher = dispatcher;
             RoleManager = roleManager;
             AddManager(RoleManager);
         }
@@ -31,7 +31,7 @@ namespace GameServer.Game
                 return false;
             }
             manager.ManagerMediator = this;
-            manager.SetServiceProvider(_services);
+            manager.Dispatcher = Dispatcher;
             _managers.Add(manager);
             return true;
         }

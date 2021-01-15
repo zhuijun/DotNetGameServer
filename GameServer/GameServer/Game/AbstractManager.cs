@@ -10,13 +10,8 @@ namespace GameServer.Game
 {
     public abstract class AbstractManager : IManager
     {
-        private IServiceProvider _services;
+        private Dispatcher _dispatcher;
         private ManagerMediator _mediator;
-
-        public void SetServiceProvider(IServiceProvider services)
-        {
-            _services = services;
-        }
 
         public ManagerMediator ManagerMediator
         {
@@ -34,7 +29,11 @@ namespace GameServer.Game
         {
             get
             {
-                return _services.GetRequiredService<Dispatcher>();
+                return _dispatcher;
+            }
+            set
+            {
+                _dispatcher = value;
             }
         }
 
