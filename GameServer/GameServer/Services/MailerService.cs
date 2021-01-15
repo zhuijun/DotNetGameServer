@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using GameServer.Common;
 using Grpc.Core;
 using Mail;
 using Microsoft.Extensions.Logging;
@@ -34,7 +35,7 @@ namespace GameServer.Services
                 {
                     var request = requestStream.Current;
 
-                    var mail = new Mail(clientId, request.Id, request.Content.ToByteArray());
+                    var mail = new MailMessage(clientId, request.Id, request.Content.ToByteArray());
                     await incomeMailQueue.WriteAsync(mail);
                     _logger.LogInformation($"request mail: {request.Id}");
                 }
@@ -45,7 +46,7 @@ namespace GameServer.Services
                 _mailQueueRepository.RemoveOutgoMailQueue(clientId);
             }
 
-            async Task DoWrite(Mail mail)
+            async Task DoWrite(MailMessage mail)
             {
                 await responseStream.WriteAsync(new MailboxMessage
                 {

@@ -16,28 +16,28 @@
 
 #endregion
 
+using GameServer.Common;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Mail;
 
 #nullable enable
 namespace GameServer.Services
 {
     public class IncomeMailQueue
     {
-        private readonly Channel<Mail> _mailChannel;
+        private readonly Channel<MailMessage> _mailChannel;
         private int _totalMailCount;
 
         public IncomeMailQueue()
         {
-            _mailChannel = Channel.CreateUnbounded<Mail>();
+            _mailChannel = Channel.CreateUnbounded<MailMessage>();
             _totalMailCount = 0;
         }
 
-        public bool TryReadMail([NotNullWhen(true)] out Mail? mail)
+        public bool TryReadMail([NotNullWhen(true)] out MailMessage? mail)
         {
             if (_mailChannel.Reader.TryRead(out mail))
             {
@@ -47,7 +47,7 @@ namespace GameServer.Services
             return false;
         }
         
-        public async ValueTask WriteAsync(Mail mail)
+        public async ValueTask WriteAsync(MailMessage mail)
         {
             await _mailChannel.Writer.WriteAsync(mail);
             Interlocked.Increment(ref _totalMailCount);

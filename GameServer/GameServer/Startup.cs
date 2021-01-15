@@ -27,17 +27,18 @@ namespace GameServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGrpc();
-            services.AddSingleton<MailQueueRepository>();
-            services.AddSingleton<Dispatcher>();
-            services.AddSingleton<MailDispatcher>();
-            services.AddHostedService<MainHostedService>();
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GameServer", Version = "v1" });
             });
+
+            services.AddGrpc();
+            services.AddHostedService<MainHostedService>();
+            services.AddSingleton<MailQueueRepository>();
+            services.AddSingleton<Dispatcher>();
+            services.AddSingleton<MailDispatcher>();
+            services.AddGame();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

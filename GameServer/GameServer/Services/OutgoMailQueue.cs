@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameServer.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,16 +11,16 @@ namespace GameServer.Services
 {
     public class OutgoMailQueue
     {
-        private readonly Channel<Mail> _mailChannel;
+        private readonly Channel<MailMessage> _mailChannel;
         private int _totalMailCount;
 
         public long Key { get; }
-        public event Func<Mail, Task>? OnRead;
+        public event Func<MailMessage, Task>? OnRead;
 
         public OutgoMailQueue(long key)
         {
             Key = key;
-            _mailChannel = Channel.CreateUnbounded<Mail>();
+            _mailChannel = Channel.CreateUnbounded<MailMessage>();
             _totalMailCount = 0;
 
             Task.Run(async () =>
@@ -41,7 +42,7 @@ namespace GameServer.Services
             _mailChannel.Writer.Complete();
         }
 
-        public bool TryWriteMail(Mail mail)
+        public bool TryWriteMail(MailMessage mail)
         {
             if (_mailChannel.Writer.TryWrite(mail))
             {

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GameServer.Common;
+using GameServer.Game;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +12,19 @@ namespace GameServer.Services
     public class MailDispatcher
     {
         private readonly ILogger<MailDispatcher> _logger;
+        private readonly ManagerMediator _managerMediator;
 
-        public event Action<Mail>? OnRead;
 
-        public MailDispatcher(ILogger<MailDispatcher> logger)
+        public MailDispatcher(ILogger<MailDispatcher> logger,
+            ManagerMediator managerMediator)
         {
             _logger = logger;
+            _managerMediator = managerMediator;
         }
 
-        public void OnReadMail(Mail mail)
+        public void OnAgentMail(MailMessage mail)
         {
-            OnRead?.Invoke(mail);
+            _managerMediator.OnAgentMail(mail);
         }
     }
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GameServer.Services
+namespace GameServer.Common
 {
-    public class Mail
+    public class MailMessage
     {
-        public Mail(long clientId, int id, byte[] content)
+        public MailMessage(long clientId, int id, byte[] content)
         {
             ClientId = clientId;
             Id = id;

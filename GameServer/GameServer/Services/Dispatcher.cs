@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using GameServer.Common;
 
 #nullable enable
 namespace GameServer.Services
@@ -55,20 +56,20 @@ namespace GameServer.Services
                     action();
                 }
 
-                while (TryReadMail(out var mail))
+                while (TryReadAgentMail(out var mail))
                 {
-                    _mailDispatcher.OnReadMail(mail);
+                    _mailDispatcher.OnAgentMail(mail);
                 }
             }
         }
 
-        public bool TryReadMail([NotNullWhen(true)] out Mail? mail)
+        private bool TryReadAgentMail([NotNullWhen(true)] out MailMessage? mail)
         {
             var incomeMailQueue = _mailQueueRepository.GetIncomeMailQueue();
             return incomeMailQueue.TryReadMail(out mail);
         }
 
-        public bool TryWriteMail(Mail mail)
+        public bool WriteAgentMail(MailMessage mail)
         {
             var outgoMailQueue = _mailQueueRepository.GetOutgoMailQueue(mail.ClientId);
             return outgoMailQueue.TryWriteMail(mail);
