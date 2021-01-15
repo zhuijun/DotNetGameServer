@@ -42,6 +42,7 @@ namespace GameServer.Services
         private void MainLoop(CancellationToken stoppingToken)
         {
             _mailDispatcher.EventAgentMail += _managerMediator.OnAgentMail;
+            _mailDispatcher.EventDBMail += _managerMediator.OnDBMail;
 
             _dispatcher.Dispatch(stoppingToken);
         }
