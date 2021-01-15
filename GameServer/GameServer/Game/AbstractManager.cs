@@ -10,32 +10,9 @@ namespace GameServer.Game
 {
     public abstract class AbstractManager : IManager
     {
-        private Dispatcher _dispatcher;
-        private ManagerMediator _mediator;
+        public ManagerMediator ManagerMediator { get; set; }
 
-        public ManagerMediator ManagerMediator
-        {
-            get 
-            {
-                return _mediator; 
-            }
-            set
-            {
-                _mediator = value;
-            }
-        }
-
-        public Dispatcher Dispatcher
-        {
-            get
-            {
-                return _dispatcher;
-            }
-            set
-            {
-                _dispatcher = value;
-            }
-        }
+        public Dispatcher Dispatcher { get; set; }
 
     }
 }
