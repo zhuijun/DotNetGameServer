@@ -56,7 +56,17 @@ namespace GameServer.Services
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _mailDispatcher.EventAgentMail -= _managerMediator.OnAgentMail;
+                _mailDispatcher.EventDBMail -= _managerMediator.OnDBMail;
+            }
         }
     }
 }
