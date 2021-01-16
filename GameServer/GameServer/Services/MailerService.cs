@@ -68,8 +68,8 @@ namespace GameServer.Services
 
             async void DoCompte()
             {
-                await DoWrite(new MailMessage(clientId, 999999, null));
                 source.Cancel();
+                await DoWrite(new MailMessage(clientId, 999999, null));
             }
         }
     }
