@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GameServer.Common;
 using Grpc.Core;
@@ -26,12 +27,16 @@ namespace GameServer.Services
             long clientId = _mailQueueRepository.CreateClientId();
             var outgoMailQueue = _mailQueueRepository.GetOutgoMailQueue(clientId);
             outgoMailQueue.OnRead += DoWrite;
+            
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            outgoMailQueue.OnComplete += DoCompte;
 
             var incomeMailQueue = _mailQueueRepository.GetIncomeMailQueue();
 
             try
             {
-                while (await requestStream.MoveNext())
+                while (await requestStream.MoveNext(token))
                 {
                     var request = requestStream.Current;
 
@@ -42,7 +47,13 @@ namespace GameServer.Services
             }
             finally
             {
+                if (!source.IsCancellationRequested)
+                {
+                    outgoMailQueue.Complete();
+                }
+
                 outgoMailQueue.OnRead -= DoWrite;
+                outgoMailQueue.OnComplete -= DoCompte;
                 _mailQueueRepository.RemoveOutgoMailQueue(clientId);
             }
 
@@ -53,6 +64,12 @@ namespace GameServer.Services
                     Id = mail.Id,
                     Content = Google.Protobuf.ByteString.CopyFrom(mail.Content),
                 });
+            }
+
+            async void DoCompte()
+            {
+                await DoWrite(new MailMessage(clientId, 999999, null));
+                source.Cancel();
             }
         }
     }

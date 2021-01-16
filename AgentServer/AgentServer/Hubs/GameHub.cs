@@ -37,7 +37,17 @@ namespace AgentServer.Hubs
                 await foreach(var message in _call.ResponseStream.ReadAllAsync())
                 {
                     await _hubContext.Clients.Client(ConnectionId).SendAsync("StoCMessage", message.Id, message.Content.ToBase64());
+                    if (message.Id == 999999)
+                    {
+                        break;
+                    }
                 }
+
+                if (!Context.ConnectionAborted.IsCancellationRequested)
+                {
+                    Context.Abort();
+                }
+
                 //Console.ForegroundColor = ConsoleColor.Green;
                 //Console.WriteLine("!!!end");
                 //Console.ResetColor();

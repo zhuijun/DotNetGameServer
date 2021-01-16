@@ -16,6 +16,7 @@ namespace GameServer.Services
 
         public long Key { get; }
         public event Func<MailMessage, Task>? OnRead;
+        public event Action? OnComplete;
 
         public OutgoMailQueue(long key)
         {
@@ -40,6 +41,7 @@ namespace GameServer.Services
         public void  Complete()
         {
             _mailChannel.Writer.Complete();
+            OnComplete?.Invoke();
         }
 
         public bool TryWriteMail(MailMessage mail)
