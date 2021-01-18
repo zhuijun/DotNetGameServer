@@ -13,7 +13,6 @@ namespace GameServer.Services
     public class DelayAction
     {
         public Action Action { get; init; }
-        public long Key { get; set; }
         public long Tick { get; set; }
         public long Interval { get; init; }
         public TimeoutLinker Linker { get; init; }
@@ -61,8 +60,7 @@ namespace GameServer.Services
             foreach (var item in _intervals)
             {
                 item.Tick = tick + item.Interval;
-                item.Key = NewKey(item.Tick);
-                _timers[item.Key] = item;
+                _timers[NewKey(item.Tick)] = item;
             }
             _intervals.Clear();
         }
