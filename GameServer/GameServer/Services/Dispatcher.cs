@@ -71,25 +71,25 @@ namespace GameServer.Services
             }
         }
 
-        private bool TryReadAgentMail([NotNullWhen(true)] out MailMessage? mail)
+        private bool TryReadAgentMail([NotNullWhen(true)] out MailPacket? mail)
         {
             var incomeMailQueue = _agentMailQueueRepository.GetIncomeMailQueue();
             return incomeMailQueue.TryReadMail(out mail);
         }
 
-        public bool WriteAgentMail(MailMessage mail)
+        public bool WriteAgentMail(MailPacket mail)
         {
             var outgoMailQueue = _agentMailQueueRepository.GetOutgoMailQueue(mail.ClientId);
             return outgoMailQueue.TryWriteMail(mail);
         }
 
-        private bool TryReadDBMail([NotNullWhen(true)] out MailMessage? mail)
+        private bool TryReadDBMail([NotNullWhen(true)] out MailPacket? mail)
         {
             var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
             return incomeMailQueue.TryReadMail(out mail);
         }
 
-        public bool WriteDBMail(MailMessage mail, DBMailQueueType type)
+        public bool WriteDBMail(MailPacket mail, DBMailQueueType type)
         {
             var outgoMailQueue = _dbMailQueueRepository.GetOutgoMailQueue(type);
             return outgoMailQueue.TryWriteMail(mail);

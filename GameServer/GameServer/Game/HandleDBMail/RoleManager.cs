@@ -10,7 +10,7 @@ namespace GameServer.Game
 {
     public partial class RoleManager : IDBMail
     {
-        public void OnDBMail(MailMessage mail)
+        public void OnDBMail(MailPacket mail)
         {
             _logger.LogDebug(mail.ToString());
             //throw new NotImplementedException();

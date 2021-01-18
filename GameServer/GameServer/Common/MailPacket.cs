@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace GameServer.Common
 {
-    public class MailMessage
+    public class MailPacket
     {
-        public MailMessage(long clientId, int id, byte[] content)
+        public MailPacket(long clientId, int id, byte[] content)
         {
             ClientId = clientId;
             Id = id;

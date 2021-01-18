@@ -8,6 +8,6 @@ namespace GameServer.Interfaces
 {
     interface IDBMail
     {
-        public void OnDBMail(MailMessage mail);
+        public void OnDBMail(MailPacket mail);
     }
 }

@@ -11,17 +11,17 @@ namespace GameServer.Services
 {
     public class OutgoMailQueue<K>
     {
-        private readonly Channel<MailMessage> _mailChannel;
+        private readonly Channel<MailPacket> _mailChannel;
         private int _totalMailCount;
 
         public K Key { get; }
-        public event Func<MailMessage, Task>? OnRead;
+        public event Func<MailPacket, Task>? OnRead;
         public event Action? OnComplete;
 
         public OutgoMailQueue(K key)
         {
             Key = key;
-            _mailChannel = Channel.CreateUnbounded<MailMessage>();
+            _mailChannel = Channel.CreateUnbounded<MailPacket>();
             _totalMailCount = 0;
 
             Task.Run(async () =>
@@ -44,7 +44,7 @@ namespace GameServer.Services
             OnComplete?.Invoke();
         }
 
-        public bool TryWriteMail(MailMessage mail)
+        public bool TryWriteMail(MailPacket mail)
         {
             if (_mailChannel.Writer.TryWrite(mail))
             {

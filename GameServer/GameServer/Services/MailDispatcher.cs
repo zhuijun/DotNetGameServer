@@ -11,15 +11,15 @@ namespace GameServer.Services
 {
     public class MailDispatcher
     {
-        public event Action<MailMessage>? EventAgentMail;
-        public event Action<MailMessage>? EventDBMail;
+        public event Action<MailPacket>? EventAgentMail;
+        public event Action<MailPacket>? EventDBMail;
 
-        public void OnAgentMail(MailMessage mail)
+        public void OnAgentMail(MailPacket mail)
         {
             EventAgentMail?.Invoke(mail);
         }
 
-        public void OnDBMail(MailMessage mail)
+        public void OnDBMail(MailPacket mail)
         {
             EventDBMail?.Invoke(mail);
         }

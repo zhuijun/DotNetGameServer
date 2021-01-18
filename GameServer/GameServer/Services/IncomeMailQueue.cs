@@ -28,16 +28,16 @@ namespace GameServer.Services
 {
     public class IncomeMailQueue
     {
-        private readonly Channel<MailMessage> _mailChannel;
+        private readonly Channel<MailPacket> _mailChannel;
         private int _totalMailCount;
 
         public IncomeMailQueue()
         {
-            _mailChannel = Channel.CreateUnbounded<MailMessage>();
+            _mailChannel = Channel.CreateUnbounded<MailPacket>();
             _totalMailCount = 0;
         }
 
-        public bool TryReadMail([NotNullWhen(true)] out MailMessage? mail)
+        public bool TryReadMail([NotNullWhen(true)] out MailPacket? mail)
         {
             if (_mailChannel.Reader.TryRead(out mail))
             {
@@ -47,7 +47,7 @@ namespace GameServer.Services
             return false;
         }
         
-        public async ValueTask WriteAsync(MailMessage mail)
+        public async ValueTask WriteAsync(MailPacket mail)
         {
             await _mailChannel.Writer.WriteAsync(mail);
             Interlocked.Increment(ref _totalMailCount);

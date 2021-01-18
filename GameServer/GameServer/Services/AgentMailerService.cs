@@ -40,7 +40,7 @@ namespace GameServer.Services
                 {
                     var request = requestStream.Current;
 
-                    var mail = new MailMessage(clientId, request.Id, request.Content.ToByteArray());
+                    var mail = new MailPacket(clientId, request.Id, request.Content.ToByteArray());
                     await incomeMailQueue.WriteAsync(mail);
                     _logger.LogInformation($"request mail: {request.Id}");
                 }
@@ -57,7 +57,7 @@ namespace GameServer.Services
                 _mailQueueRepository.RemoveOutgoMailQueue(clientId);
             }
 
-            async Task DoWrite(MailMessage mail)
+            async Task DoWrite(MailPacket mail)
             {
                 await responseStream.WriteAsync(new MailboxMessage
                 {
@@ -69,7 +69,7 @@ namespace GameServer.Services
             async void DoCompte()
             {
                 source.Cancel();
-                await DoWrite(new MailMessage(clientId, 999999, null));
+                await DoWrite(new MailPacket(clientId, 999999, null));
             }
         }
     }

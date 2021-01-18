@@ -44,7 +44,7 @@ namespace GameServer.Game
             }
         }
 
-        public void OnAgentMail(MailMessage mail)
+        public void OnAgentMail(MailPacket mail)
         {
             void doAction(IManager manager)
             {
@@ -56,7 +56,7 @@ namespace GameServer.Game
             ForEachMananger(doAction);
         }
 
-        public void OnDBMail(MailMessage mail)
+        public void OnDBMail(MailPacket mail)
         {
             void doAction(IManager manager)
             {

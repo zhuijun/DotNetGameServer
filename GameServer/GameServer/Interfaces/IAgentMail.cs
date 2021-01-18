@@ -8,6 +8,6 @@ namespace GameServer.Interfaces
 {
     interface IAgentMail
     {
-        public void OnAgentMail(MailMessage mail);
+        public void OnAgentMail(MailPacket mail);
     }
 }

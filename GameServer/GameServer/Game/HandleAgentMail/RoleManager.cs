@@ -10,14 +10,14 @@ namespace GameServer.Game
 {
     public partial class RoleManager : IAgentMail
     {
-        public void OnAgentMail(MailMessage mail)
+        public void OnAgentMail(MailPacket mail)
         {
             _logger.LogDebug(mail.ToString());
 
             switch (mail.Id)
             {
                 case 1:
-                    var mm = new MailMessage(mail.ClientId, 2, mail.Content);
+                    var mm = new MailPacket(mail.ClientId, 2, mail.Content);
                     Dispatcher.WriteAgentMail(mm);
                     Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
                     break;

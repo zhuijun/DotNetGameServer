@@ -59,7 +59,7 @@ namespace GameServer.Services
                 var outgoMailQueue = _dbMailQueueRepository.GetOutgoMailQueue(type);
                 outgoMailQueue.OnRead += WriteDBMail;
 
-                async Task WriteDBMail(MailMessage mail)
+                async Task WriteDBMail(MailPacket mail)
                 {
                     var forward = new ForwardMailMessage
                     {
@@ -75,7 +75,7 @@ namespace GameServer.Services
                     var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
                     await foreach (var message in _call.ResponseStream.ReadAllAsync())
                     {
-                        await incomeMailQueue.WriteAsync(new MailMessage(message.Reserve, message.Id, message.Content.ToByteArray()));
+                        await incomeMailQueue.WriteAsync(new MailPacket(message.Reserve, message.Id, message.Content.ToByteArray()));
                     }
                     //Console.ForegroundColor = ConsoleColor.Green;
                     //Console.WriteLine("!!!end");
