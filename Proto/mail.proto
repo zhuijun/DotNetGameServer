@@ -24,9 +24,11 @@ service Mailer {
 message ForwardMailMessage {
     int32 id = 1;
     bytes content = 2;
+    int64 reserve = 3;
 }
 
 message MailboxMessage {
     int32 id = 1;
     bytes content = 2;
+    int64 reserve = 3;
 }

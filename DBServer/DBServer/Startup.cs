@@ -54,7 +54,7 @@ namespace DBServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<DBMailerService>();
+                endpoints.MapGrpcService<MailerService>();
             });
         }
     }

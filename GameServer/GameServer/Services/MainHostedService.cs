@@ -43,9 +43,15 @@ namespace GameServer.Services
         {
             _logger.LogInformation("MainHostedService running.");
 
+            InitDBMailQueue(stoppingToken);
+
             Task.Run(() => MainLoop(stoppingToken), stoppingToken);
 
+            return Task.CompletedTask;
+        }
 
+        private void InitDBMailQueue(CancellationToken stoppingToken)
+        {
             foreach (var type in Enum.GetValues<DBMailQueueType>())
             {
                 var _client = new Mailer.MailerClient(_dbGrpcChannel.Channel);
@@ -58,13 +64,24 @@ namespace GameServer.Services
                     var forward = new ForwardMailMessage
                     {
                         Id = mail.Id,
-                        Content = ByteString.CopyFrom(mail.Content)
+                        Content = ByteString.CopyFrom(mail.Content),
+                        Reserve = mail.ClientId
                     };
                     await _call.RequestStream.WriteAsync(forward);
                 }
-            }
 
-            return Task.CompletedTask;
+                Task.Run(async () =>
+                {
+                    var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
+                    await foreach (var message in _call.ResponseStream.ReadAllAsync())
+                    {
+                        await incomeMailQueue.WriteAsync(new MailMessage(message.Reserve, message.Id, message.Content.ToByteArray()));
+                    }
+                    //Console.ForegroundColor = ConsoleColor.Green;
+                    //Console.WriteLine("!!!end");
+                    //Console.ResetColor();
+                }, stoppingToken);
+            }
         }
 
         private void MainLoop(CancellationToken stoppingToken)

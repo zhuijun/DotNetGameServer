@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace DBServer.Services
 {
-    public class DBMailerService : Mailer.MailerBase
+    public class MailerService : Mailer.MailerBase
     {
         private readonly ILogger _logger;
 
-        public DBMailerService(ILoggerFactory loggerFactory)
+        public MailerService(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<DBMailerService>();
+            _logger = loggerFactory.CreateLogger<MailerService>();
         }
 
         public async override Task Mailbox(
@@ -28,7 +28,11 @@ namespace DBServer.Services
                 {
                     var request = requestStream.Current;
 
-
+                    await responseStream.WriteAsync(new MailboxMessage
+                    {
+                        Id = request.Id,
+                        Content = request.Content,
+                    });
                     _logger.LogInformation($"request mail: {request.Id}");
                 }
             }
