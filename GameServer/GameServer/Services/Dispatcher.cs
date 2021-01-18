@@ -15,10 +15,10 @@ namespace GameServer.Services
         private readonly AgentMailQueueRepository _agentMailQueueRepository;
         private readonly DBMailQueueRepository _dbMailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
-        private readonly TicksProvider _ticksProvider;
 
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
 
+        public TicksProvider TicksProvider { get; }
         public QuickTimer QuickTimer { get; }
 
 
@@ -31,30 +31,30 @@ namespace GameServer.Services
             _agentMailQueueRepository = agentMailQueueRepository;
             _dbMailQueueRepository = dbMailQueueRepository;
             _mailDispatcher = mailDispatcher;
-            _ticksProvider = ticksProvider;
+            TicksProvider = ticksProvider;
             QuickTimer = quickTimer;
         }
 
         public void Dispatch(CancellationToken stoppingToken)
         {
 
-            _ticksProvider.DateTimeCache = DateTime.Now;
+            TicksProvider.DateTimeCache = DateTime.Now;
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var elapsed = DateTime.Now - _ticksProvider.DateTimeCache;
+                var elapsed = DateTime.Now - TicksProvider.DateTimeCache;
                 if (elapsed < TimeSpan.FromMilliseconds(25))
                 {
                     Thread.Sleep(TimeSpan.FromMilliseconds(25) - elapsed);
                 }
-                _ticksProvider.DateTimeCache = DateTime.Now;
+                TicksProvider.DateTimeCache = DateTime.Now;
 
                 while (_performAtNextLoop.TryDequeue(out var action))
                 {
                     action();
                 }
 
-                QuickTimer.Update(_ticksProvider.DateTimeCache.Ticks);
+                QuickTimer.Update(TicksProvider.DateTimeCache.Ticks);
 
                 while (TryReadAgentMail(out var mail))
                 {

@@ -19,20 +19,25 @@ namespace GameServer.Game
             switch (mail.Id)
             {
                 case 1:
-
-                    if (linker != null)
+                    if (linker == null)
                     {
-                        linker.Valid = false;
+                        Func<Action> fun = () =>
+                        {
+                            int i = 0;
+                            return () =>
+                            {
+                                var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
+                                Dispatcher.WriteAgentMail(mm);
+                                Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
+                                if (++i == 10)
+                                {
+                                    linker.Valid = false;
+                                    linker = null;
+                                }
+                            };
+                        };
+                        linker = Dispatcher.QuickTimer.SetTimeoutWithLinker(fun(), TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5));
                     }
-                    else
-                    {
-                        linker = Dispatcher.QuickTimer.SetTimeoutWithLinker(() => {
-                            var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
-                            Dispatcher.WriteAgentMail(mm);
-                        }, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5));
-                        //Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
-                    }
-
                     break;
                 default:
                     break;
