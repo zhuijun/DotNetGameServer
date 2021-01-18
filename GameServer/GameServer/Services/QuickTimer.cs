@@ -15,7 +15,7 @@ namespace GameServer.Services
         public Action Action { get; init; }
         public long Tick { get; set; }
         public long Interval { get; init; }
-        public TimeoutLinker Linker { get; set; }
+        public TimeoutLinker Linker { get; init; }
     }
 
     public class QuickTimer
@@ -25,6 +25,7 @@ namespace GameServer.Services
         private readonly List<long> _toDelete = new List<long>();
 
         private readonly TicksProvider _ticksProvider;
+        private long lastTick = 0;
 
         public QuickTimer(TicksProvider ticksProvider)
         {
@@ -69,10 +70,11 @@ namespace GameServer.Services
         {
             var linker = new TimeoutLinker { Valid = true };
             long tick = _ticksProvider.TicksCache + delay.Ticks;
-            while (_timers.ContainsKey(tick))
+            if (lastTick == tick)
             {
                 tick++;
             }
+            lastTick = tick;
             _timers.Add(tick, new DelayAction { Action = action, Tick = tick, Interval = interval.Ticks, Linker = linker });
             return linker;
         }
