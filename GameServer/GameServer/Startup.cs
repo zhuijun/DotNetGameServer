@@ -40,6 +40,8 @@ namespace GameServer
             services.AddSingleton<DBGrpcChannel>();
             services.AddSingleton<Dispatcher>();
             services.AddSingleton<MailDispatcher>();
+            services.AddSingleton<TicksProvider>();
+            services.AddSingleton<QuickTimer>();
             services.AddGame();
         }
 

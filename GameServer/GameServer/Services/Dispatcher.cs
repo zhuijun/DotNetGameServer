@@ -15,49 +15,46 @@ namespace GameServer.Services
         private readonly AgentMailQueueRepository _agentMailQueueRepository;
         private readonly DBMailQueueRepository _dbMailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
+        private readonly TicksProvider _ticksProvider;
+
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
-        private readonly DateTime _centuryBegin = new DateTime(1970, 1, 1, 8, 0, 0);
 
-        public long TicksCache 
-        {
-            get { return (DateTimeCache - _centuryBegin).Ticks; }
-        }
-        public long TimestampCache 
-        { 
-            get { return TicksCache / TimeSpan.TicksPerSecond; } 
-        }
-
-        private DateTime DateTimeCache { get; set; }
-
+        public QuickTimer QuickTimer { get; }
 
 
         public Dispatcher(AgentMailQueueRepository agentMailQueueRepository,
             DBMailQueueRepository dbMailQueueRepository,
-            MailDispatcher mailDispatcher)
+            MailDispatcher mailDispatcher,
+            TicksProvider ticksProvider,
+            QuickTimer quickTimer)
         {
             _agentMailQueueRepository = agentMailQueueRepository;
             _dbMailQueueRepository = dbMailQueueRepository;
             _mailDispatcher = mailDispatcher;
+            _ticksProvider = ticksProvider;
+            QuickTimer = quickTimer;
         }
 
         public void Dispatch(CancellationToken stoppingToken)
         {
-            
-            DateTimeCache = DateTime.Now;
+
+            _ticksProvider.DateTimeCache = DateTime.Now;
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var elapsed = DateTime.Now - DateTimeCache;
+                var elapsed = DateTime.Now - _ticksProvider.DateTimeCache;
                 if (elapsed < TimeSpan.FromMilliseconds(25))
                 {
                     Thread.Sleep(TimeSpan.FromMilliseconds(25) - elapsed);
                 }
-                DateTimeCache = DateTime.Now;
+                _ticksProvider.DateTimeCache = DateTime.Now;
 
                 while (_performAtNextLoop.TryDequeue(out var action))
                 {
                     action();
                 }
+
+                QuickTimer.Update(_ticksProvider.DateTimeCache.Ticks);
 
                 while (TryReadAgentMail(out var mail))
                 {
