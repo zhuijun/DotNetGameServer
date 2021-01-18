@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 #nullable enable
 namespace GameServer.Services
 {
-    public class OutgoMailQueue<K>
+    public class OutgoMailQueue<TKey>
     {
         private readonly Channel<MailPacket> _mailChannel;
         private int _totalMailCount;
 
-        public K Key { get; }
+        public TKey Key { get; }
         public event Func<MailPacket, Task>? OnRead;
         public event Action? OnComplete;
 
-        public OutgoMailQueue(K key)
+        public OutgoMailQueue(TKey key)
         {
             Key = key;
             _mailChannel = Channel.CreateUnbounded<MailPacket>();
