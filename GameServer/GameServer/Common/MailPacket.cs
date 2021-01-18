@@ -7,15 +7,10 @@ namespace GameServer.Common
 {
     public class MailPacket
     {
-        public MailPacket(long clientId, int id, byte[] content)
-        {
-            ClientId = clientId;
-            Id = id;
-            Content = content;
-        }
-
-        public long ClientId { get; }
-        public int Id { get; }
-        public byte[] Content { get; }
+        public int Id { get; init; }
+        public byte[] Content { get; init; }
+        public long Reserve { get; init; }
+        public long ClientId { get; init; }
+        public long UserId { get; init; }
     }
 }

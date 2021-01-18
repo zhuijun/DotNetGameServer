@@ -17,7 +17,7 @@ namespace GameServer.Game
             switch (mail.Id)
             {
                 case 1:
-                    var mm = new MailPacket(mail.ClientId, 2, mail.Content);
+                    var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId};
                     Dispatcher.WriteAgentMail(mm);
                     Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
                     break;

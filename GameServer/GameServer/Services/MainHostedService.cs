@@ -75,7 +75,7 @@ namespace GameServer.Services
                     var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
                     await foreach (var message in _call.ResponseStream.ReadAllAsync())
                     {
-                        await incomeMailQueue.WriteAsync(new MailPacket(message.Reserve, message.Id, message.Content.ToByteArray()));
+                        await incomeMailQueue.WriteAsync(new MailPacket { Id = message.Id,  Content = message.Content.ToByteArray(), Reserve = message.Reserve });
                     }
                     //Console.ForegroundColor = ConsoleColor.Green;
                     //Console.WriteLine("!!!end");
