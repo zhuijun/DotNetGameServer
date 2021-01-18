@@ -21,7 +21,7 @@ namespace GameServer.Game
                 case 1:
                     if (linker == null)
                     {
-                        Func<Action> fun = () =>
+                        Action fun()
                         {
                             int i = 0;
                             return () =>
@@ -35,7 +35,7 @@ namespace GameServer.Game
                                     linker = null;
                                 }
                             };
-                        };
+                        }
                         linker = Dispatcher.QuickTimer.SetTimeoutWithLinker(fun(), TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5));
                     }
                     break;

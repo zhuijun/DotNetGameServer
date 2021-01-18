@@ -11,7 +11,7 @@ namespace GameServer.Game
 {
     public class ManagerMediator
     {
-        private readonly List<AbstractManager> _managers = new List<AbstractManager>();
+        private readonly List<IManager> _managers = new List<IManager>();
 
         public Dispatcher Dispatcher { get; }
         public RoleManager RoleManager { get; }
@@ -24,7 +24,7 @@ namespace GameServer.Game
             AddManager(RoleManager);
         }
 
-        private bool AddManager<T>(T manager) where T : AbstractManager
+        private bool AddManager<T>(T manager) where T : IManager, IDisposable
         {
             if (_managers.Contains(manager))
             {

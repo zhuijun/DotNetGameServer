@@ -8,7 +8,15 @@ using System.Threading.Tasks;
 
 namespace GameServer.Game
 {
-    public partial class RoleManager : AbstractManager
+    public class Role : IDisposable
+    {
+        public void Dispose()
+        {
+            //throw new NotImplementedException();
+        }
+    }
+
+    public partial class RoleManager : AbstractManager<long, Role>
     {
         private readonly ILogger<RoleManager> _logger;
         public RoleManager(ILogger<RoleManager> logger)
@@ -16,5 +24,10 @@ namespace GameServer.Game
             _logger = logger;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            //throw new NotImplementedException();
+        }
     }
 }
