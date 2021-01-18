@@ -64,7 +64,7 @@ namespace GameServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<AgentMailerService>();
+                endpoints.MapGrpcService<MailerService>();
             });
         }
     }
