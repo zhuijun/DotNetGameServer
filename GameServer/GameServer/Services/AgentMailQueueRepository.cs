@@ -21,9 +21,9 @@ using System.Threading;
 
 namespace GameServer.Services
 {
-    public class MailQueueRepository
+    public class AgentMailQueueRepository
     {
-        private readonly ConcurrentDictionary<long, OutgoMailQueue> _outgoMailQueues = new ConcurrentDictionary<long, OutgoMailQueue>();
+        private readonly ConcurrentDictionary<long, OutgoMailQueue<long>> _outgoMailQueues = new ConcurrentDictionary<long, OutgoMailQueue<long>>();
         private long _clientIdSeed = 0;
 
         private readonly IncomeMailQueue _incomeMailQueue = new IncomeMailQueue();
@@ -32,9 +32,9 @@ namespace GameServer.Services
             return _incomeMailQueue;
         }
 
-        public OutgoMailQueue GetOutgoMailQueue(long clientId)
+        public OutgoMailQueue<long> GetOutgoMailQueue(long clientId)
         {
-            return _outgoMailQueues.GetOrAdd(clientId, (n) => new OutgoMailQueue(n));
+            return _outgoMailQueues.GetOrAdd(clientId, (n) => new OutgoMailQueue<long>(n));
         }
 
         public bool RemoveOutgoMailQueue(long clientId)

@@ -8,14 +8,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GameServer.Services
 {
-    public class MailerService : Mailer.MailerBase
+    public class AgentMailerService : Mailer.MailerBase
     {
         private readonly ILogger _logger;
-        private readonly MailQueueRepository _mailQueueRepository;
+        private readonly AgentMailQueueRepository _mailQueueRepository;
 
-        public MailerService(ILoggerFactory loggerFactory, MailQueueRepository mailQueueRepository)
+        public AgentMailerService(ILoggerFactory loggerFactory, AgentMailQueueRepository mailQueueRepository)
         {
-            _logger = loggerFactory.CreateLogger<MailerService>();
+            _logger = loggerFactory.CreateLogger<AgentMailerService>();
             _mailQueueRepository = mailQueueRepository;
         }
 

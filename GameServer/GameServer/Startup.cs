@@ -35,7 +35,8 @@ namespace GameServer
 
             services.AddGrpc();
             services.AddHostedService<MainHostedService>();
-            services.AddSingleton<MailQueueRepository>();
+            services.AddSingleton<AgentMailQueueRepository>();
+            services.AddSingleton<DBMailQueueRepository>();
             services.AddSingleton<Dispatcher>();
             services.AddSingleton<MailDispatcher>();
             services.AddGame();
@@ -60,7 +61,7 @@ namespace GameServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<MailerService>();
+                endpoints.MapGrpcService<AgentMailerService>();
             });
         }
     }

@@ -12,7 +12,7 @@ namespace GameServer.Services
 {
     public class Dispatcher
     {
-        private readonly MailQueueRepository _mailQueueRepository;
+        private readonly AgentMailQueueRepository _mailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
         private readonly DateTime _centuryBegin = new DateTime(1970, 1, 1, 8, 0, 0);
@@ -30,7 +30,7 @@ namespace GameServer.Services
         
         
 
-        public Dispatcher(MailQueueRepository mailQueueRepository
+        public Dispatcher(AgentMailQueueRepository mailQueueRepository
             , MailDispatcher mailDispatcher)
         {
             _mailQueueRepository = mailQueueRepository;
