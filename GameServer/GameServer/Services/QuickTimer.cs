@@ -13,6 +13,7 @@ namespace GameServer.Services
     public class DelayAction
     {
         public Action Action { get; init; }
+        public long Key { get; set; }
         public long Tick { get; set; }
         public long Interval { get; init; }
         public TimeoutLinker Linker { get; init; }
@@ -25,7 +26,7 @@ namespace GameServer.Services
         private readonly List<long> _toDelete = new List<long>();
 
         private readonly TicksProvider _ticksProvider;
-        private long _lastTick = 0;
+        private long _lastKey = 0;
 
         public QuickTimer(TicksProvider ticksProvider)
         {
@@ -37,7 +38,7 @@ namespace GameServer.Services
             long tick = _ticksProvider.TicksCache;
             foreach (var item in _timers)
             {
-                if (item.Key > tick)
+                if (item.Value.Tick > tick)
                 {
                     break;
                 }
@@ -60,8 +61,9 @@ namespace GameServer.Services
 
             foreach (var item in _intervals)
             {
+                item.Key = (item.Key - item.Tick) + tick + item.Interval;
                 item.Tick = tick + item.Interval;
-                _timers[item.Tick]= item;
+                _timers[item.Key] = item;
             }
             _intervals.Clear();
         }
@@ -70,13 +72,19 @@ namespace GameServer.Services
         {
             var linker = new TimeoutLinker { Valid = true };
             long tick = _ticksProvider.TicksCache + delay.Ticks;
-            if (_lastTick == tick)
-            {
-                tick++;
-            }
-            _lastTick = tick;
-            _timers.Add(tick, new DelayAction { Action = action, Tick = tick, Interval = interval.Ticks, Linker = linker });
+            _timers.Add(NewKey(tick), new DelayAction { Action = action, Tick = tick, Interval = interval.Ticks, Linker = linker });
             return linker;
+        }
+
+        long NewKey(long tick)
+        {
+            long key = tick;
+            if (_lastKey == key)
+            {
+                key++;
+            }
+            _lastKey = key;
+            return key;
         }
 
         public void StopAll()
