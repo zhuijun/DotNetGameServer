@@ -36,7 +36,8 @@ namespace AgentServer.Hubs
             {
                 await foreach(var message in _call.ResponseStream.ReadAllAsync())
                 {
-                    await _hubContext.Clients.Client(ConnectionId).SendAsync("StoCMessage", message.Id, message.Content.ToBase64());
+                    var packet = new NetPacket { Id = message.Id, Content = message.Content.ToBase64(), Reserve = message.Reserve };
+                    await _hubContext.Clients.Client(ConnectionId).SendAsync("StoCMessage", packet);
                     if (message.Id == 999999)
                     {
                         break;
@@ -68,13 +69,14 @@ namespace AgentServer.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task CtoSMessage(int id, string message)
+        public async Task CtoSMessage(NetPacket packet)
         {
             var _call = Context.Items["_call"] as AsyncDuplexStreamingCall<ForwardMailMessage, MailboxMessage>;
             var forward = new ForwardMailMessage
             {
-                Id = id,
-                Content = ByteString.FromBase64(message)
+                Id = packet.Id,
+                Content = ByteString.FromBase64(packet.Content),
+                Reserve = packet.Reserve
             };
             await _call.RequestStream.WriteAsync(forward);
             //return Clients.All.SendAsync("StoCMessage", message);
