@@ -31,8 +31,9 @@ namespace GameServer.Services
             _ticksProvider = ticksProvider;
         }
 
-        public void Update(long tick)
+        public void Update()
         {
+            long tick = _ticksProvider.TicksCache;
             foreach (var item in _timers)
             {
                 if (item.Key > tick)

@@ -54,7 +54,7 @@ namespace GameServer.Services
                     action();
                 }
 
-                QuickTimer.Update(TicksProvider.DateTimeCache.Ticks);
+                QuickTimer.Update();
 
                 while (TryReadAgentMail(out var mail))
                 {
