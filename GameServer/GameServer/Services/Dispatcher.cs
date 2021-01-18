@@ -12,7 +12,8 @@ namespace GameServer.Services
 {
     public class Dispatcher
     {
-        private readonly AgentMailQueueRepository _mailQueueRepository;
+        private readonly AgentMailQueueRepository _agentMailQueueRepository;
+        private readonly DBMailQueueRepository _dbMailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
         private readonly DateTime _centuryBegin = new DateTime(1970, 1, 1, 8, 0, 0);
@@ -27,13 +28,15 @@ namespace GameServer.Services
         }
 
         private DateTime DateTimeCache { get; set; }
-        
-        
 
-        public Dispatcher(AgentMailQueueRepository mailQueueRepository
-            , MailDispatcher mailDispatcher)
+
+
+        public Dispatcher(AgentMailQueueRepository agentMailQueueRepository,
+            DBMailQueueRepository dbMailQueueRepository,
+            MailDispatcher mailDispatcher)
         {
-            _mailQueueRepository = mailQueueRepository;
+            _agentMailQueueRepository = agentMailQueueRepository;
+            _dbMailQueueRepository = dbMailQueueRepository;
             _mailDispatcher = mailDispatcher;
         }
 
@@ -60,18 +63,35 @@ namespace GameServer.Services
                 {
                     _mailDispatcher.OnAgentMail(mail);
                 }
+
+                while (TryReadDBMail(out var mail))
+                {
+                    _mailDispatcher.OnDBMail(mail);
+                }
             }
         }
 
         private bool TryReadAgentMail([NotNullWhen(true)] out MailMessage? mail)
         {
-            var incomeMailQueue = _mailQueueRepository.GetIncomeMailQueue();
+            var incomeMailQueue = _agentMailQueueRepository.GetIncomeMailQueue();
             return incomeMailQueue.TryReadMail(out mail);
         }
 
         public bool WriteAgentMail(MailMessage mail)
         {
-            var outgoMailQueue = _mailQueueRepository.GetOutgoMailQueue(mail.ClientId);
+            var outgoMailQueue = _agentMailQueueRepository.GetOutgoMailQueue(mail.ClientId);
+            return outgoMailQueue.TryWriteMail(mail);
+        }
+
+        private bool TryReadDBMail([NotNullWhen(true)] out MailMessage? mail)
+        {
+            var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
+            return incomeMailQueue.TryReadMail(out mail);
+        }
+
+        public bool WriteDBMail(MailMessage mail, DBMailQueueType type)
+        {
+            var outgoMailQueue = _dbMailQueueRepository.GetOutgoMailQueue(type);
             return outgoMailQueue.TryWriteMail(mail);
         }
 

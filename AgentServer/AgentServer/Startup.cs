@@ -95,7 +95,7 @@ namespace AgentServer
             });
 
             services.AddSignalR();
-            services.AddSingleton<GrpcChannelService>();
+            services.AddSingleton<GameGrpcChannel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

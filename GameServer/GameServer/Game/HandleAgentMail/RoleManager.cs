@@ -19,6 +19,7 @@ namespace GameServer.Game
                 case 1:
                     var mm = new MailMessage(mail.ClientId, 2, mail.Content);
                     Dispatcher.WriteAgentMail(mm);
+                    //Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
                     break;
                 default:
                     break;

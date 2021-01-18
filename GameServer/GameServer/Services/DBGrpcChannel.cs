@@ -5,15 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AgentServer.Services
+namespace GameServer.Services
 {
-    public class GrpcChannelService
+    public class DBGrpcChannel
     {
         public GrpcChannel Channel { get; set; }
 
-        public GrpcChannelService(IConfiguration configuration)
+        public DBGrpcChannel(IConfiguration configuration)
         {
-            var address = configuration.GetValue<string>("GameServerURL");
+            var address = configuration.GetValue<string>("DBServerURL");
             Channel = GrpcChannel.ForAddress(address);
         }
     }

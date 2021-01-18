@@ -37,6 +37,7 @@ namespace GameServer
             services.AddHostedService<MainHostedService>();
             services.AddSingleton<AgentMailQueueRepository>();
             services.AddSingleton<DBMailQueueRepository>();
+            services.AddSingleton<DBGrpcChannel>();
             services.AddSingleton<Dispatcher>();
             services.AddSingleton<MailDispatcher>();
             services.AddGame();

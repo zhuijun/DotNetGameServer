@@ -9,7 +9,7 @@ namespace GameServer.Services
     public enum DBMailQueueType
     {
         Role = 1,
-        Other
+        Other,
     }
 
     public class DBMailQueueRepository

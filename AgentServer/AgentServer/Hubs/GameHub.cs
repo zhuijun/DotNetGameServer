@@ -16,9 +16,9 @@ namespace AgentServer.Hubs
     public class GameHub : Hub
     {
         private readonly IHubContext<GameHub> _hubContext;
-        private GrpcChannelService ChannelService { get; }
+        private GameGrpcChannel ChannelService { get; }
 
-        public GameHub(IHubContext<GameHub> hubContext, GrpcChannelService channel)
+        public GameHub(IHubContext<GameHub> hubContext, GameGrpcChannel channel)
         {
             _hubContext = hubContext;
             ChannelService = channel;
