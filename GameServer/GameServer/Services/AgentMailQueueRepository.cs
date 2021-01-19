@@ -24,7 +24,6 @@ namespace GameServer.Services
     public class AgentMailQueueRepository
     {
         private readonly ConcurrentDictionary<long, OutgoMailQueue<long>> _outgoMailQueues = new ConcurrentDictionary<long, OutgoMailQueue<long>>();
-        private long _clientIdSeed = 0;
 
         private readonly IncomeMailQueue _incomeMailQueue = new IncomeMailQueue();
         public IncomeMailQueue GetIncomeMailQueue()
@@ -42,11 +41,5 @@ namespace GameServer.Services
             var r = _outgoMailQueues.TryRemove(clientId, out var _);
             return r;
         }
-
-        public long CreateClientId()
-        {
-            return Interlocked.Increment(ref _clientIdSeed);
-        }
-
     }
 }

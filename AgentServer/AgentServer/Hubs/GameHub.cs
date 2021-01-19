@@ -27,7 +27,7 @@ namespace AgentServer.Hubs
         public override async Task OnConnectedAsync()
         {
             var _client = new Mailer.MailerClient(ChannelService.Channel);
-            var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent") });
+            var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent"), new Metadata.Entry("user-identifier", Context.UserIdentifier) });
             Context.Items.Add("_client", _client);
             Context.Items.Add("_call", _call);
 

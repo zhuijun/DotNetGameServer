@@ -42,6 +42,8 @@ namespace GameServer
             services.AddSingleton<MailDispatcher>();
             services.AddSingleton<TicksProvider>();
             services.AddSingleton<QuickTimer>();
+            services.AddSingleton<AgentClientIdProvider>();
+            
             services.AddGame();
         }
 

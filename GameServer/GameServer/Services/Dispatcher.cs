@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using GameServer.Common;
+using Google.Protobuf;
 
 #nullable enable
 namespace GameServer.Services
@@ -15,6 +16,7 @@ namespace GameServer.Services
         private readonly AgentMailQueueRepository _agentMailQueueRepository;
         private readonly DBMailQueueRepository _dbMailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
+        private readonly AgentClientIdProvider _agentClientIdProvider;
 
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
 
@@ -25,12 +27,14 @@ namespace GameServer.Services
         public Dispatcher(AgentMailQueueRepository agentMailQueueRepository,
             DBMailQueueRepository dbMailQueueRepository,
             MailDispatcher mailDispatcher,
+            AgentClientIdProvider agentClientIdProvider,
             TicksProvider ticksProvider,
             QuickTimer quickTimer)
         {
             _agentMailQueueRepository = agentMailQueueRepository;
             _dbMailQueueRepository = dbMailQueueRepository;
             _mailDispatcher = mailDispatcher;
+            _agentClientIdProvider = agentClientIdProvider;
             TicksProvider = ticksProvider;
             QuickTimer = quickTimer;
         }
@@ -78,6 +82,20 @@ namespace GameServer.Services
         {
             var outgoMailQueue = _agentMailQueueRepository.GetOutgoMailQueue(mail.ClientId);
             return outgoMailQueue.TryWriteMail(mail);
+        }
+
+        public bool WriteAgentMail(int id, byte[] content, long reserve, long userId)
+        {
+            var clientId = _agentClientIdProvider.GetUserClientId(userId);
+            var mail = new MailPacket { Id = id, Content = content, Reserve = reserve, UserId = userId, ClientId = clientId };
+            return WriteAgentMail(mail);
+        }
+
+        public bool WriteAgentMail(int id, IMessage message, long reserve, long userId)
+        {
+            var clientId = _agentClientIdProvider.GetUserClientId(userId);
+            var mail = new MailPacket { Id = id, Content = message.ToByteArray(), Reserve = reserve, UserId = userId, ClientId = clientId };
+            return WriteAgentMail(mail);
         }
 
         private bool TryReadDBMail([NotNullWhen(true)] out MailPacket? mail)

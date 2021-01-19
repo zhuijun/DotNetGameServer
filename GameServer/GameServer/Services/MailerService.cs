@@ -12,12 +12,15 @@ namespace GameServer.Services
     {
         private readonly ILogger _logger;
         private readonly AgentMailQueueRepository _agentMailQueueRepository;
+        private readonly AgentClientIdProvider _agentClientIdProvider;
 
         public MailerService(ILoggerFactory loggerFactory, 
-            AgentMailQueueRepository agentMailQueueRepository)
+            AgentMailQueueRepository agentMailQueueRepository,
+            AgentClientIdProvider agentClientIdProvider)
         {
             _logger = loggerFactory.CreateLogger<MailerService>();
             _agentMailQueueRepository = agentMailQueueRepository;
+            _agentClientIdProvider = agentClientIdProvider;
         }
 
         public async override Task Mailbox(
@@ -31,7 +34,11 @@ namespace GameServer.Services
             {
                 case "agent":
                     {
-                        long clientId = _agentMailQueueRepository.CreateClientId();
+                        var userIdentifier = context.RequestHeaders.SingleOrDefault(e => e.Key == "user-identifier").Value;
+                        long userId = long.Parse(userIdentifier);
+                        long clientId = _agentClientIdProvider.CreateClientId();
+                        _agentClientIdProvider.SetUserClientId(userId, clientId);
+
                         var outgoMailQueue = _agentMailQueueRepository.GetOutgoMailQueue(clientId);
                         outgoMailQueue.OnRead += DoWrite;
 
@@ -47,7 +54,7 @@ namespace GameServer.Services
                             {
                                 var request = requestStream.Current;
 
-                                var mail = new MailPacket { Id = request.Id, Content = request.Content.ToByteArray(), Reserve = request.Reserve, ClientId = clientId };
+                                var mail = new MailPacket { Id = request.Id, Content = request.Content.ToByteArray(), Reserve = request.Reserve, ClientId = clientId, UserId = userId };
                                 await incomeMailQueue.WriteAsync(mail);
                                 _logger.LogInformation($"request mail: {request.Id}");
                             }
