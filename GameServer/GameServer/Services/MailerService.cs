@@ -36,6 +36,16 @@ namespace GameServer.Services
                     {
                         var userIdentifier = context.RequestHeaders.SingleOrDefault(e => e.Key == "user-identifier").Value;
                         long userId = long.Parse(userIdentifier);
+                        long oldClientId = _agentClientIdProvider.GetUserClientId(userId);
+                        if (oldClientId > 0)
+                        {
+                            var oldOutgoMailQueue = _agentMailQueueRepository.TryGetOutgoMailQueue(oldClientId);
+                            if (oldOutgoMailQueue != null)
+                            {
+                                oldOutgoMailQueue.Complete();
+                            }
+                        }
+
                         long clientId = _agentClientIdProvider.CreateClientId();
                         _agentClientIdProvider.SetUserClientId(userId, clientId);
 
@@ -43,17 +53,14 @@ namespace GameServer.Services
                         outgoMailQueue.OnRead += DoWrite;
 
                         CancellationTokenSource source = new CancellationTokenSource();
-                        CancellationToken token = source.Token;
                         outgoMailQueue.OnComplete += DoCompte;
 
                         var incomeMailQueue = _agentMailQueueRepository.GetIncomeMailQueue();
 
                         try
                         {
-                            while (await requestStream.MoveNext(token))
+                            await foreach (var request in requestStream.ReadAllAsync())
                             {
-                                var request = requestStream.Current;
-
                                 var mail = new MailPacket { Id = request.Id, Content = request.Content.ToByteArray(), Reserve = request.Reserve, ClientId = clientId, UserId = userId };
                                 await incomeMailQueue.WriteAsync(mail);
                                 _logger.LogInformation($"request mail: {request.Id}");
@@ -63,6 +70,7 @@ namespace GameServer.Services
                         {
                             if (!source.IsCancellationRequested)
                             {
+                                source.Cancel();
                                 outgoMailQueue.Complete();
                             }
 
@@ -76,14 +84,17 @@ namespace GameServer.Services
                             await responseStream.WriteAsync(new MailboxMessage
                             {
                                 Id = mail.Id,
-                                Content = Google.Protobuf.ByteString.CopyFrom(mail.Content),
+                                Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
                             });
                         }
 
                         async void DoCompte()
                         {
-                            source.Cancel();
-                            await DoWrite(new MailPacket { Id = 999999, ClientId = clientId });
+                            if (!source.IsCancellationRequested)
+                            {
+                                source.Cancel();
+                                await DoWrite(new MailPacket { Id = 999999, ClientId = clientId });
+                            }
                         }
                     }
 

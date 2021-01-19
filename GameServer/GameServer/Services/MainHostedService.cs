@@ -55,7 +55,9 @@ namespace GameServer.Services
             foreach (var type in Enum.GetValues<DBMailQueueType>())
             {
                 var _client = new Mailer.MailerClient(_dbGrpcChannel.Channel);
-                var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken: stoppingToken);
+
+                var callOptions = new CallOptions(new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken: stoppingToken);
+                var _call = _client.Mailbox(callOptions.WithWaitForReady(true));
                 var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(type);
                 outgoMailQueue.OnRead += WriteDBMail;
 
@@ -64,7 +66,7 @@ namespace GameServer.Services
                     var forward = new ForwardMailMessage
                     {
                         Id = mail.Id,
-                        Content = ByteString.CopyFrom(mail.Content),
+                        Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
                         Reserve = mail.ClientId
                     };
                     await _call.RequestStream.WriteAsync(forward);

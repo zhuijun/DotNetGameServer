@@ -24,10 +24,8 @@ namespace DBServer.Services
         {
             try
             {
-                while (await requestStream.MoveNext())
+                await foreach (var request in requestStream.ReadAllAsync())
                 {
-                    var request = requestStream.Current;
-
                     await responseStream.WriteAsync(new MailboxMessage
                     {
                         Id = request.Id,

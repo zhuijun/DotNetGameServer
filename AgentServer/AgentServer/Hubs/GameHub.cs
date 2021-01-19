@@ -31,7 +31,17 @@ namespace AgentServer.Hubs
             Context.Items.Add("_client", _client);
             Context.Items.Add("_call", _call);
 
+            var CancellationToken = Context.ConnectionAborted;
             var ConnectionId = Context.ConnectionId;
+            var HttpContext = Context.GetHttpContext();
+            void abort()
+            {
+                if (!CancellationToken.IsCancellationRequested)
+                {
+                    HttpContext.Abort();
+                }
+            }
+
             var responseTask = Task.Run(async () =>
             {
                 await foreach(var message in _call.ResponseStream.ReadAllAsync())
@@ -44,10 +54,7 @@ namespace AgentServer.Hubs
                     }
                 }
 
-                if (!Context.ConnectionAborted.IsCancellationRequested)
-                {
-                    Context.Abort();
-                }
+                abort();
 
                 //Console.ForegroundColor = ConsoleColor.Green;
                 //Console.WriteLine("!!!end");
@@ -79,7 +86,6 @@ namespace AgentServer.Hubs
                 Reserve = packet.Reserve
             };
             await _call.RequestStream.WriteAsync(forward);
-            //return Clients.All.SendAsync("StoCMessage", message);
         }
     }
 }
