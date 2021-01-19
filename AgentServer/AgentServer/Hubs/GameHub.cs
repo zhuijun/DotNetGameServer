@@ -37,15 +37,8 @@ namespace AgentServer.Hubs
             var CancellationToken = Context.ConnectionAborted;
             var ConnectionId = Context.ConnectionId;
             var HttpContext = Context.GetHttpContext();
-            void abort()
-            {
-                if (!CancellationToken.IsCancellationRequested)
-                {
-                    HttpContext.Abort();
-                }
-            }
 
-            var responseTask = Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 await foreach(var message in _call.ResponseStream.ReadAllAsync())
                 {
@@ -57,13 +50,14 @@ namespace AgentServer.Hubs
                     }
                 }
 
-                abort();
-
+                if (!CancellationToken.IsCancellationRequested)
+                {
+                    HttpContext.Abort();
+                }
                 //Console.ForegroundColor = ConsoleColor.Green;
                 //Console.WriteLine("!!!end");
                 //Console.ResetColor();
             });
-            Context.Items.Add("_task", responseTask);
 
             await base.OnConnectedAsync();
         }
@@ -72,9 +66,6 @@ namespace AgentServer.Hubs
         {
             var _call = Context.Items["_call"] as AsyncDuplexStreamingCall<ForwardMailMessage, MailboxMessage>;
             await _call.RequestStream.CompleteAsync();
-
-            var responseTask = Context.Items["_task"] as Task;
-            await responseTask;
 
             await base.OnDisconnectedAsync(exception);
         }
