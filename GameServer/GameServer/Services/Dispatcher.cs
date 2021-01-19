@@ -80,8 +80,12 @@ namespace GameServer.Services
 
         public bool WriteAgentMail(MailPacket mail)
         {
-            var outgoMailQueue = _agentMailQueueRepository.GetOutgoMailQueue(mail.ClientId);
-            return outgoMailQueue.TryWriteMail(mail);
+            var outgoMailQueue = _agentMailQueueRepository.TryGetOutgoMailQueue(mail.ClientId);
+            if (outgoMailQueue != null)
+            {
+                return outgoMailQueue.TryWriteMail(mail);
+            }
+            return false;
         }
 
         public bool WriteAgentMail(int id, byte[] content, long reserve, long userId)
@@ -106,7 +110,7 @@ namespace GameServer.Services
 
         public bool WriteDBMail(MailPacket mail, DBMailQueueType type)
         {
-            var outgoMailQueue = _dbMailQueueRepository.GetOutgoMailQueue(type);
+            var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(type);
             return outgoMailQueue.TryWriteMail(mail);
         }
 

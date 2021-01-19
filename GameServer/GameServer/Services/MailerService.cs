@@ -39,7 +39,7 @@ namespace GameServer.Services
                         long clientId = _agentClientIdProvider.CreateClientId();
                         _agentClientIdProvider.SetUserClientId(userId, clientId);
 
-                        var outgoMailQueue = _agentMailQueueRepository.GetOutgoMailQueue(clientId);
+                        var outgoMailQueue = _agentMailQueueRepository.GetOrAddOutgoMailQueue(clientId);
                         outgoMailQueue.OnRead += DoWrite;
 
                         CancellationTokenSource source = new CancellationTokenSource();
@@ -68,7 +68,7 @@ namespace GameServer.Services
 
                             outgoMailQueue.OnRead -= DoWrite;
                             outgoMailQueue.OnComplete -= DoCompte;
-                            _agentMailQueueRepository.RemoveOutgoMailQueue(clientId);
+                            _agentMailQueueRepository.TryRemoveOutgoMailQueue(clientId);
                         }
 
                         async Task DoWrite(MailPacket mail)

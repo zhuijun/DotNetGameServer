@@ -56,7 +56,7 @@ namespace GameServer.Services
             {
                 var _client = new Mailer.MailerClient(_dbGrpcChannel.Channel);
                 var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken: stoppingToken);
-                var outgoMailQueue = _dbMailQueueRepository.GetOutgoMailQueue(type);
+                var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(type);
                 outgoMailQueue.OnRead += WriteDBMail;
 
                 async Task WriteDBMail(MailPacket mail)

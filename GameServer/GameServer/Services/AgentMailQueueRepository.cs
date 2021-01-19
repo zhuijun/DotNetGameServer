@@ -31,12 +31,18 @@ namespace GameServer.Services
             return _incomeMailQueue;
         }
 
-        public OutgoMailQueue<long> GetOutgoMailQueue(long clientId)
+        public OutgoMailQueue<long> GetOrAddOutgoMailQueue(long clientId)
         {
             return _outgoMailQueues.GetOrAdd(clientId, (n) => new OutgoMailQueue<long>(n));
         }
 
-        public bool RemoveOutgoMailQueue(long clientId)
+        public OutgoMailQueue<long> TryGetOutgoMailQueue(long clientId)
+        {
+            _outgoMailQueues.TryGetValue(clientId, out var outgoMailQueue);
+            return outgoMailQueue;
+        }
+
+        public bool TryRemoveOutgoMailQueue(long clientId)
         {
             var r = _outgoMailQueues.TryRemove(clientId, out var _);
             return r;

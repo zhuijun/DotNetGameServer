@@ -23,12 +23,12 @@ namespace GameServer.Services
             return _incomeMailQueue;
         }
 
-        public OutgoMailQueue<DBMailQueueType> GetOutgoMailQueue(DBMailQueueType type)
+        public OutgoMailQueue<DBMailQueueType> GetOrAddOutgoMailQueue(DBMailQueueType type)
         {
             return _outgoMailQueues.GetOrAdd(type, (n) => new OutgoMailQueue<DBMailQueueType>(n));
         }
 
-        public bool RemoveOutgoMailQueue(DBMailQueueType type)
+        public bool TryRemoveOutgoMailQueue(DBMailQueueType type)
         {
             var r = _outgoMailQueues.TryRemove(type, out var _);
             return r;
