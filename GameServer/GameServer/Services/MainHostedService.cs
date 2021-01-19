@@ -57,9 +57,23 @@ namespace GameServer.Services
                 var _client = new Mailer.MailerClient(_dbGrpcChannel.Channel);
 
                 var callOptions = new CallOptions(new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken: stoppingToken);
-                var _call = _client.Mailbox(callOptions.WithWaitForReady(true));
+                var _call = _client.Mailbox(callOptions);
+
                 var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(type);
                 outgoMailQueue.OnRead += WriteDBMail;
+
+            _ = Task.Run(async () =>
+                {
+                    var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
+                    await foreach (var message in _call.ResponseStream.ReadAllAsync())
+                    {
+                        await incomeMailQueue.WriteAsync(new MailPacket { Id = message.Id, Content = message.Content.ToByteArray(), Reserve = message.Reserve });
+                    }
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("!!!end");
+                    Console.ResetColor();
+                }, stoppingToken);
+
 
                 async Task WriteDBMail(MailPacket mail)
                 {
@@ -69,20 +83,15 @@ namespace GameServer.Services
                         Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
                         Reserve = mail.ClientId
                     };
-                    await _call.RequestStream.WriteAsync(forward);
-                }
-
-                Task.Run(async () =>
-                {
-                    var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
-                    await foreach (var message in _call.ResponseStream.ReadAllAsync())
+                    try
                     {
-                        await incomeMailQueue.WriteAsync(new MailPacket { Id = message.Id,  Content = message.Content.ToByteArray(), Reserve = message.Reserve });
+                        await _call.RequestStream.WriteAsync(forward);
                     }
-                    //Console.ForegroundColor = ConsoleColor.Green;
-                    //Console.WriteLine("!!!end");
-                    //Console.ResetColor();
-                }, stoppingToken);
+                    catch (Exception e)
+                    {
+                        _logger.LogWarning(e.Message);
+                    }
+                }
             }
         }
 

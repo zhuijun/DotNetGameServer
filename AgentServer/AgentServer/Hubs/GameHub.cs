@@ -5,6 +5,7 @@ using Grpc.Net.Client;
 using Mail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace AgentServer.Hubs
     [Authorize(Policy = "Game")]
     public class GameHub : Hub
     {
+        private readonly ILogger<GameHub> _logger;
         private readonly IHubContext<GameHub> _hubContext;
         private GameGrpcChannel ChannelService { get; }
 
-        public GameHub(IHubContext<GameHub> hubContext, GameGrpcChannel channel)
+        public GameHub(ILogger<GameHub> logger, IHubContext<GameHub> hubContext, GameGrpcChannel channel)
         {
+            _logger = logger;
             _hubContext = hubContext;
             ChannelService = channel;
         }
@@ -85,7 +88,14 @@ namespace AgentServer.Hubs
                 Content = ByteString.FromBase64(packet.Content),
                 Reserve = packet.Reserve
             };
-            await _call.RequestStream.WriteAsync(forward);
+            try
+            {
+                await _call.RequestStream.WriteAsync(forward);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e.Message);
+            }
         }
     }
 }

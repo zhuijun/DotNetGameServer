@@ -10,7 +10,7 @@ namespace DBServer.Services
 {
     public class MailerService : Mailer.MailerBase
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<MailerService> _logger;
 
         public MailerService(ILoggerFactory loggerFactory)
         {
@@ -36,7 +36,7 @@ namespace DBServer.Services
             }
             finally
             {
-
+                _logger.LogInformation("Mailbox finally");
             }
         }
     }

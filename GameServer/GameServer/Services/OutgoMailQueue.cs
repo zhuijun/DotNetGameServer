@@ -24,13 +24,17 @@ namespace GameServer.Services
             _mailChannel = Channel.CreateUnbounded<MailPacket>();
             _totalMailCount = 0;
 
-            Task.Run(async () =>
-            {
-                await foreach(var mail in _mailChannel.Reader.ReadAllAsync())
-                {
-                    Interlocked.Decrement(ref _totalMailCount);
-                    OnRead?.Invoke(mail);
-                }
+            _ = Task.Run(async () =>
+              {
+                  await foreach (var mail in _mailChannel.Reader.ReadAllAsync())
+                  {
+                      Interlocked.Decrement(ref _totalMailCount);
+
+                      if (OnRead != null)
+                      {
+                          await OnRead.Invoke(mail);
+                      }
+                  }
 
                 //Console.ForegroundColor = ConsoleColor.Green;
                 //Console.WriteLine("OutgoMailQueue !!!end");
