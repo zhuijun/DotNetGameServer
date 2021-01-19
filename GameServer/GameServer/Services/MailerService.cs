@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameServer.Common;
@@ -65,6 +66,10 @@ namespace GameServer.Services
                                 await incomeMailQueue.WriteAsync(mail);
                                 _logger.LogInformation($"request mail: {request.Id}");
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogWarning(e.Message);
                         }
                         finally
                         {

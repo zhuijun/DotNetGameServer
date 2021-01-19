@@ -34,6 +34,10 @@ namespace DBServer.Services
                     _logger.LogInformation($"request mail: {request.Id}");
                 }
             }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e.Message);
+            }
             finally
             {
                 _logger.LogInformation("Mailbox finally");
