@@ -52,7 +52,9 @@ namespace AgentServer
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = "https://localhost:5101";
+                    var address = Configuration.GetValue<string>("AccountServerURL");
+                    options.Authority = address;
+                    //options.Authority = "https://localhost:5101";
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
