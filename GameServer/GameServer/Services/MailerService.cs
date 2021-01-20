@@ -82,6 +82,7 @@ namespace GameServer.Services
                             outgoMailQueue.OnRead -= DoWrite;
                             outgoMailQueue.OnComplete -= DoCompte;
                             _agentMailQueueRepository.TryRemoveOutgoMailQueue(clientId);
+                            _agentClientIdProvider.RemoveUserClientId(userId);
                         }
 
                         async Task DoWrite(MailPacket mail)

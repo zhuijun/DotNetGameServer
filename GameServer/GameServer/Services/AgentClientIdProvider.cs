@@ -27,5 +27,10 @@ namespace GameServer.Services
             _userClientIdMap.TryGetValue(userId, out var clientId);
             return clientId;
         }
+
+        public bool RemoveUserClientId(long userId)
+        {
+            return _userClientIdMap.TryRemove(userId, out var _);
+        }
     }
 }
