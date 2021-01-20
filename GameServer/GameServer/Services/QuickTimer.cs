@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,10 +26,12 @@ namespace GameServer.Services
         private readonly List<long> _toDelete = new List<long>();
 
         private readonly TicksProvider _ticksProvider;
+        private readonly ILogger<QuickTimer> _logger;
 
-        public QuickTimer(TicksProvider ticksProvider)
+        public QuickTimer(TicksProvider ticksProvider, ILogger<QuickTimer> logger)
         {
             _ticksProvider = ticksProvider;
+            _logger = logger;
         }
 
         public void Update()
@@ -42,10 +45,17 @@ namespace GameServer.Services
                 }
 
                 var v = item.Value;
-                v.Action();
-                if (v.Interval > 0 && v.Linker.Valid)
+                try
                 {
-                    _intervals.Add(v);
+                    v.Action();
+                    if (v.Interval > 0 && v.Linker.Valid)
+                    {
+                        _intervals.Add(v);
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e.Message);
                 }
 
                 _toDelete.Add(item.Key);
