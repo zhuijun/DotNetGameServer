@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DBServer.Data;
 
 namespace DBServer
 {
@@ -35,6 +37,9 @@ namespace DBServer
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DBServer", Version = "v1" });
             });
+
+            services.AddDbContext<DBServerContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DBServerContext")));
 
             services.AddTransient<IMessageHandle, MessageHandleImpl>();
         }
