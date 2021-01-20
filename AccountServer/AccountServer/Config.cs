@@ -21,7 +21,7 @@ namespace IdentityServer
             new ApiScope[]
             {
                 new ApiScope("api1", "My API"),
-                new ApiScope("game", new List<string>{"extra_claim"}),
+                new ApiScope("game", new List<string>{"nickname"}),
             };
 
         public static IEnumerable<Client> Clients =>

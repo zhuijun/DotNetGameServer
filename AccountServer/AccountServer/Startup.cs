@@ -1,4 +1,4 @@
-using IdentityServer;
+﻿using IdentityServer;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using AccountServer.Data;
 
 namespace AccountServer
 {
@@ -70,6 +72,9 @@ namespace AccountServer
                     AllowAll = true
                 };
             });
+
+            services.AddDbContext<AccountServerContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AccountServerContext")));
          }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
