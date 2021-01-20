@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using DBServer.Interfaces;
+using Grpc.Core;
 using Mail;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,10 +12,12 @@ namespace DBServer.Services
     public class MailerService : Mailer.MailerBase
     {
         private readonly ILogger<MailerService> _logger;
+        private readonly IMessageHandle _messageHandle;
 
-        public MailerService(ILoggerFactory loggerFactory)
+        public MailerService(ILoggerFactory loggerFactory, IMessageHandle messageHandle)
         {
             _logger = loggerFactory.CreateLogger<MailerService>();
+            _messageHandle = messageHandle;
         }
 
         public async override Task Mailbox(
@@ -22,16 +25,17 @@ namespace DBServer.Services
             IServerStreamWriter<MailboxMessage> responseStream,
             ServerCallContext context)
         {
+
+            async Task replyMailAction(MailboxMessage replayMail)
+            {
+                await responseStream.WriteAsync(replayMail);
+            }
+
             try
             {
                 await foreach (var request in requestStream.ReadAllAsync())
                 {
-                    await responseStream.WriteAsync(new MailboxMessage
-                    {
-                        Id = request.Id,
-                        Content = request.Content,
-                    });
-                    _logger.LogInformation($"request mail: {request.Id}");
+                    await _messageHandle.HandleMessage(request, replyMailAction);
                 }
             }
             catch (Exception e)
