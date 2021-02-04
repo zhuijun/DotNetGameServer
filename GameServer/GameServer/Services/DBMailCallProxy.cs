@@ -23,6 +23,8 @@ namespace GameServer.Services
         private readonly ILogger _logger;
         private readonly Channel<MailPacket> _mailChannel;
 
+        private MailPacket? CurrentMail { get; set; }
+
         public DBMailCallProxy(Mailer.MailerClient client, 
             DBMailQueueRepository dbMailQueueRepository, 
             DBMailQueueType type,
@@ -71,31 +73,58 @@ namespace GameServer.Services
 
             _ = Task.Run(async () =>
             {
-                await foreach (var mail in _mailChannel.Reader.ReadAllAsync(Sourse.Token))
+                while (!Sourse.Token.IsCancellationRequested)
                 {
-                    await WriteDBMail(mail);
-                }
-
-                async Task WriteDBMail(MailPacket mail)
-                {
-                    var forward = new ForwardMailMessage
-                    {
-                        Id = mail.Id,
-                        Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
-                        Reserve = mail.ClientId
-                    };
                     try
                     {
-                        await _call.RequestStream.WriteAsync(forward);
+                        if (CurrentMail == null)
+                        {
+                            if (await _mailChannel.Reader.WaitToReadAsync(Sourse.Token))
+                            {
+                                if (_mailChannel.Reader.TryRead(out var mail))
+                                {
+                                    CurrentMail = mail;
+                                    await WriteDBMail(CurrentMail);
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            await WriteDBMail(CurrentMail);
+                        }
                     }
                     catch (Exception e)
                     {
                         _logger.LogWarning(e.Message);
                         Sourse.Cancel();
-                        EventCancelled?.Invoke(_type);
                     }
                 }
             }, Sourse.Token);
+
+            async Task WriteDBMail(MailPacket mail)
+            {
+                var forward = new ForwardMailMessage
+                {
+                    Id = mail.Id,
+                    Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
+                    Reserve = mail.ClientId
+                };
+                try
+                {
+                    await _call.RequestStream.WriteAsync(forward);
+                    CurrentMail = null;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogWarning(e.Message);
+                    Sourse.Cancel();
+                    EventCancelled?.Invoke(_type);
+                }
+            }
         }
     }
 }
