@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package AgentGameProto;
+
+enum MessageID
+{
+	UNDEFINE = 0;
+	AtoGJoinGameRequestID = 0xFF01;
+	GtoAJoinGameReplyID = 0xff02;
+}
+
+message AtoGJoinGameRequest
+{
+	int64 UserID = 1;
+	string NickName = 2;
+}
+
+message GtoAJoinGameReply
+{
+	
+}

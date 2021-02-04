@@ -60,6 +60,26 @@ namespace AgentServer.Hubs
             });
 
             await base.OnConnectedAsync();
+
+            //进入游戏
+            var joinGameRequest = new AgentGameProto.AtoGJoinGameRequest 
+            { 
+                UserID = long.Parse(Context.UserIdentifier),
+                NickName = Context.User.FindFirst("nickname").Value
+            };
+            var forward = new ForwardMailMessage
+            {
+                Id = (int)AgentGameProto.MessageID.AtoGjoinGameRequestId,
+                Content = joinGameRequest.ToByteString()
+            };
+            try
+            {
+                await _call.RequestStream.WriteAsync(forward);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e.Message);
+            }
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

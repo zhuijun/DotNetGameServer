@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="..\..\Proto\mail.proto" GrpcServices="Client" Link="Protos\mail.proto" />
+		<Protobuf Include="..\..\Proto\AgentGame.proto"  Link="Protos\AgentGame.proto" />
 	</ItemGroup>
 	
 </Project>

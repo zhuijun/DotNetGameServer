@@ -11,37 +11,48 @@ namespace GameServer.Game
 {
     public partial class RoleManager : IAgentMail
     {
-        private TimeoutLinker linker;
+        //private TimeoutLinker linker;
         public void OnAgentMail(MailPacket mail)
         {
             _logger.LogDebug(mail.ToString());
 
             switch (mail.Id)
             {
-                case 1:
-                    if (linker == null)
+                case (int)AgentGameProto.MessageID.AtoGjoinGameRequestId:
                     {
-                        Action fun()
-                        {
-                            int i = 0;
-                            return () =>
-                            {
-                                var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
-                                Dispatcher.WriteAgentMail(mm);
-                                Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
-                                if (++i == 10)
-                                {
-                                    linker.Valid = false;
-                                    linker = null;
-                                }
-                            };
-                        }
-                        linker = Dispatcher.QuickTimer.SetTimeoutWithLinker(fun(), TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5));
+                        OnAtoGjoinGameRequest(mail);
                     }
                     break;
+                //case 1:
+                //    if (linker == null)
+                //    {
+                //        Action fun()
+                //        {
+                //            int i = 0;
+                //            return () =>
+                //            {
+                //                var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
+                //                Dispatcher.WriteAgentMail(mm);
+                //                Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
+                //                if (++i == 10)
+                //                {
+                //                    linker.Valid = false;
+                //                    linker = null;
+                //                }
+                //            };
+                //        }
+                //        linker = Dispatcher.QuickTimer.SetTimeoutWithLinker(fun(), TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5));
+                //    }
+                //    break;
                 default:
                     break;
             }
+        }
+
+        void OnAtoGjoinGameRequest(MailPacket mail)
+        {
+            var request = AgentGameProto.AtoGJoinGameRequest.Parser.ParseFrom(mail.Content);
+            _logger.LogInformation(request.ToString());
         }
     }
 }

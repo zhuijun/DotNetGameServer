@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="..\..\Proto\mail.proto" GrpcServices="Both" Link="Protos\mail.proto" />
+		<Protobuf Include="..\..\Proto\AgentGame.proto" Link="Protos\AgentGame.proto" />
 	</ItemGroup>
 	
 </Project>
