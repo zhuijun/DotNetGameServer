@@ -24,6 +24,8 @@ namespace GameServer.Services
         private readonly DBGrpcChannel _dbGrpcChannel;
         private readonly DBMailQueueRepository _dbMailQueueRepository;
 
+        private readonly List<DBMailCallProxy> _dbMailCallProxies = new List<DBMailCallProxy>();
+
         public MainHostedService(ILogger<MainHostedService> logger,
             Dispatcher dispatcher,
             MailDispatcher mailDispatcher,
@@ -52,46 +54,12 @@ namespace GameServer.Services
 
         private void InitDBMailQueue(CancellationToken stoppingToken)
         {
+            var _client = new Mailer.MailerClient(_dbGrpcChannel.Channel);
             foreach (var type in Enum.GetValues<DBMailQueueType>())
             {
-                var _client = new Mailer.MailerClient(_dbGrpcChannel.Channel);
-
-                var callOptions = new CallOptions(new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken: stoppingToken);
-                var _call = _client.Mailbox(callOptions.WithWaitForReady());
-
-                var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(type);
-                outgoMailQueue.OnRead += WriteDBMail;
-
-            _ = Task.Run(async () =>
-                {
-                    var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
-                    await foreach (var message in _call.ResponseStream.ReadAllAsync())
-                    {
-                        await incomeMailQueue.WriteAsync(new MailPacket { Id = message.Id, Content = message.Content.ToByteArray(), Reserve = message.Reserve });
-                    }
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("!!!end");
-                    Console.ResetColor();
-                }, stoppingToken);
-
-
-                async Task WriteDBMail(MailPacket mail)
-                {
-                    var forward = new ForwardMailMessage
-                    {
-                        Id = mail.Id,
-                        Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
-                        Reserve = mail.ClientId
-                    };
-                    try
-                    {
-                        await _call.RequestStream.WriteAsync(forward);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogWarning(e.Message);
-                    }
-                }
+                var proxy = new DBMailCallProxy(_client, _dbMailQueueRepository, type, _logger);
+                proxy.Start();
+                _dbMailCallProxies.Add(proxy);
             }
         }
 
