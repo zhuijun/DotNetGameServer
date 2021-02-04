@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -20,6 +21,7 @@ namespace GameServer.Services
         private readonly DBMailQueueRepository _dbMailQueueRepository;
         private readonly DBMailQueueType _type;
         private readonly ILogger _logger;
+        private readonly Channel<MailPacket> _mailChannel;
 
         public DBMailCallProxy(Mailer.MailerClient client, 
             DBMailQueueRepository dbMailQueueRepository, 
@@ -30,14 +32,21 @@ namespace GameServer.Services
             _dbMailQueueRepository = dbMailQueueRepository;
             _type = type;
             _logger = logger;
-
+            _mailChannel = Channel.CreateUnbounded<MailPacket>();
+            var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(_type);
+            outgoMailQueue.OnRead += OnRead;
             EventCancelled += OnCancelled;
         }
 
         private async Task OnCancelled(DBMailQueueType obj)
         {
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(3));
             Start();
+        }
+
+        private async Task OnRead(MailPacket mail)
+        {
+            await _mailChannel.Writer.WriteAsync(mail);
         }
 
         public void Start()
@@ -46,9 +55,6 @@ namespace GameServer.Services
 
             var callOptions = new CallOptions(new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken : Sourse.Token);
             var _call = _client.Mailbox(callOptions.WithWaitForReady());
-
-            var outgoMailQueue = _dbMailQueueRepository.GetOrAddOutgoMailQueue(_type);
-            outgoMailQueue.OnRead += WriteDBMail;
 
             _ = Task.Run(async () =>
             {
@@ -63,27 +69,33 @@ namespace GameServer.Services
             }, Sourse.Token);
 
 
-            async Task WriteDBMail(MailPacket mail)
+            _ = Task.Run(async () =>
             {
-                var forward = new ForwardMailMessage
+                await foreach (var mail in _mailChannel.Reader.ReadAllAsync(Sourse.Token))
                 {
-                    Id = mail.Id,
-                    Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
-                    Reserve = mail.ClientId
-                };
-                try
-                {
-                    await _call.RequestStream.WriteAsync(forward);
+                    await WriteDBMail(mail);
                 }
-                catch (Exception e)
-                {
-                    _logger.LogWarning(e.Message);
-                    outgoMailQueue.OnRead -= WriteDBMail;
-                    Sourse.Cancel();
 
-                    EventCancelled?.Invoke(_type);
+                async Task WriteDBMail(MailPacket mail)
+                {
+                    var forward = new ForwardMailMessage
+                    {
+                        Id = mail.Id,
+                        Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
+                        Reserve = mail.ClientId
+                    };
+                    try
+                    {
+                        await _call.RequestStream.WriteAsync(forward);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogWarning(e.Message);
+                        Sourse.Cancel();
+                        EventCancelled?.Invoke(_type);
+                    }
                 }
-            }
+            }, Sourse.Token);
         }
     }
 }
