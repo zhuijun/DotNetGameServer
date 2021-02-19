@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package GameDBProto;
+
+enum MessageID
+{
+	UNDEFINE = 0;
+	EnterRoleRequestID = 0X0101; //进入角色
+	EnterRoleReplyID = 0X0102; //进入角色返回
+
+}
+
+message ReplayResult
+{
+	int32 ErrorCode = 1;
+	string ErrorInfo = 2;
+}
+
+message EnterRoleRequest
+{
+	int64 UserID = 1;
+}
+
+message EnterRoleReply
+{
+	ReplayResult result = 1;
+	int64 RoleID = 2;
+}
