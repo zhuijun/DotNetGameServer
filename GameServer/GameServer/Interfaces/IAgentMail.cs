@@ -8,7 +8,7 @@ namespace GameServer.Interfaces
 {
     interface IAgentMail
     {
-        public void OnAgentMailEx(MailPacket mail)
+        public sealed void OnAgentMailEx(MailPacket mail)
         {
             switch (mail.Id)
             {

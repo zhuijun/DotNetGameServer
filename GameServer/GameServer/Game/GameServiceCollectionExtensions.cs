@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddSingleton<ManagerMediator>();
             services.AddSingleton<RoleManager>();
-
+            services.AddSingleton<UserManager>();
 
             return services;
         }

@@ -24,12 +24,13 @@ namespace GameServer.Game
 
         public void OnJoinGame(AgentGameProto.AtoGJoinGameRequest request)
         {
-            //throw new NotImplementedException();
+            var user = new User { UserID = request.UserID, NickName = request.NickName };
+            AddItem(user.UserID, user);
         }
 
         public void OnLeaveGame(AgentGameProto.AtoGLeaveGameRequest request)
         {
-            //throw new NotImplementedException();
+            RemoveItem(request.UserID);
         }
     }
 }

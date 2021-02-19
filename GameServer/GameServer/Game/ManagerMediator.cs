@@ -15,13 +15,17 @@ namespace GameServer.Game
 
         public Dispatcher Dispatcher { get; }
         public RoleManager RoleManager { get; }
+        public UserManager UserManager { get; }
 
         public ManagerMediator(Dispatcher dispatcher, 
-            RoleManager roleManager)
+            RoleManager roleManager,
+            UserManager userManager)
         {
             Dispatcher = dispatcher;
             RoleManager = roleManager;
             AddManager(RoleManager);
+            UserManager = userManager;
+            AddManager(UserManager);
         }
 
         private bool AddManager<T>(T manager) where T : IManager, IDisposable
