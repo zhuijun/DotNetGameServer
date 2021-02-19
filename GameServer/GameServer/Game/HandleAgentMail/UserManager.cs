@@ -17,27 +17,19 @@ namespace GameServer.Game
 
             switch (mail.Id)
             {
-                case (int)AgentGameProto.MessageID.AtoGjoinGameRequestId:
-                    {
-                        OnAtoGJoinGameRequest(mail);
-                    }
-                    break;
                 default:
                     break;
             }
         }
 
-        void OnAtoGJoinGameRequest(MailPacket mail)
+        public void OnJoinGame(AgentGameProto.AtoGJoinGameRequest request)
         {
-            var request = AgentGameProto.AtoGJoinGameRequest.Parser.ParseFrom(mail.Content);
-            _logger.LogInformation(request.ToString());
+            //throw new NotImplementedException();
+        }
 
-            var user = new User { UserID = request.UserID, NickName = request.NickName };
-            AddItem(user.UserID, user);
-
-            //var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
-            //Dispatcher.WriteAgentMail(mm);
-            //Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
+        public void OnLeaveGame(AgentGameProto.AtoGLeaveGameRequest request)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

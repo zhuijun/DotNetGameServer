@@ -50,7 +50,7 @@ namespace GameServer.Game
             {
                 if (manager is IAgentMail agentMail)
                 {
-                    agentMail.OnAgentMail(mail);
+                    agentMail.OnAgentMailEx(mail);
                 }
             }
             ForEachMananger(doAction);
