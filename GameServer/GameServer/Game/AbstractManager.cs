@@ -15,6 +15,21 @@ namespace GameServer.Game
 
         internal Dictionary<TKey, TValue> Items { get; } = new Dictionary<TKey, TValue>();
 
+        protected bool AddItem(TKey k, TValue v)
+        {
+            if (Items.ContainsKey(k))
+            {
+                return false;
+            }
+            Items.Add(k, v);
+            return true;
+        }
+
+        protected bool RemoveItem(TKey k)
+        {
+            return Items.Remove(k);
+        }
+
         public virtual void Dispose()
         {
             foreach (var item in Items)

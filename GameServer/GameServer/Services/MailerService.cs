@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameServer.Common;
+using Google.Protobuf;
 using Grpc.Core;
 using Mail;
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,7 @@ namespace GameServer.Services
                 case "agent":
                     {
                         var userIdentifier = context.RequestHeaders.SingleOrDefault(e => e.Key == "user-identifier").Value;
+                        var nickname = context.RequestHeaders.SingleOrDefault(e => e.Key == "nickname").Value;
                         long userId = long.Parse(userIdentifier);
                         long oldClientId = _agentClientIdProvider.GetUserClientId(userId);
                         if (oldClientId > 0)
@@ -43,9 +45,11 @@ namespace GameServer.Services
                             var oldOutgoMailQueue = _agentMailQueueRepository.TryGetOutgoMailQueue(oldClientId);
                             if (oldOutgoMailQueue != null)
                             {
-                                oldOutgoMailQueue.Complete();
+                                await oldOutgoMailQueue.Complete();
                             }
                         }
+
+                        var incomeMailQueue = _agentMailQueueRepository.GetIncomeMailQueue();
 
                         long clientId = _agentClientIdProvider.CreateClientId();
                         _agentClientIdProvider.SetUserClientId(userId, clientId);
@@ -56,7 +60,7 @@ namespace GameServer.Services
                         CancellationTokenSource source = new CancellationTokenSource();
                         outgoMailQueue.OnComplete += DoCompte;
 
-                        var incomeMailQueue = _agentMailQueueRepository.GetIncomeMailQueue();
+                        await JoinGame();
 
                         try
                         {
@@ -76,13 +80,14 @@ namespace GameServer.Services
                             if (!source.IsCancellationRequested)
                             {
                                 source.Cancel();
-                                outgoMailQueue.Complete();
+                                await outgoMailQueue.Complete();
+                                await LeaveGame();
+                                _agentClientIdProvider.RemoveUserClientId(userId);
                             }
 
                             outgoMailQueue.OnRead -= DoWrite;
                             outgoMailQueue.OnComplete -= DoCompte;
                             _agentMailQueueRepository.TryRemoveOutgoMailQueue(clientId);
-                            _agentClientIdProvider.RemoveUserClientId(userId);
                         }
 
                         async Task DoWrite(MailPacket mail)
@@ -94,13 +99,47 @@ namespace GameServer.Services
                             });
                         }
 
-                        async void DoCompte()
+                        async Task DoCompte()
                         {
                             if (!source.IsCancellationRequested)
                             {
                                 source.Cancel();
                                 await DoWrite(new MailPacket { Id = 999999, ClientId = clientId });
+                                await LeaveGame();
                             }
+                        }
+
+                        async Task JoinGame()
+                        {
+                            //进入游戏
+                            var mail = new MailPacket
+                            {
+                                Id = (int)AgentGameProto.MessageID.AtoGjoinGameRequestId,
+                                Content = new AgentGameProto.AtoGJoinGameRequest
+                                {
+                                    UserID = userId,
+                                    NickName = nickname
+                                }.ToByteArray(),
+                                ClientId = clientId,
+                                UserId = userId
+                            };
+                            await incomeMailQueue.WriteAsync(mail);
+                        }
+
+                        async Task LeaveGame()
+                        {
+                            //退出游戏
+                            var mail = new MailPacket
+                            {
+                                Id = (int)AgentGameProto.MessageID.AtoGleaveGameRequestId,
+                                Content = new AgentGameProto.AtoGLeaveGameRequest
+                                {
+                                    UserID = userId
+                                }.ToByteArray(),
+                                ClientId = clientId,
+                                UserId = userId
+                            };
+                            await incomeMailQueue.WriteAsync(mail);
                         }
                     }
 

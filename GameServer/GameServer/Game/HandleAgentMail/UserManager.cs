@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameServer.Game
 {
-    public partial class RoleManager : IAgentMail
+    public partial class UserManager : IAgentMail
     {
         public void OnAgentMail(MailPacket mail)
         {
@@ -31,6 +31,9 @@ namespace GameServer.Game
         {
             var request = AgentGameProto.AtoGJoinGameRequest.Parser.ParseFrom(mail.Content);
             _logger.LogInformation(request.ToString());
+
+            var user = new User { UserID = request.UserID, NickName = request.NickName };
+            AddItem(user.UserID, user);
 
             //var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
             //Dispatcher.WriteAgentMail(mm);

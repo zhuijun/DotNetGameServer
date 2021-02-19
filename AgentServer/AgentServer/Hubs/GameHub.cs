@@ -30,7 +30,8 @@ namespace AgentServer.Hubs
         public override async Task OnConnectedAsync()
         {
             var _client = new Mailer.MailerClient(ChannelService.Channel);
-            var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent"), new Metadata.Entry("user-identifier", Context.UserIdentifier) });
+            var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent"), new Metadata.Entry("user-identifier", Context.UserIdentifier), 
+                new Metadata.Entry("nickname", Context.User.FindFirst("nickname").Value) });
             Context.Items.Add("_client", _client);
             Context.Items.Add("_call", _call);
 
@@ -60,26 +61,6 @@ namespace AgentServer.Hubs
             });
 
             await base.OnConnectedAsync();
-
-            //进入游戏
-            var joinGameRequest = new AgentGameProto.AtoGJoinGameRequest 
-            { 
-                UserID = long.Parse(Context.UserIdentifier),
-                NickName = Context.User.FindFirst("nickname").Value
-            };
-            var forward = new ForwardMailMessage
-            {
-                Id = (int)AgentGameProto.MessageID.AtoGjoinGameRequestId,
-                Content = joinGameRequest.ToByteString()
-            };
-            try
-            {
-                await _call.RequestStream.WriteAsync(forward);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e.Message);
-            }
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

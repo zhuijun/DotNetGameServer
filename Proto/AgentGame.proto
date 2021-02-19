@@ -5,8 +5,11 @@ package AgentGameProto;
 enum MessageID
 {
 	UNDEFINE = 0;
-	AtoGJoinGameRequestID = 0xFF01;
-	GtoAJoinGameReplyID = 0xff02;
+	AtoGJoinGameRequestID = 0XFF01;
+	GtoAJoinGameReplyID = 0XFF02;
+
+	AtoGLeaveGameRequestID = 0XFF03;
+	GtoALeaveGameReplyID = 0XFF04;
 }
 
 message AtoGJoinGameRequest
@@ -16,6 +19,16 @@ message AtoGJoinGameRequest
 }
 
 message GtoAJoinGameReply
+{
+	
+}
+
+message AtoGLeaveGameRequest
+{
+	int64 UserID = 1;
+}
+
+message GtoALeaveGameReply
 {
 	
 }

@@ -16,7 +16,7 @@ namespace GameServer.Services
 
         public TKey Key { get; }
         public event Func<MailPacket, Task>? OnRead;
-        public event Action? OnComplete;
+        public event Func<Task>? OnComplete;
 
         public OutgoMailQueue(TKey key)
         {
@@ -42,10 +42,13 @@ namespace GameServer.Services
             });
         }
 
-        public void  Complete()
+        public async Task  Complete()
         {
             _mailChannel.Writer.Complete();
-            OnComplete?.Invoke();
+            if (OnComplete != null)
+            {
+                await OnComplete.Invoke();
+            }
         }
 
         public bool TryWriteMail(MailPacket mail)
