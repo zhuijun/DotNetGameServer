@@ -12,15 +12,15 @@ namespace GameServer.Interfaces
         {
             switch (mail.Id)
             {
-                case (int)AgentGameProto.MessageID.AtoGjoinGameRequestId:
+                case (int)AgentGameProto.MessageID.JoinGameRequestId:
                     {
-                        var request = AgentGameProto.AtoGJoinGameRequest.Parser.ParseFrom(mail.Content);
+                        var request = AgentGameProto.JoinGameRequest.Parser.ParseFrom(mail.Content);
                         OnJoinGame(request);
                     }
                     break;
-                case (int)AgentGameProto.MessageID.AtoGleaveGameRequestId:
+                case (int)AgentGameProto.MessageID.LeaveGameRequestId:
                     {
-                        var request = AgentGameProto.AtoGLeaveGameRequest.Parser.ParseFrom(mail.Content);
+                        var request = AgentGameProto.LeaveGameRequest.Parser.ParseFrom(mail.Content);
                         OnLeaveGame(request);
                     }
                     break;
@@ -32,7 +32,7 @@ namespace GameServer.Interfaces
 
         public void OnAgentMail(MailPacket mail);
 
-        public void OnJoinGame(AgentGameProto.AtoGJoinGameRequest request);
-        public void OnLeaveGame(AgentGameProto.AtoGLeaveGameRequest request);
+        public void OnJoinGame(AgentGameProto.JoinGameRequest request);
+        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request);
     }
 }

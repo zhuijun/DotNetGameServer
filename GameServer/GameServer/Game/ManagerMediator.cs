@@ -14,18 +14,20 @@ namespace GameServer.Game
         private readonly List<IManager> _managers = new List<IManager>();
 
         public Dispatcher Dispatcher { get; }
-        public RoleManager RoleManager { get; }
         public UserManager UserManager { get; }
+        public RoleManager RoleManager { get; }
 
-        public ManagerMediator(Dispatcher dispatcher, 
-            RoleManager roleManager,
-            UserManager userManager)
+        public ManagerMediator(Dispatcher dispatcher,
+            UserManager userManager,
+            RoleManager roleManager)
         {
             Dispatcher = dispatcher;
-            RoleManager = roleManager;
-            AddManager(RoleManager);
+
             UserManager = userManager;
             AddManager(UserManager);
+
+            RoleManager = roleManager;
+            AddManager(RoleManager);
         }
 
         private bool AddManager<T>(T manager) where T : IManager, IDisposable

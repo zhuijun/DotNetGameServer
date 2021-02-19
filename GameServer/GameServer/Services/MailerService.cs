@@ -114,8 +114,8 @@ namespace GameServer.Services
                             //进入游戏
                             var mail = new MailPacket
                             {
-                                Id = (int)AgentGameProto.MessageID.AtoGjoinGameRequestId,
-                                Content = new AgentGameProto.AtoGJoinGameRequest
+                                Id = (int)AgentGameProto.MessageID.JoinGameRequestId,
+                                Content = new AgentGameProto.JoinGameRequest
                                 {
                                     UserID = userId,
                                     NickName = nickname
@@ -131,8 +131,8 @@ namespace GameServer.Services
                             //退出游戏
                             var mail = new MailPacket
                             {
-                                Id = (int)AgentGameProto.MessageID.AtoGleaveGameRequestId,
-                                Content = new AgentGameProto.AtoGLeaveGameRequest
+                                Id = (int)AgentGameProto.MessageID.LeaveGameRequestId,
+                                Content = new AgentGameProto.LeaveGameRequest
                                 {
                                     UserID = userId
                                 }.ToByteArray(),

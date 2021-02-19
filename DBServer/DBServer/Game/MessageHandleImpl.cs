@@ -1,4 +1,5 @@
 ﻿using DBServer.Interfaces;
+using Google.Protobuf;
 using Mail;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,10 @@ namespace DBServer.Game
 
         private async Task OnEnterRole(ForwardMailMessage forwardMail, Func<MailboxMessage, Task> replyMailAction)
         {
-            if (forwardMail.Id == 1)
+            if (forwardMail.Id == (int)GameDBProto.MessageID.EnterRoleRequestId)
             {
-                await replyMailAction(new MailboxMessage { Id = forwardMail.Id, Content = forwardMail.Content });
+                var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 0 }, RoleID = 1 };
+                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageID.EnterRoleReplyId, Content = replay.ToByteString(), Reserve = forwardMail.Reserve });
             }
         }
     }

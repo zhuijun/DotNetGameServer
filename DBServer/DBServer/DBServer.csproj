@@ -26,6 +26,7 @@
 	
   <ItemGroup>
 	  <Protobuf Include="..\..\Proto\mail.proto" GrpcServices="Server" Link="Protos\mail.proto" />
+	  <Protobuf Include="..\..\Proto\GameDB.proto" Link="Protos\GameDB.proto" />
   </ItemGroup>
 
 </Project>

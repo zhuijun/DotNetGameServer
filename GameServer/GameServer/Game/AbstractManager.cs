@@ -15,6 +15,11 @@ namespace GameServer.Game
 
         internal Dictionary<TKey, TValue> Items { get; } = new Dictionary<TKey, TValue>();
 
+        public TValue GetItem(TKey k)
+        {
+            return Items.GetValueOrDefault(k);
+        }
+
         protected bool AddItem(TKey k, TValue v)
         {
             if (Items.ContainsKey(k))

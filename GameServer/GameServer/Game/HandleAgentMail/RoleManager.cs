@@ -1,6 +1,7 @@
 ﻿using GameServer.Common;
 using GameServer.Interfaces;
 using GameServer.Services;
+using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,30 @@ namespace GameServer.Game
 
             switch (mail.Id)
             {
+                case (int)ClientServerProto.MessageID.CtoSenterRoleRequestId:
+                    OnEnterRoleRequest(mail);
+                    break;
                 default:
                     break;
             }
         }
 
-        public void OnJoinGame(AgentGameProto.AtoGJoinGameRequest request)
+        public void OnJoinGame(AgentGameProto.JoinGameRequest request)
         {
             //throw new NotImplementedException();
         }
 
-        public void OnLeaveGame(AgentGameProto.AtoGLeaveGameRequest request)
+        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request)
         {
             //throw new NotImplementedException();
+        }
+
+        private void OnEnterRoleRequest(MailPacket mail)
+        {
+            //var request = ClientServerProto.CtoSEnterRoleRequest.Parser.ParseFrom(mail.Content);
+            var dbRequest = new GameDBProto.EnterRoleRequest { UserID = mail.UserId };
+            var dbMail = new MailPacket { Id = (int)GameDBProto.MessageID.EnterRoleRequestId, Content = dbRequest.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId };
+            Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
         }
     }
 }
