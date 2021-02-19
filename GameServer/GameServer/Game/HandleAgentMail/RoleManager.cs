@@ -11,7 +11,6 @@ namespace GameServer.Game
 {
     public partial class RoleManager : IAgentMail
     {
-        //private TimeoutLinker linker;
         public void OnAgentMail(MailPacket mail)
         {
             _logger.LogDebug(mail.ToString());
@@ -23,27 +22,6 @@ namespace GameServer.Game
                         OnAtoGjoinGameRequest(mail);
                     }
                     break;
-                //case 1:
-                //    if (linker == null)
-                //    {
-                //        Action fun()
-                //        {
-                //            int i = 0;
-                //            return () =>
-                //            {
-                //                var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
-                //                Dispatcher.WriteAgentMail(mm);
-                //                Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
-                //                if (++i == 10)
-                //                {
-                //                    linker.Valid = false;
-                //                    linker = null;
-                //                }
-                //            };
-                //        }
-                //        linker = Dispatcher.QuickTimer.SetTimeoutWithLinker(fun(), TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5));
-                //    }
-                //    break;
                 default:
                     break;
             }
@@ -53,6 +31,10 @@ namespace GameServer.Game
         {
             var request = AgentGameProto.AtoGJoinGameRequest.Parser.ParseFrom(mail.Content);
             _logger.LogInformation(request.ToString());
+
+            var mm = new MailPacket { Id = mail.Id, Content = mail.Content, Reserve = mail.Reserve, ClientId = mail.ClientId };
+            Dispatcher.WriteAgentMail(mm);
+            Dispatcher.WriteDBMail(mail, Services.DBMailQueueType.Role);
         }
     }
 }

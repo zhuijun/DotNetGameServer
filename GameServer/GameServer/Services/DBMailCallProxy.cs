@@ -85,6 +85,7 @@ namespace GameServer.Services
                                 {
                                     CurrentMail = mail;
                                     await WriteDBMail(CurrentMail);
+                                    CurrentMail = null;
                                 }
                             }
                             else
@@ -95,6 +96,7 @@ namespace GameServer.Services
                         else
                         {
                             await WriteDBMail(CurrentMail);
+                            CurrentMail = null;
                         }
                     }
                     catch (Exception e)
@@ -116,7 +118,6 @@ namespace GameServer.Services
                 try
                 {
                     await _call.RequestStream.WriteAsync(forward);
-                    CurrentMail = null;
                 }
                 catch (Exception e)
                 {
