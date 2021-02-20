@@ -1,6 +1,8 @@
-﻿using DBServer.Interfaces;
+﻿using DBServer.Data;
+using DBServer.Interfaces;
 using Google.Protobuf;
 using Mail;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +13,13 @@ namespace DBServer.Game
 {
     public class MessageHandleImpl : IMessageHandle
     {
+        private readonly DBServerContext _context;
         private readonly Func<ForwardMailMessage, Func<MailboxMessage, Task>, Task>? _Handles;
 
-        public MessageHandleImpl()
+
+        public MessageHandleImpl(DBServerContext context)
         {
+            _context = context;
             _Handles += OnEnterRole;
         }
 
@@ -31,7 +36,16 @@ namespace DBServer.Game
         {
             if (forwardMail.Id == (int)GameDBProto.MessageId.EnterRoleRequestId)
             {
-                var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 0 }, RoleId = 1 };
+                var request = GameDBProto.EnterRoleRequest.Parser.ParseFrom(forwardMail.Content);
+                var role = await _context.GameRole.AsNoTracking().FirstOrDefaultAsync(r => r.UserId == request.UserId);
+                if (role == null)
+                {
+                    var r = await _context.GameRole.AddAsync(new Models.GameRole { UserId = request.UserId, NickName = request.NickName });
+                    await _context.SaveChangesAsync();
+                    role = r.Entity;
+                }
+
+                var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 1 }, RoleId = role.RoleId,  NickName = role.NickName};
                 await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = replay.ToByteString(), Reserve = forwardMail.Reserve });
             }
         }

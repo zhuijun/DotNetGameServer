@@ -14,6 +14,7 @@ namespace DBServer.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     RoleId = table.Column<long>(type: "bigint", nullable: false, comment: "角色Id")
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(type: "bigint", nullable: false, comment: "用户Id"),
                     NickName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "昵称"),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UpateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")

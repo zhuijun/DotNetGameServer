@@ -11,11 +11,12 @@ GO
 BEGIN TRANSACTION;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210220072920_InitialCreate')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210220092652_InitialCreate')
 BEGIN
     CREATE TABLE [GameRole] (
         [Id] uniqueidentifier NOT NULL DEFAULT (newid()),
         [RoleId] bigint NOT NULL IDENTITY,
+        [UserId] bigint NOT NULL,
         [NickName] nvarchar(50) NOT NULL,
         [CreateTime] datetime2 NOT NULL DEFAULT (getdate()),
         [UpateTime] datetime2 NOT NULL DEFAULT (getdate()),
@@ -28,15 +29,17 @@ BEGIN
     EXEC sp_addextendedproperty 'MS_Description', @description, 'SCHEMA', @defaultSchema, 'TABLE', N'GameRole';
     SET @description = N'角色Id';
     EXEC sp_addextendedproperty 'MS_Description', @description, 'SCHEMA', @defaultSchema, 'TABLE', N'GameRole', 'COLUMN', N'RoleId';
+    SET @description = N'用户Id';
+    EXEC sp_addextendedproperty 'MS_Description', @description, 'SCHEMA', @defaultSchema, 'TABLE', N'GameRole', 'COLUMN', N'UserId';
     SET @description = N'昵称';
     EXEC sp_addextendedproperty 'MS_Description', @description, 'SCHEMA', @defaultSchema, 'TABLE', N'GameRole', 'COLUMN', N'NickName';
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210220072920_InitialCreate')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20210220092652_InitialCreate')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20210220072920_InitialCreate', N'5.0.2');
+    VALUES (N'20210220092652_InitialCreate', N'5.0.2');
 END;
 GO
 

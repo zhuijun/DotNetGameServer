@@ -19,10 +19,12 @@ message ReplayResult
 message EnterRoleRequest
 {
 	int64 UserId = 1;
+	string NickName = 2;
 }
 
 message EnterRoleReply
 {
 	ReplayResult result = 1;
 	int64 RoleId = 2;
+	string NickName = 3;
 }

@@ -18,6 +18,10 @@ namespace DBServer.Models
         public long RoleId { get; set; }
 
         [Required]
+        [Comment("用户Id")]
+        public long UserId { get; set; }
+
+        [Required]
         [StringLength(50, MinimumLength = 1)]
         [Comment("昵称")]
         public string NickName { get; set; }

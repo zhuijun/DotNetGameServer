@@ -48,6 +48,10 @@ namespace DBServer.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasComment("用户Id");
+
                     b.HasKey("Id");
 
                     b.ToTable("GameRole");
