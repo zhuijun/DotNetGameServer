@@ -23,5 +23,6 @@ message CtoSEnterRoleRequest
 message StoCEnterRoleReply
 {
 	ReplayResult result = 1;
-	int64 RoleID = 2;
+	int64 RoleId = 2;
+	string NickName = 3;
 }

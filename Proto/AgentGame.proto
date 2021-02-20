@@ -14,7 +14,7 @@ enum MessageID
 
 message JoinGameRequest
 {
-	int64 UserID = 1;
+	int64 UserId = 1;
 	string NickName = 2;
 }
 
@@ -25,7 +25,7 @@ message JoinGameReply
 
 message LeaveGameRequest
 {
-	int64 UserID = 1;
+	int64 UserId = 1;
 }
 
 message LeaveGameReply

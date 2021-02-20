@@ -31,7 +31,7 @@ namespace DBServer.Game
         {
             if (forwardMail.Id == (int)GameDBProto.MessageID.EnterRoleRequestId)
             {
-                var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 0 }, RoleID = 1 };
+                var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 0 }, RoleId = 1 };
                 await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageID.EnterRoleReplyId, Content = replay.ToByteString(), Reserve = forwardMail.Reserve });
             }
         }

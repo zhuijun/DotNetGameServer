@@ -27,11 +27,11 @@ namespace AccountServer.Extensions
 
             if (userid != null && token != null)
             {
-                var account = await _context.UserAccount.AsNoTracking().FirstOrDefaultAsync(a => a.UserID.ToString() == userid && a.Token == token);
+                var account = await _context.UserAccount.AsNoTracking().FirstOrDefaultAsync(a => a.UserId.ToString() == userid && a.Token == token);
                 if (account != null)
                 {
                     context.Result = new GrantValidationResult(
-                        subject: $"{account.UserID}",
+                        subject: $"{account.UserId}",
                         claims: new[] { new Claim("nickname", $"{account.NickName}") },
                         authenticationMethod: GrantType);
                 }

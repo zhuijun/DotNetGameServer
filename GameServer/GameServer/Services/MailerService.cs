@@ -117,7 +117,7 @@ namespace GameServer.Services
                                 Id = (int)AgentGameProto.MessageID.JoinGameRequestId,
                                 Content = new AgentGameProto.JoinGameRequest
                                 {
-                                    UserID = userId,
+                                    UserId = userId,
                                     NickName = nickname
                                 }.ToByteArray(),
                                 ClientId = clientId,
@@ -134,7 +134,7 @@ namespace GameServer.Services
                                 Id = (int)AgentGameProto.MessageID.LeaveGameRequestId,
                                 Content = new AgentGameProto.LeaveGameRequest
                                 {
-                                    UserID = userId
+                                    UserId = userId
                                 }.ToByteArray(),
                                 ClientId = clientId,
                                 UserId = userId

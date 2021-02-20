@@ -8,7 +8,7 @@ namespace GameServer.Game
 {
     public class User : IDisposable
     {
-        public long UserID { get; set; }
+        public long UserId { get; set; }
         public string NickName { get; set; }
 
         public void Dispose()

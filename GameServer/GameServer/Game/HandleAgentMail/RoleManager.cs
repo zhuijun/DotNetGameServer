@@ -39,7 +39,7 @@ namespace GameServer.Game
         private void OnEnterRoleRequest(MailPacket mail)
         {
             //var request = ClientServerProto.CtoSEnterRoleRequest.Parser.ParseFrom(mail.Content);
-            var dbRequest = new GameDBProto.EnterRoleRequest { UserID = mail.UserId };
+            var dbRequest = new GameDBProto.EnterRoleRequest { UserId = mail.UserId };
             var dbMail = new MailPacket { Id = (int)GameDBProto.MessageID.EnterRoleRequestId, Content = dbRequest.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId };
             Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
         }

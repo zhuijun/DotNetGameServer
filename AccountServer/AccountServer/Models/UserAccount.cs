@@ -8,13 +8,13 @@ namespace AccountServer.Models
 {
     public class UserAccount
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
-        /// 用户ID
+        /// 用户Id
         /// </summary>
-        [Description("用户ID")]
-        public long UserID { get; set; }
+        [Description("用户Id")]
+        public long UserId { get; set; }
 
         /// <summary>
         /// 用户名

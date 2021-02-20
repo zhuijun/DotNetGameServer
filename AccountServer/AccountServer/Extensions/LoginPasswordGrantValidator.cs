@@ -31,7 +31,7 @@ namespace AccountServer.Extensions
                 if (account != null)
                 {
                     context.Result = new GrantValidationResult(
-                        subject: $"{account.UserID}",
+                        subject: $"{account.UserId}",
                         claims: new[] { new Claim("nickname", $"{account.NickName}") },
                         authenticationMethod: GrantType);
                 }

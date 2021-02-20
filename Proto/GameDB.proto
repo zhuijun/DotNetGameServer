@@ -18,11 +18,11 @@ message ReplayResult
 
 message EnterRoleRequest
 {
-	int64 UserID = 1;
+	int64 UserId = 1;
 }
 
 message EnterRoleReply
 {
 	ReplayResult result = 1;
-	int64 RoleID = 2;
+	int64 RoleId = 2;
 }
