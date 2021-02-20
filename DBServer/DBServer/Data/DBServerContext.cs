@@ -15,5 +15,18 @@ namespace DBServer.Data
         }
 
         public DbSet<DBServer.Models.GameRole> GameRole { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GameRole>()
+                .Property(b => b.Id)
+                .HasDefaultValueSql("newid()");
+            modelBuilder.Entity<GameRole>()
+                .Property(b => b.CreateTime)
+                .HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<GameRole>()
+                .Property(b => b.UpateTime)
+                .HasDefaultValueSql("getdate()");
+        }
     }
 }
