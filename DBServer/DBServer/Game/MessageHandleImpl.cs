@@ -46,7 +46,8 @@ namespace DBServer.Game
                 }
 
                 var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 1 }, RoleId = role.RoleId,  NickName = role.NickName};
-                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = replay.ToByteString(), Reserve = forwardMail.Reserve });
+                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = replay.ToByteString(), 
+                    Reserve = forwardMail.Reserve, UserId = forwardMail.UserId, ClientId = forwardMail.ClientId });
             }
         }
     }

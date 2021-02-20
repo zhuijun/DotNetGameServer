@@ -63,7 +63,8 @@ namespace GameServer.Services
                 var incomeMailQueue = _dbMailQueueRepository.GetIncomeMailQueue();
                 await foreach (var message in _call.ResponseStream.ReadAllAsync(Sourse.Token))
                 {
-                    await incomeMailQueue.WriteAsync(new MailPacket { Id = message.Id, Content = message.Content.ToByteArray(), Reserve = message.Reserve });
+                    await incomeMailQueue.WriteAsync(new MailPacket { Id = message.Id, Content = message.Content.ToByteArray(), 
+                        Reserve = message.Reserve, UserId = message.UserId, ClientId = message.ClientId });
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("!!!end");
@@ -113,7 +114,7 @@ namespace GameServer.Services
                 {
                     Id = mail.Id,
                     Content = mail.Content != null ? Google.Protobuf.ByteString.CopyFrom(mail.Content) : Google.Protobuf.ByteString.Empty,
-                    Reserve = mail.ClientId
+                    Reserve = mail.ClientId, UserId = mail.UserId, ClientId = mail.ClientId
                 };
                 try
                 {
