@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package ClientServerProto;
 
-enum MessageID
+enum MessageId
 {
 	UNDEFINE = 0;
-	CtoSEnterRoleRequestID = 0X0101; //进入角色
-	StoCEnterRoleReplyID = 0X0102; //进入角色返回
+	CtoSEnterRoleRequestId = 0X0101; //进入角色
+	StoCEnterRoleReplyId = 0X0102; //进入角色返回
 
 }
 

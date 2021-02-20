@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package GameDBProto;
 
-enum MessageID
+enum MessageId
 {
 	UNDEFINE = 0;
-	EnterRoleRequestID = 0X0101; //进入角色
-	EnterRoleReplyID = 0X0102; //进入角色返回
+	EnterRoleRequestId = 0X0101; //进入角色
+	EnterRoleReplyId = 0X0102; //进入角色返回
 
 }
 

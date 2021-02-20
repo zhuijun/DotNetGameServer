@@ -2,14 +2,14 @@ syntax = "proto3";
 
 package AgentGameProto;
 
-enum MessageID
+enum MessageId
 {
 	UNDEFINE = 0;
-	JoinGameRequestID = 0XFF01;
-	JoinGameReplyID = 0XFF02;
+	JoinGameRequestId = 0XFF01;
+	JoinGameReplyId = 0XFF02;
 
-	LeaveGameRequestID = 0XFF03;
-	LeaveGameReplyID = 0XFF04;
+	LeaveGameRequestId = 0XFF03;
+	LeaveGameReplyId = 0XFF04;
 }
 
 message JoinGameRequest

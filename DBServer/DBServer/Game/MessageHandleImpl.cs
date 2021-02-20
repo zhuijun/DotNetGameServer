@@ -29,10 +29,10 @@ namespace DBServer.Game
 
         private async Task OnEnterRole(ForwardMailMessage forwardMail, Func<MailboxMessage, Task> replyMailAction)
         {
-            if (forwardMail.Id == (int)GameDBProto.MessageID.EnterRoleRequestId)
+            if (forwardMail.Id == (int)GameDBProto.MessageId.EnterRoleRequestId)
             {
                 var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 0 }, RoleId = 1 };
-                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageID.EnterRoleReplyId, Content = replay.ToByteString(), Reserve = forwardMail.Reserve });
+                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = replay.ToByteString(), Reserve = forwardMail.Reserve });
             }
         }
     }

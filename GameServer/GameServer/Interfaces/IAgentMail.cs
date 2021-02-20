@@ -12,13 +12,13 @@ namespace GameServer.Interfaces
         {
             switch (mail.Id)
             {
-                case (int)AgentGameProto.MessageID.JoinGameRequestId:
+                case (int)AgentGameProto.MessageId.JoinGameRequestId:
                     {
                         var request = AgentGameProto.JoinGameRequest.Parser.ParseFrom(mail.Content);
                         OnJoinGame(request);
                     }
                     break;
-                case (int)AgentGameProto.MessageID.LeaveGameRequestId:
+                case (int)AgentGameProto.MessageId.LeaveGameRequestId:
                     {
                         var request = AgentGameProto.LeaveGameRequest.Parser.ParseFrom(mail.Content);
                         OnLeaveGame(request);

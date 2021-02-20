@@ -18,7 +18,7 @@ namespace GameServer.Game
 
             switch (mail.Id)
             {
-                case (int)ClientServerProto.MessageID.CtoSenterRoleRequestId:
+                case (int)ClientServerProto.MessageId.CtoSenterRoleRequestId:
                     OnEnterRoleRequest(mail);
                     break;
                 default:
@@ -40,7 +40,7 @@ namespace GameServer.Game
         {
             //var request = ClientServerProto.CtoSEnterRoleRequest.Parser.ParseFrom(mail.Content);
             var dbRequest = new GameDBProto.EnterRoleRequest { UserId = mail.UserId };
-            var dbMail = new MailPacket { Id = (int)GameDBProto.MessageID.EnterRoleRequestId, Content = dbRequest.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId };
+            var dbMail = new MailPacket { Id = (int)GameDBProto.MessageId.EnterRoleRequestId, Content = dbRequest.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId };
             Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
         }
     }

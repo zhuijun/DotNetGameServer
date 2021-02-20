@@ -15,7 +15,7 @@ namespace GameServer.Game
         {
             switch (mail.Id)
             {
-                case (int)GameDBProto.MessageID.EnterRoleReplyId:
+                case (int)GameDBProto.MessageId.EnterRoleReplyId:
                     DBEnterRoleReply(mail);
                     break;
                 default:
@@ -27,7 +27,7 @@ namespace GameServer.Game
         {
             var replay = GameDBProto.EnterRoleReply.Parser.ParseFrom(mail.Content);
             var stoc = new ClientServerProto.StoCEnterRoleReply {Result =  new ClientServerProto.ReplayResult { ErrorCode = replay.Result.ErrorCode, ErrorInfo = replay.Result.ErrorInfo }, RoleId = replay.RoleId };
-            Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageID.StoCenterRoleReplyId, Content = stoc.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
+            Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCenterRoleReplyId, Content = stoc.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
         }
     }
 }
