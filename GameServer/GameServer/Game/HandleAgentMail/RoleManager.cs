@@ -21,6 +21,9 @@ namespace GameServer.Game
                 case (int)ClientServerProto.MessageId.CtoSenterRoleRequestId:
                     OnEnterRoleRequest(mail);
                     break;
+                case (int)ClientServerProto.MessageId.CtoSroleInfoRequestId:
+                    OnRoleInfoRequest(mail);
+                    break;
                 default:
                     break;
             }
@@ -46,6 +49,16 @@ namespace GameServer.Game
             var dbRequest = new GameDBProto.EnterRoleRequest { UserId = mail.UserId, NickName = user.NickName };
             var dbMail = new MailPacket { Id = (int)GameDBProto.MessageId.EnterRoleRequestId, Content = dbRequest.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId };
             Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
+        }
+
+        private void OnRoleInfoRequest(MailPacket mail)
+        {
+            var role = GetRoleByClientId(mail.ClientId);
+            if (role != null)
+            {
+                var stoc = new ClientServerProto.StoCRoleInfoReply { RoleId = role.RoleId, NickName = role.NickName };
+                Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId, Content = stoc.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
+            }
         }
     }
 }

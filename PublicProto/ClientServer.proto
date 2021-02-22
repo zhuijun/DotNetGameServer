@@ -8,6 +8,9 @@ enum MessageId
 	CtoSEnterRoleRequestId = 0X0101; //进入角色
 	StoCEnterRoleReplyId = 0X0102; //进入角色返回
 
+	CtoSRoleInfoRequestId = 0X0103; //请求角色信息
+	StoCRoleInfoReplyId = 0X0104; //请求角色信息返回
+
 }
 
 message ReplayResult
@@ -25,4 +28,15 @@ message StoCEnterRoleReply
 	ReplayResult result = 1;
 	int64 RoleId = 2;
 	string NickName = 3;
+}
+
+message CtoSRoleInfoRequest
+{
+
+}
+
+message StoCRoleInfoReply
+{
+	int64 RoleId = 1;
+	string NickName = 2;
 }

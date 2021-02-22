@@ -10,6 +10,9 @@ namespace GameServer.Game
 {
     public class Role : IDisposable
     {
+        public long RoleId { get; set; }
+        public string NickName { get; set; }
+
         public void Dispose()
         {
             //throw new NotImplementedException();
@@ -30,6 +33,15 @@ namespace GameServer.Game
         {
             base.Dispose();
             //throw new NotImplementedException();
+        }
+
+        public Role GetRoleByClientId(long clientId)
+        {
+            if (_clientRoleDict.TryGetValue(clientId, out var roleId))
+            {
+                return Items.GetValueOrDefault(roleId);
+            }
+            return null;
         }
     }
 }
