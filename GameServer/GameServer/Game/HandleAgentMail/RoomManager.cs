@@ -25,16 +25,17 @@ namespace GameServer.Game
                     OnLeaveDeskRequest(mail);
                     break;
                 default:
-                    var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
-                    var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
-                    if (desk != null)
-                    {
-                        if (desk.GameLogic is IAgentMail agentMail)
-                        {
-                            agentMail.OnAgentMail(mail);
-                        }
-                    }
                     break;
+            }
+
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
+            if (desk != null)
+            {
+                if (desk.GameLogic is IAgentMail agentMail)
+                {
+                    agentMail.OnAgentMail(mail);
+                }
             }
         }
 

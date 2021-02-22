@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<GameFactory>();
             services.AddSingleton<RoleManager>();
             services.AddSingleton<UserManager>();
+            services.AddSingleton<RoomManager>();
 
             return services;
         }
