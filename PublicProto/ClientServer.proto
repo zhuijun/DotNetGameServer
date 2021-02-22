@@ -17,7 +17,8 @@ enum MessageId
 	CtoSJoinDeskRequestId = 0X0109; //加入游戏桌子
 	StoCJoinDeskReplyId = 0X0110; //加入游戏桌子返回
 
-
+	CtoSLeaveDeskRequestId = 0X0111; //离开游戏桌子
+	StoCLeaveDeskReplyId = 0X0112; //离开游戏桌子返回
 }
 
 message ReplayResult
@@ -65,6 +66,16 @@ message CtoSJoinDeskRequest
 }
 
 message StoCJoinDeskReply
+{
+	ReplayResult Result = 1;
+}
+
+message CtoSLeaveDeskRequest
+{
+
+}
+
+message StoCLeaveDeskReply
 {
 	ReplayResult Result = 1;
 }
