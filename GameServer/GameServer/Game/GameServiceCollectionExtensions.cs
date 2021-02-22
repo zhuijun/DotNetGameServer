@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddGame(this IServiceCollection services)
         {
             services.AddSingleton<ManagerMediator>();
+            services.AddSingleton<GameFactory>();
             services.AddSingleton<RoleManager>();
             services.AddSingleton<UserManager>();
 

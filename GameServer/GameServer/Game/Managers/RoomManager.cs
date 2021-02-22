@@ -55,5 +55,12 @@ namespace GameServer.Game
     public partial class RoomManager : AbstractManager<int, Room>
     {
         private readonly Room _room = new Room();
+        private readonly GameFactory _gameFactory;
+
+        public RoomManager(GameFactory gameFactory)
+        {
+            _gameFactory = gameFactory;
+        }
+
     }
 }
