@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AccountServer.Data;
+using AccountServer.Extensions;
 
 namespace AccountServer
 {
@@ -58,8 +59,8 @@ namespace AccountServer
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddExtensionGrantValidator<Extensions.LoginPasswordGrantValidator>()
-            .AddExtensionGrantValidator<Extensions.LoginTokenGrantValidator>();
-
+            .AddExtensionGrantValidator<Extensions.LoginTokenGrantValidator>()
+            .AddCustomTokenRequestValidator<CustomLifeTimeTokenRequestValidator>();
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
