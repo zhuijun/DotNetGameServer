@@ -26,14 +26,17 @@ namespace GameServer.Game
             }
         }
 
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request)
+        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId)
         {
-            //throw new NotImplementedException();
         }
 
-        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request)
+        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request, long clientId)
         {
-            //throw new NotImplementedException();
+            if (_clientRoleDict.TryGetValue(clientId, out var roleId))
+            {
+                Items.Remove(roleId);
+                _clientRoleDict.Remove(clientId);
+            }
         }
 
         private void OnEnterRoleRequest(MailPacket mail)

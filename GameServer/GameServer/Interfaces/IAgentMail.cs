@@ -15,13 +15,13 @@ namespace GameServer.Interfaces
                 case (int)AgentGameProto.MessageId.JoinGameRequestId:
                     {
                         var request = AgentGameProto.JoinGameRequest.Parser.ParseFrom(mail.Content);
-                        OnJoinGame(request);
+                        OnJoinGame(request, mail.ClientId);
                     }
                     break;
                 case (int)AgentGameProto.MessageId.LeaveGameRequestId:
                     {
                         var request = AgentGameProto.LeaveGameRequest.Parser.ParseFrom(mail.Content);
-                        OnLeaveGame(request);
+                        OnLeaveGame(request, mail.ClientId);
                     }
                     break;
                 default:
@@ -32,7 +32,7 @@ namespace GameServer.Interfaces
 
         public void OnAgentMail(MailPacket mail);
 
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request);
-        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request);
+        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId);
+        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request, long clientId);
     }
 }

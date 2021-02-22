@@ -22,13 +22,13 @@ namespace GameServer.Game
             }
         }
 
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request)
+        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId)
         {
             var user = new User { UserId = request.UserId, NickName = request.NickName };
             AddItem(user.UserId, user);
         }
 
-        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request)
+        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request, long clientId)
         {
             RemoveItem(request.UserId);
         }

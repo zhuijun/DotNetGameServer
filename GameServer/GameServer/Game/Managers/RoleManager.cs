@@ -19,6 +19,8 @@ namespace GameServer.Game
     public partial class RoleManager : AbstractManager<long, Role>
     {
         private readonly ILogger<RoleManager> _logger;
+        private readonly Dictionary<long, long> _clientRoleDict = new Dictionary<long, long>();
+
         public RoleManager(ILogger<RoleManager> logger)
         {
             _logger = logger;
