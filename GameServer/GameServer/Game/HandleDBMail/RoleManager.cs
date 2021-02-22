@@ -30,7 +30,7 @@ namespace GameServer.Game
             Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCenterRoleReplyId, Content = stoc.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
 
             _clientRoleDict.Add(mail.ClientId, replay.RoleId);
-            var role = new Role();
+            var role = new Role { RoleId = replay.RoleId, NickName = replay.NickName, ClientId = mail.ClientId };
             AddItem(replay.RoleId, role);
         }
     }

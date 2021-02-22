@@ -42,6 +42,16 @@ namespace GameServer.Game
             }
         }
 
+        public void PushRoleInfo(long roleId)
+        {
+            var role = GetItem(roleId);
+            if (role != null)
+            {
+                var stoc = new ClientServerProto.StoCRoleInfoReply { RoleId = role.RoleId, NickName = role.NickName };
+                Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId, Content = stoc.ToByteArray(), ClientId = role.ClientId });
+            }
+        }
+
         private void OnEnterRoleRequest(MailPacket mail)
         {
             //var request = ClientServerProto.CtoSEnterRoleRequest.Parser.ParseFrom(mail.Content);

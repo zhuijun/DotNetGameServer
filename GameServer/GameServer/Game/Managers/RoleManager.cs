@@ -12,6 +12,7 @@ namespace GameServer.Game
     {
         public long RoleId { get; set; }
         public string NickName { get; set; }
+        public long ClientId { get; set; }
 
         public void Dispose()
         {
