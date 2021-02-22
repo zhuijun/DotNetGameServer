@@ -68,8 +68,14 @@ namespace GameServer.Game
             if (role != null)
             {
                 var stoc = new ClientServerProto.StoCRoleInfoReply { RoleId = role.RoleId, NickName = role.NickName };
-                Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId, Content = stoc.ToByteArray(), 
-                    Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
+                Dispatcher.WriteAgentMail(new MailPacket
+                {
+                    Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId,
+                    Content = stoc.ToByteArray(),
+                    Reserve = mail.Reserve,
+                    UserId = mail.UserId,
+                    ClientId = mail.ClientId
+                });
             }
         }
     }

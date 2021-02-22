@@ -1,6 +1,7 @@
 ﻿using AgentGameProto;
 using GameServer.Common;
 using GameServer.Interfaces;
+using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,12 +55,18 @@ namespace GameServer.Game
                 {
                     agentMail.OnLeaveGame(request, clientId);
                 }
-                //_room.RemoveRoleDesk(roleId);
+                desk.RemoveRole(roleId);
+                if (desk.RoleCount() == 0)
+                {
+                    _room.RemoveDesk(desk.DeskId);
+                }
+                _room.RemoveRoleDesk(roleId);
             }
         }
 
         private void OnCreateDeskRequest(MailPacket mail)
         {
+            var stoc = new ClientServerProto.StoCCreateDeskReply();
             var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
             var deskId = _room.GetRoleDesk(roleId);
             if (deskId == 0)
@@ -68,7 +75,23 @@ namespace GameServer.Game
                 var desk = _room.CreateDesk(game, 3);
                 deskId = desk.DeskId;
                 _room.AddRoleDesk(roleId, deskId);
+
+                stoc.DeskId = deskId;
             }
+            else
+            {
+                stoc.Result.ErrorCode = 1;
+                stoc.Result.ErrorInfo = "already on desk";
+                stoc.DeskId = deskId;
+            }
+            Dispatcher.WriteAgentMail(new MailPacket
+            {
+                Id = (int)ClientServerProto.MessageId.StoCcreateDeskReplyId,
+                Content = stoc.ToByteArray(),
+                Reserve = mail.Reserve,
+                UserId = mail.UserId,
+                ClientId = mail.ClientId
+            });
         }
     }
 }

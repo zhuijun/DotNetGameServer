@@ -12,6 +12,11 @@ namespace GameServer.Game
         public object GameLogic { get; set; }
         public int MaxRoleCount { get; set; }
 
+        public int RoleCount()
+        {
+            return Roles.Count;
+        }
+
         public void AddRole(long roleId)
         {
             Roles.Add(roleId);
