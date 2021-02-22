@@ -11,7 +11,8 @@ namespace GameServer.Game
     {
         public void OnDBMail(MailPacket mail)
         {
-            var desk = _room.GetDesk(1);
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
             if (desk != null)
             {
                 if (desk.GameLogic is IDBMail dbMail)

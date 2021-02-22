@@ -25,6 +25,7 @@ namespace GameServer.Game
 
     public class Room : IDisposable
     {
+        private readonly Dictionary<long, long> _roleDeskDict = new Dictionary<long, long>();
         private readonly Dictionary<long, Desk> _desks = new Dictionary<long, Desk>();
         private long _deskId = 0;
 
@@ -44,6 +45,21 @@ namespace GameServer.Game
         public void RemoveDesk(long deskId)
         {
             _desks.Remove(deskId);
+        }
+
+        public void AddRoleDesk(long roleId, long deskId)
+        {
+            _roleDeskDict.Add(roleId, deskId);
+        }
+
+        public long GetRoleDesk(long roleId)
+        {
+            return _roleDeskDict.GetValueOrDefault(roleId);
+        }
+
+        public void RemoveRoleDesk(long roleId)
+        {
+            _roleDeskDict.Remove(roleId);
         }
 
         public void Dispose()

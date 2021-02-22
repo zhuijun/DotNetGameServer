@@ -12,7 +12,8 @@ namespace GameServer.Game
     {
         public void OnAgentMail(MailPacket mail)
         {
-            var desk = _room.GetDesk(1);
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
             if (desk != null)
             {
                 if (desk.GameLogic is IAgentMail agentMail)
@@ -24,7 +25,8 @@ namespace GameServer.Game
 
         public void OnJoinGame(JoinGameRequest request, long clientId)
         {
-            var desk = _room.GetDesk(1);
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(clientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
             if (desk != null)
             {
                 if (desk.GameLogic is IAgentMail agentMail)
@@ -36,7 +38,8 @@ namespace GameServer.Game
 
         public void OnLeaveGame(LeaveGameRequest request, long clientId)
         {
-            var desk = _room.GetDesk(1);
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(clientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
             if (desk != null)
             {
                 if (desk.GameLogic is IAgentMail agentMail)

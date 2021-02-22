@@ -33,7 +33,11 @@ namespace GameServer.Game
         public override void Dispose()
         {
             base.Dispose();
-            //throw new NotImplementedException();
+        }
+
+        public long GetRoleIdByClientId(long clientId)
+        {
+            return _clientRoleDict.GetValueOrDefault(clientId);
         }
 
         public Role GetRoleByClientId(long clientId)
