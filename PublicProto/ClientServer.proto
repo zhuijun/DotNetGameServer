@@ -11,11 +11,18 @@ enum MessageId
 	CtoSRoleInfoRequestId = 0X0103; //请求角色信息
 	StoCRoleInfoReplyId = 0X0104; //请求角色信息返回
 
+	CtoSCreateDeskRequestId = 0X0107; //创建游戏桌子
+	StoCCreateDeskReplyId = 0X0108;//创建游戏桌子返回
+
+	CtoSJoinDeskRequestId = 0X0109; //加入游戏桌子
+	StoCJoinDeskReplyId = 0X0110; //加入游戏桌子返回
+
+
 }
 
 message ReplayResult
 {
-	int32 ErrorCode = 1;
+	int32 ErrorCode = 1; //0成功，非0失败
 	string ErrorInfo = 2;
 }
 
@@ -25,7 +32,7 @@ message CtoSEnterRoleRequest
 
 message StoCEnterRoleReply
 {
-	ReplayResult result = 1;
+	ReplayResult Result = 1;
 	int64 RoleId = 2;
 	string NickName = 3;
 }
@@ -39,4 +46,25 @@ message StoCRoleInfoReply
 {
 	int64 RoleId = 1;
 	string NickName = 2;
+}
+
+message CtoSCreateDeskRequest
+{
+
+}
+
+message StoCCreateDeskReply
+{
+	ReplayResult Result = 1;
+	int64 DeskId = 2; //桌号
+}
+
+message CtoSJoinDeskRequest
+{
+	int64 DeskId = 1; //桌号
+}
+
+message StoCJoinDeskReply
+{
+	ReplayResult Result = 1;
 }

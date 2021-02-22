@@ -12,14 +12,22 @@ namespace GameServer.Game
     {
         public void OnAgentMail(MailPacket mail)
         {
-            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
-            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
-            if (desk != null)
+            switch (mail.Id)
             {
-                if (desk.GameLogic is IAgentMail agentMail)
-                {
-                    agentMail.OnAgentMail(mail);
-                }
+                case (int)ClientServerProto.MessageId.CtoScreateDeskRequestId:
+                    OnCreateDeskRequest(mail);
+                    break;
+                default:
+                    var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+                    var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
+                    if (desk != null)
+                    {
+                        if (desk.GameLogic is IAgentMail agentMail)
+                        {
+                            agentMail.OnAgentMail(mail);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -46,6 +54,20 @@ namespace GameServer.Game
                 {
                     agentMail.OnLeaveGame(request, clientId);
                 }
+                //_room.RemoveRoleDesk(roleId);
+            }
+        }
+
+        private void OnCreateDeskRequest(MailPacket mail)
+        {
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+            var deskId = _room.GetRoleDesk(roleId);
+            if (deskId == 0)
+            {
+                var game = _gameFactory.CreateGame(1);
+                var desk = _room.CreateDesk(game, 3);
+                deskId = desk.DeskId;
+                _room.AddRoleDesk(roleId, deskId);
             }
         }
     }

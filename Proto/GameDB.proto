@@ -12,7 +12,7 @@ enum MessageId
 
 message ReplayResult
 {
-	int32 ErrorCode = 1;
+	int32 ErrorCode = 1; //0³É¹¦£¬·Ç0Ê§°Ü
 	string ErrorInfo = 2;
 }
 
@@ -24,7 +24,7 @@ message EnterRoleRequest
 
 message EnterRoleReply
 {
-	ReplayResult result = 1;
+	ReplayResult Result = 1;
 	int64 RoleId = 2;
 	string NickName = 3;
 }

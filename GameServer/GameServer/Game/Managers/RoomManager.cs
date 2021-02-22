@@ -10,7 +10,7 @@ namespace GameServer.Game
         public long DeskId { get; set; }
         public List<long> Roles { get; set; } = new List<long>();
         public object GameLogic { get; set; }
-
+        public int MaxRoleCount { get; set; }
 
         public void AddRole(long roleId)
         {
@@ -29,10 +29,10 @@ namespace GameServer.Game
         private readonly Dictionary<long, Desk> _desks = new Dictionary<long, Desk>();
         private long _deskId = 0;
 
-        public Desk CreateDesk(object gameLogic)
+        public Desk CreateDesk(object gameLogic, int maxRoleCount)
         {
             var deskId = ++_deskId;
-            var desk = new Desk { DeskId = deskId, GameLogic = gameLogic };
+            var desk = new Desk { DeskId = deskId, GameLogic = gameLogic, MaxRoleCount = maxRoleCount };
             _desks.Add(deskId, desk);
             return desk;
         }
