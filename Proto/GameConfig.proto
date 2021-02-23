@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package GameConfig;
+
+message TestItem
+{
+	int32 id = 1;
+	string name = 2;
+	int32 age = 3;
+}
+
+message TestConfig
+{
+	map<int32, TestItem> items = 1;
+}

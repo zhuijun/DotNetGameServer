@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddSingleton<ManagerMediator>();
             services.AddSingleton<GameFactory>();
+            services.AddSingleton<ConfigManager>();
             services.AddSingleton<RoleManager>();
             services.AddSingleton<UserManager>();
             services.AddSingleton<RoomManager>();
