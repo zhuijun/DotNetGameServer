@@ -35,14 +35,14 @@ namespace GameServer.Game
             var jsonPath = Path.Combine(configPath, "Json");
 
             //测试配置
-            var testJson = File.ReadAllText(Path.Combine(jsonPath, "test.json"));
+            var testJson = File.OpenRead(Path.Combine(jsonPath, "test.json"));
             using (JsonDocument document = JsonDocument.Parse(testJson))
             {
                 JsonElement root = document.RootElement;
-                foreach (JsonElement item in root.EnumerateArray())
+                foreach (JsonElement element in root.EnumerateArray())
                 {
-                    var config = GameConfig.TestItem.Parser.ParseJson(item.GetRawText());
-                    TestConfig.Items.Add(config.Id, config);
+                    var item = GameConfig.TestItem.Parser.ParseJson(element.GetRawText());
+                    TestConfig.Items.Add(item.Id, item);
                 }
             }
 
