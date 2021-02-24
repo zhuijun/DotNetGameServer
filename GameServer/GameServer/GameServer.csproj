@@ -23,6 +23,7 @@
 		<Protobuf Include="..\..\Proto\AgentGame.proto" Link="Protos\AgentGame.proto" />
 		<Protobuf Include="..\..\Proto\GameDB.proto" Link="Protos\GameDB.proto" />
 		<Protobuf Include="..\..\PublicProto\ClientServer.proto" Link="Protos\ClientServer.proto" />
+		<Protobuf Include="..\..\PublicProto\ShootGame.proto" Link="Protos\ShootGame.proto" />
 	</ItemGroup>
 	
 </Project>

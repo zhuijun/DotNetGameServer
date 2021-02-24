@@ -32,7 +32,7 @@ namespace AccountServer.Extensions
                 {
                     context.Result = new GrantValidationResult(
                         subject: $"{account.UserId}",
-                        claims: new[] { new Claim("nickname", $"{account.NickName}") },
+                        claims: new[] { new Claim("nickname", $"{account.NickName}"), new Claim("headicon", $"{account.HeadIcon}") },
                         authenticationMethod: GrantType);
                 }
                 else

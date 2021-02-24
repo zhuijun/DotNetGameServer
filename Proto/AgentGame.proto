@@ -16,6 +16,7 @@ message JoinGameRequest
 {
 	int64 UserId = 1;
 	string NickName = 2;
+	string HeadIcon = 3;
 }
 
 message JoinGameReply

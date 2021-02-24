@@ -31,7 +31,7 @@ namespace AgentServer.Hubs
         {
             var _client = new Mailer.MailerClient(ChannelService.Channel);
             var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent"), new Metadata.Entry("user-identifier", Context.UserIdentifier), 
-                new Metadata.Entry("nickname", Context.User.FindFirst("nickname").Value) });
+                new Metadata.Entry("nickname", Context.User.FindFirst("nickname").Value), new Metadata.Entry("headicon", Context.User.FindFirst("headicon").Value) });
             Context.Items.Add("_client", _client);
             Context.Items.Add("_call", _call);
 

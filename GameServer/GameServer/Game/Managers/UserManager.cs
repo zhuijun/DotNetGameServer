@@ -10,6 +10,7 @@ namespace GameServer.Game
     {
         public long UserId { get; set; }
         public string NickName { get; set; }
+        public string HeadIcon { get; set; }
 
         public void Dispose()
         {

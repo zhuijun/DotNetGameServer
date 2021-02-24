@@ -38,6 +38,7 @@ namespace GameServer.Services
                     {
                         var userIdentifier = context.RequestHeaders.SingleOrDefault(e => e.Key == "user-identifier").Value;
                         var nickname = context.RequestHeaders.SingleOrDefault(e => e.Key == "nickname").Value;
+                        var headicon = context.RequestHeaders.SingleOrDefault(e => e.Key == "headicon").Value;
                         long userId = long.Parse(userIdentifier);
                         long oldClientId = _agentClientIdProvider.GetUserClientId(userId);
                         if (oldClientId > 0)
@@ -118,7 +119,8 @@ namespace GameServer.Services
                                 Content = new AgentGameProto.JoinGameRequest
                                 {
                                     UserId = userId,
-                                    NickName = nickname
+                                    NickName = nickname,
+                                    HeadIcon = headicon
                                 }.ToByteArray(),
                                 ClientId = clientId,
                                 UserId = userId

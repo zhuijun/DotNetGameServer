@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package ShootGameProto;
+
+enum MessageId
+{
+	UNDEFINE = 0;
+	CtoSEnterGameRequestId = 0X0201; //进入游戏
+	StoCEnterGameReplyId = 0X0202; //进入游戏返回
+
+	CtoSShootRequestId = 0X0203; //射击
+	StoCShootReplyId = 0X0204; //射击返回
+
+	StoCShootResultId = 0X0206; //推送射击结果
+	StoCMoveTargetId = 0X0208; //移到目标位置
+
+
+}
+
+message ReplayResult
+{
+	int32 ErrorCode = 1; //0成功，非0失败
+	string ErrorInfo = 2;
+}
+
+//正在游戏的玩家信息
+message Player
+{
+	int32 Position = 1;		//位置
+	int64 RoleId = 2;		//角色Id
+	string NickName = 3; //昵称
+	string HeadIcon = 4;	  //头像
+}
+
+//射击目标
+message Target
+{
+	int32 Position = 1;//位置
+	int32 TargetId = 2; //Id
+	int32 Hp = 3; //血量
+}
+
+message CtoSEnterGameRequest
+{
+
+}
+
+message StoCEnterGameReply
+{
+	ReplayResult Result = 1;
+	repeated Player Players = 2;
+	repeated Target Targets = 3;
+}
+
+message CtoSShootRequest
+{
+
+}
+
+message StoCShootReply
+{
+	ReplayResult Result = 1;
+}
+
+message StoCShootResult
+{
+	int32 PlayerPosition = 1; //玩家位置
+	int32 TargetPosition = 2; //目标位置
+	int32 HurtHp = 3; //掉血量
+}
+
+message StoCMoveTarget
+{
+	int32 TargetPosition = 1; //目标位置
+	int32 ViewPosition = 2; //场景中的位置
+}
