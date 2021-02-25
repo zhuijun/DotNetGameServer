@@ -53,6 +53,11 @@ namespace GameServer.Services
 
         public void Start()
         {
+            if (Sourse != null && !Sourse.IsCancellationRequested)
+            {
+                return;
+            }
+
             Sourse = new CancellationTokenSource();
 
             var callOptions = new CallOptions(new Metadata { new Metadata.Entry("mailbox-name", "game") }, cancellationToken : Sourse.Token);
