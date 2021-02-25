@@ -29,12 +29,19 @@ namespace GameServer.Game
             }
 
             var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
-            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
-            if (desk != null)
+            if (roleId > 0)
             {
-                if (desk.GameLogic is IAgentMail agentMail)
+                var deskId = _room.GetRoleDesk(roleId);
+                if (deskId > 0)
                 {
-                    agentMail.OnAgentMail(mail);
+                    var desk = _room.GetDesk(deskId);
+                    if (desk != null)
+                    {
+                        if (desk.GameLogic is IAgentMail agentMail)
+                        {
+                            agentMail.OnAgentMail(mail);
+                        }
+                    }
                 }
             }
         }
