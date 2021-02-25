@@ -12,7 +12,6 @@ enum MessageId
 	StoCShootReplyId = 0X0204; //射击返回
 
 	StoCShootResultId = 0X0206; //推送射击结果
-	StoCMoveTargetId = 0X0208; //移到目标位置
 
 
 }
@@ -69,8 +68,3 @@ message StoCShootResult
 	int32 HurtHp = 3; //掉血量
 }
 
-message StoCMoveTarget
-{
-	int32 TargetPosition = 1; //目标位置
-	int32 ViewPosition = 2; //场景中的位置
-}
