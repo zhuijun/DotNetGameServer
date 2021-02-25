@@ -19,6 +19,10 @@ enum MessageId
 
 	CtoSLeaveDeskRequestId = 0X0111; //离开游戏桌子
 	StoCLeaveDeskReplyId = 0X0112; //离开游戏桌子返回
+
+	StoCBeginTestNetworkDelayId = 0X0114; //通知客户端开始测试网络延迟
+	CtoSTestNetwordDelayRequestId = 0X0115; //测试网络延迟
+	StoCTestNetworkDelayReplyId = 0X0116; //测试网络延迟返回
 }
 
 message ReplayResult
@@ -78,4 +82,20 @@ message CtoSLeaveDeskRequest
 message StoCLeaveDeskReply
 {
 	ReplayResult Result = 1;
+}
+
+message StoCBeginTestNetworkDelay
+{
+
+}
+
+message CtoSTestNetwordDelayRequest
+{
+
+}
+
+message StoCTestNetworkDelayReply
+{
+	int64 CurrentTicks = 1; //TicksPerSecond = 10000000;
+	int64 DelayTicks = 2;
 }

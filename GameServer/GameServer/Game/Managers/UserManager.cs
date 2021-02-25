@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GameServer.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,10 @@ namespace GameServer.Game
 
     public partial class UserManager : AbstractManager<long, User>
     {
+        private readonly Dictionary<long, long> _userTick = new Dictionary<long, long>();
+        private readonly Dictionary<long, TimeoutLinker> _userTimeoutLinker = new Dictionary<long, TimeoutLinker>();
         private readonly ILogger<UserManager> _logger;
+
         public UserManager(ILogger<UserManager> logger)
         {
             _logger = logger;

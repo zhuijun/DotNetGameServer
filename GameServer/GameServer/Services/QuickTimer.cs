@@ -47,10 +47,14 @@ namespace GameServer.Services
                 var v = item.Value;
                 try
                 {
-                    v.Action();
-                    if (v.Interval > 0 && v.Linker.Valid)
+                    if (v.Linker.Valid)
                     {
-                        _intervals.Add(v);
+                        v.Action();
+
+                        if (v.Interval > 0)
+                        {
+                            _intervals.Add(v);
+                        }
                     }
                 }
                 catch (Exception e)

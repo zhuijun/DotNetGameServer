@@ -46,7 +46,7 @@ namespace GameServer.Game
                 }
             }
 
-            Console.WriteLine(TestConfig);
+            //Console.WriteLine(TestConfig);
         }
     }
 }

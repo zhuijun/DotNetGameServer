@@ -69,7 +69,7 @@ namespace GameServer.Services
                             {
                                 var mail = new MailPacket { Id = request.Id, Content = request.Content.ToByteArray(), Reserve = request.Reserve, ClientId = clientId, UserId = userId };
                                 await incomeMailQueue.WriteAsync(mail);
-                                _logger.LogInformation($"request mail: {request.Id}");
+                                //_logger.LogInformation($"request mail: {request.Id}");
                             }
                         }
                         catch (Exception e)
