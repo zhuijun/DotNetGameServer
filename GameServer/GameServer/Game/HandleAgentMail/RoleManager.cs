@@ -56,10 +56,25 @@ namespace GameServer.Game
         {
             //var request = ClientServerProto.CtoSEnterRoleRequest.Parser.ParseFrom(mail.Content);
             var user = ManagerMediator.UserManager.GetItem(mail.UserId);
-            var dbRequest = new GameDBProto.EnterRoleRequest { UserId = mail.UserId, NickName = user.NickName };
-            var dbMail = new MailPacket { Id = (int)GameDBProto.MessageId.EnterRoleRequestId, Content = dbRequest.ToByteArray(), 
-                Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId };
-            Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
+
+            if (!_clientRoleDict.TryGetValue(mail.ClientId, out var roleId))
+            {
+                var dbRequest = new GameDBProto.EnterRoleRequest { UserId = mail.UserId, NickName = user.NickName };
+                var dbMail = new MailPacket
+                {
+                    Id = (int)GameDBProto.MessageId.EnterRoleRequestId,
+                    Content = dbRequest.ToByteArray(),
+                    Reserve = mail.Reserve,
+                    UserId = mail.UserId,
+                    ClientId = mail.ClientId
+                };
+                Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
+            }
+            else
+            {
+                var stoc = new ClientServerProto.StoCEnterRoleReply { Result = new ClientServerProto.ReplayResult { ErrorCode = 2, ErrorInfo = "已进入角色" }, RoleId = roleId, NickName = user.NickName };
+                Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCenterRoleReplyId, Content = stoc.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
+            }
         }
 
         private void OnRoleInfoRequest(MailPacket mail)
