@@ -22,6 +22,7 @@ namespace DBServer.Game
         {
             _context = context;
             _Handles += OnEnterRole;
+            _Handles += OnLoadConfigRequest;
         }
 
 
@@ -49,6 +50,30 @@ namespace DBServer.Game
                 var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 1 }, RoleId = role.RoleId,  NickName = role.NickName};
                 await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = replay.ToByteString(), 
                     Reserve = forwardMail.Reserve, UserId = forwardMail.UserId, ClientId = forwardMail.ClientId });
+            }
+        }
+
+        private async Task OnLoadConfigRequest(ForwardMailMessage forwardMail, Func<MailboxMessage, Task> replyMailAction)
+        {
+            if (forwardMail.Id == (int)GameDBProto.MessageId.LoadConfigRequestId)
+            {
+                var fruitConfig = await _context.WatermelonConfig.AsNoTracking().ToListAsync();
+
+                var fruitConfigProto = new WatermelonConfigProto.FruitConfig();
+                foreach (var item in fruitConfig)
+                {
+                    fruitConfigProto.Items.Add(item.FruitId, new WatermelonConfigProto.Fruit { Id = item.FruitId, Rate = item.Rate, Image = item.Image, Name = item.Name, Score = item.Score });
+                }
+
+                var replay = new GameDBProto.LoadConfigReply { FruitConfig = Google.Protobuf.WellKnownTypes.Any.Pack(fruitConfigProto) };
+                await replyMailAction(new MailboxMessage
+                {
+                    Id = (int)GameDBProto.MessageId.LoadConfigReplyId,
+                    Content = replay.ToByteString(),
+                    Reserve = forwardMail.Reserve,
+                    UserId = forwardMail.UserId,
+                    ClientId = forwardMail.ClientId
+                });
             }
         }
     }

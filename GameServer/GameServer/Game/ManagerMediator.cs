@@ -52,6 +52,18 @@ namespace GameServer.Game
             return true;
         }
 
+        public void OnStartUp()
+        {
+            static void doAction(IManager manager)
+            {
+                if (manager is IStartUp agentMail)
+                {
+                    agentMail.OnStartUp();
+                }
+            }
+            ForEachMananger(doAction);
+        }
+
         public void ForEachMananger(Action<IManager> action)
         {
             foreach (var manager in _managers)

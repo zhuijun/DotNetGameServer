@@ -1,5 +1,7 @@
-﻿using GameServer.Interfaces;
+﻿using GameServer.Common;
+using GameServer.Interfaces;
 using GameServer.Services;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,13 +12,14 @@ using System.Threading.Tasks;
 
 namespace GameServer.Game
 {
-    public class ConfigManager : IManager
+    public partial class ConfigManager : IManager, IStartUp
     {
         public ManagerMediator ManagerMediator { get; set; }
         public Dispatcher Dispatcher { get; set; }
         public IConfiguration Configuration { get; }
 
         public GameConfig.TestConfig TestConfig { get; } = new GameConfig.TestConfig();
+        public WatermelonConfigProto.FruitConfig FruitConfig { get; set; }
 
         public ConfigManager(IConfiguration configuration)
         {
@@ -47,6 +50,17 @@ namespace GameServer.Game
             }
 
             //Console.WriteLine(TestConfig);
+        }
+
+        public void OnStartUp()
+        {
+            var dbRequest = new GameDBProto.LoadConfigRequest { };
+            var dbMail = new MailPacket
+            {
+                Id = (int)GameDBProto.MessageId.LoadConfigRequestId,
+                Content = dbRequest.ToByteArray(),
+            };
+            Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Other);
         }
     }
 }

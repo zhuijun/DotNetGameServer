@@ -33,6 +33,7 @@
   <ItemGroup>
 	  <Protobuf Include="..\..\Proto\mail.proto" GrpcServices="Server" Link="Protos\mail.proto" />
 	  <Protobuf Include="..\..\Proto\GameDB.proto" Link="Protos\GameDB.proto" />
+	  <Protobuf Include="..\..\PublicProto\WatermelonConfig.proto" Link="Protos\WatermelonConfig.proto" />
   </ItemGroup>
 
 </Project>

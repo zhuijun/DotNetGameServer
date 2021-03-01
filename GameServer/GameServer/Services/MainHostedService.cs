@@ -68,6 +68,8 @@ namespace GameServer.Services
             _mailDispatcher.EventAgentMail += _managerMediator.OnAgentMail;
             _mailDispatcher.EventDBMail += _managerMediator.OnDBMail;
 
+            _managerMediator.OnStartUp();
+
             _dispatcher.Dispatch(stoppingToken);
         }
 

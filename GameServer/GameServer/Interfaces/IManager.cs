@@ -12,5 +12,6 @@ namespace GameServer.Interfaces
         public ManagerMediator ManagerMediator { get; set; }
 
         public Dispatcher Dispatcher { get; set; }
+
     }
 }
