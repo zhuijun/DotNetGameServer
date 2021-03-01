@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBServer.Models
+namespace Repository.Models
 {
     [Comment("游戏角色表")]
     public class GameRole

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package WatermelonConfig;
+
+message Fruit
+{
+	int32 Id = 1;
+	int32 Rate = 2; //概率
+	string Name = 3; //名称
+	string Image = 4; //图片
+	int32 Score = 5; //合成可得的积分
+}
+
+message FruitConfig
+{
+	map<int32, Fruit> items = 1;
+}

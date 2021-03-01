@@ -1,8 +1,9 @@
-﻿using DBServer.Data;
-using DBServer.Interfaces;
+﻿using DBServer.Interfaces;
 using Google.Protobuf;
 using Mail;
 using Microsoft.EntityFrameworkCore;
+using Repository.Data;
+using Repository.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,11 @@ namespace DBServer.Game
 {
     public class MessageHandleImpl : IMessageHandle
     {
-        private readonly DBServerContext _context;
+        private readonly GameDbContext _context;
         private readonly Func<ForwardMailMessage, Func<MailboxMessage, Task>, Task>? _Handles;
 
 
-        public MessageHandleImpl(DBServerContext context)
+        public MessageHandleImpl(GameDbContext context)
         {
             _context = context;
             _Handles += OnEnterRole;
@@ -40,7 +41,7 @@ namespace DBServer.Game
                 var role = await _context.GameRole.AsNoTracking().FirstOrDefaultAsync(r => r.UserId == request.UserId);
                 if (role == null)
                 {
-                    var r = await _context.GameRole.AddAsync(new Models.GameRole { UserId = request.UserId, NickName = request.NickName });
+                    var r = await _context.GameRole.AddAsync(new GameRole { UserId = request.UserId, NickName = request.NickName });
                     await _context.SaveChangesAsync();
                     role = r.Entity;
                 }

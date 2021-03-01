@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DBServer.Models;
+using Repository.Models;
 
-namespace DBServer.Data
+namespace Repository.Data
 {
-    public class DBServerContext : DbContext
+    public class GameDbContext : DbContext
     {
-        public DBServerContext (DbContextOptions<DBServerContext> options)
+        public GameDbContext (DbContextOptions<GameDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<DBServer.Models.GameRole> GameRole { get; set; }
+        public DbSet<GameRole> GameRole { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
