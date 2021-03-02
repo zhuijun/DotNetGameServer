@@ -12,7 +12,7 @@ namespace GameServer.Game
     {
         public void OnDBMail(MailPacket mail)
         {
-            _logger.LogDebug(mail.ToString());
+            //_logger.LogDebug(mail.ToString());
             //throw new NotImplementedException();
         }
     }

@@ -12,7 +12,7 @@ namespace GameServer.Game
             switch (type)
             {
                 case 1:
-                    return new ShootGame();
+                    return new WatermelonGame();
                 default:
                     break;
             }

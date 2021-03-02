@@ -25,6 +25,7 @@
 		<Protobuf Include="..\..\PublicProto\ClientServer.proto" Link="Protos\ClientServer.proto" />
 		<Protobuf Include="..\..\PublicProto\ShootGame.proto" Link="Protos\ShootGame.proto" />
 		<Protobuf Include="..\..\PublicProto\WatermelonConfig.proto" Link="Protos\WatermelonConfig.proto" />
+		<Protobuf Include="..\..\PublicProto\WatermelonGame.proto" Link="Protos\WatermelonGame.proto" />
 	</ItemGroup>
 	
 </Project>

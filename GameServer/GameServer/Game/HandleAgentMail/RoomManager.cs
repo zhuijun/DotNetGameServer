@@ -86,7 +86,7 @@ namespace GameServer.Game
             if (deskId == 0)
             {
                 var game = _gameFactory.CreateGame(1);
-                var desk = _room.CreateDesk(game, 3);
+                var desk = _room.CreateDesk(game, 1);
                 deskId = desk.DeskId;
                 desk.AddRole(roleId);
                 _room.AddRoleDesk(roleId, deskId);
@@ -119,13 +119,19 @@ namespace GameServer.Game
             var desk = _room.GetDesk(deskId);
             if (desk != null)
             {
-                desk.AddRole(roleId);
-                _room.AddRoleDesk(roleId, deskId);
+                if (desk.MaxRoleCount < desk.Roles.Count)
+                {
+                    desk.AddRole(roleId);
+                    _room.AddRoleDesk(roleId, deskId);
+                }
+                else
+                {
+                    stoc.Result = new ClientServerProto.ReplayResult { ErrorCode = 2, ErrorInfo = "无空位" };
+                }
             }
             else
             {
-                stoc.Result.ErrorCode = 1;
-                stoc.Result.ErrorInfo = "not find desk";
+                stoc.Result = new ClientServerProto.ReplayResult { ErrorCode = 1, ErrorInfo = "未找到空位" };
             }
 
             Dispatcher.WriteAgentMail(new MailPacket
@@ -164,8 +170,7 @@ namespace GameServer.Game
             }
             else
             {
-                stoc.Result.ErrorCode = 1;
-                stoc.Result.ErrorInfo = "not on desk";
+                stoc.Result = new ClientServerProto.ReplayResult { ErrorCode = 1, ErrorInfo = "不在座位上" };
             }
 
             Dispatcher.WriteAgentMail(new MailPacket

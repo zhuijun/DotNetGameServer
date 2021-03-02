@@ -14,7 +14,7 @@ namespace GameServer.Game
     {
         public void OnAgentMail(MailPacket mail)
         {
-            _logger.LogDebug(mail.ToString());
+            //_logger.LogDebug(mail.ToString());
 
             switch (mail.Id)
             {
