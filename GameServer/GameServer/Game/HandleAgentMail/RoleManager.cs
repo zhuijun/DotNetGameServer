@@ -48,7 +48,11 @@ namespace GameServer.Game
             if (role != null)
             {
                 var stoc = new ClientServerProto.StoCRoleInfoReply { RoleId = role.RoleId, NickName = role.NickName };
-                Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId, Content = stoc.ToByteArray(), ClientId = role.ClientId });
+                Dispatcher.WriteAgentMail(new MailPacket { 
+                    Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId, 
+                    Content = stoc.ToByteArray(), 
+                    ClientId = role.ClientId 
+                });
             }
         }
 
@@ -73,7 +77,13 @@ namespace GameServer.Game
             else
             {
                 var stoc = new ClientServerProto.StoCEnterRoleReply { Result = new ClientServerProto.ReplayResult { ErrorCode = 2, ErrorInfo = "已进入角色" }, RoleId = roleId, NickName = user.NickName };
-                Dispatcher.WriteAgentMail(new MailPacket { Id = (int)ClientServerProto.MessageId.StoCenterRoleReplyId, Content = stoc.ToByteArray(), Reserve = mail.Reserve, UserId = mail.UserId, ClientId = mail.ClientId });
+                Dispatcher.WriteAgentMail(new MailPacket { 
+                    Id = (int)ClientServerProto.MessageId.StoCenterRoleReplyId, 
+                    Content = stoc.ToByteArray(), 
+                    Reserve = mail.Reserve, 
+                    UserId = mail.UserId, 
+                    ClientId = mail.ClientId 
+                });
             }
         }
 
