@@ -85,18 +85,13 @@ namespace GameServer.Game
             var deskId = _room.GetRoleDesk(roleId);
             if (deskId == 0)
             {
-                var game = _gameFactory.CreateGame(1);
-                var desk = _room.CreateDesk(game, 1);
-                deskId = desk.DeskId;
-                desk.AddRole(roleId);
-                _room.AddRoleDesk(roleId, deskId);
+                deskId = CreateRoleDesk(roleId, 1);
 
                 stoc.DeskId = deskId;
             }
             else
             {
-                stoc.Result.ErrorCode = 1;
-                stoc.Result.ErrorInfo = "already on desk";
+                stoc.Result = new ClientServerProto.ReplayResult { ErrorCode = 1, ErrorInfo = "already on desk" };
                 stoc.DeskId = deskId;
             }
             Dispatcher.WriteAgentMail(new MailPacket
@@ -107,6 +102,17 @@ namespace GameServer.Game
                 UserId = mail.UserId,
                 ClientId = mail.ClientId
             });
+        }
+
+        private long CreateRoleDesk(long roleId, int gameType)
+        {
+            long deskId;
+            var game = _gameFactory.CreateGame(gameType);
+            var desk = _room.CreateDesk(game, 1);
+            deskId = desk.DeskId;
+            desk.AddRole(roleId);
+            _room.AddRoleDesk(roleId, deskId);
+            return deskId;
         }
 
         private void OnJoinDeskRequest(MailPacket mail)
