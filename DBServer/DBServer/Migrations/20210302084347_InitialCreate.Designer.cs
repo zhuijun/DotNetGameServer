@@ -10,7 +10,7 @@ using Repository.Data;
 namespace DBServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20210302014248_InitialCreate")]
+    [Migration("20210302084347_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,45 @@ namespace DBServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Repository.Models.FruitConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<int>("FruitId")
+                        .HasColumnType("int")
+                        .HasComment("水果Id");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("图片");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("名称");
+
+                    b.Property<int>("Rate")
+                        .HasColumnType("int")
+                        .HasComment("概率");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int")
+                        .HasComment("合成可得的积分");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FruitId")
+                        .IsUnique()
+                        .HasFilter("[FruitId] IS NOT NULL");
+
+                    b.ToTable("FruitConfig");
+
+                    b
+                        .HasComment("合成大西瓜配置表");
+                });
 
             modelBuilder.Entity("Repository.Models.GameRole", b =>
                 {
@@ -60,44 +99,6 @@ namespace DBServer.Migrations
 
                     b
                         .HasComment("游戏角色表");
-                });
-
-            modelBuilder.Entity("Repository.Models.WatermelonConfig", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("newid()");
-
-                    b.Property<int>("FruitId")
-                        .HasColumnType("int")
-                        .HasComment("水果Id");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("图片");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("名称");
-
-                    b.Property<int>("Rate")
-                        .HasColumnType("int")
-                        .HasComment("概率");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int")
-                        .HasComment("合成可得的积分");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FruitId")
-                        .HasFilter("[FruitId] IS NOT NULL");
-
-                    b.ToTable("WatermelonConfig");
-
-                    b
-                        .HasComment("合成大西瓜配置表");
                 });
 #pragma warning restore 612, 618
         }

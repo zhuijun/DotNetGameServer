@@ -57,7 +57,7 @@ namespace DBServer.Game
         {
             if (forwardMail.Id == (int)GameDBProto.MessageId.LoadConfigRequestId)
             {
-                var fruitConfig = await _context.WatermelonConfig.AsNoTracking().ToListAsync();
+                var fruitConfig = await _context.FruitConfig.AsNoTracking().OrderBy(s => s.FruitId).ToListAsync();
 
                 var fruitConfigProto = new WatermelonConfigProto.FruitConfig();
                 foreach (var item in fruitConfig)

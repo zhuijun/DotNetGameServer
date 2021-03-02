@@ -6,8 +6,8 @@ using System.Text;
 namespace Repository.Models
 {
     [Index(nameof(FruitId), IsUnique = true)]
-    [Comment("合成大西瓜配置表")]
-    public class WatermelonConfig
+    [Comment("合成大西瓜水果配置表")]
+    public class FruitConfig
     {
         public Guid Id { get; set; }
 

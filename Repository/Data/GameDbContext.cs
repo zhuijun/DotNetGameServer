@@ -15,7 +15,7 @@ namespace Repository.Data
         }
 
         public DbSet<GameRole> GameRole { get; set; }
-        public DbSet<WatermelonConfig> WatermelonConfig { get; set; }
+        public DbSet<FruitConfig> FruitConfig { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,10 +29,10 @@ namespace Repository.Data
                 .Property(b => b.UpateTime)
                 .HasDefaultValueSql("getdate()");
 
-            modelBuilder.Entity<WatermelonConfig>()
+            modelBuilder.Entity<FruitConfig>()
                 .Property(b => b.Id)
                 .HasDefaultValueSql("newid()");
-            modelBuilder.Entity<WatermelonConfig>()
+            modelBuilder.Entity<FruitConfig>()
                 .HasIndex(b => b.FruitId)
                 .HasFilter("[FruitId] IS NOT NULL");
         }
