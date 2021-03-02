@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "WatermelonConfig.proto";
+
+package WatermelonGameProto;
+
+enum MessageId
+{
+	UNDEFINE = 0;
+	CtoSGetConfigRequestId = 0X0301; //获取游戏配置
+	StoCGetConfigReplyId = 0X0302; //获取游戏配置返回
+
+}
+
+message ReplayResult
+{
+	int32 ErrorCode = 1; //0成功，非0失败
+	string ErrorInfo = 2;
+}
+
+message CtoSGetConfigRequest
+{
+
+}
+
+message StoCGetConfigReply
+{
+	ReplayResult Result = 1;
+	WatermelonConfigProto.FruitConfig FruitConfig = 2; //水果配置
+}

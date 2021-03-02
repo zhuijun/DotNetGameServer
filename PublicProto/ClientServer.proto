@@ -55,7 +55,7 @@ message StoCRoleInfoReply
 
 message CtoSCreateDeskRequest
 {
-
+	int32 GameId = 1; //游戏Id
 }
 
 message StoCCreateDeskReply

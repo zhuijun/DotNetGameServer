@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Repository.Models
 {
-    [Index(nameof(FruitId))]
+    [Index(nameof(FruitId), IsUnique = true)]
     [Comment("合成大西瓜配置表")]
     public class WatermelonConfig
     {
