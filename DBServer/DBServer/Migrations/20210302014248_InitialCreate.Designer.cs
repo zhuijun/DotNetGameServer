@@ -10,8 +10,8 @@ using Repository.Data;
 namespace DBServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20210301085715_WatermelonConfig")]
-    partial class WatermelonConfig
+    [Migration("20210302014248_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,7 +66,12 @@ namespace DBServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<int>("FruitId")
+                        .HasColumnType("int")
+                        .HasComment("水果Id");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)")
@@ -85,6 +90,9 @@ namespace DBServer.Migrations
                         .HasComment("合成可得的积分");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FruitId")
+                        .HasFilter("[FruitId] IS NOT NULL");
 
                     b.ToTable("WatermelonConfig");
 

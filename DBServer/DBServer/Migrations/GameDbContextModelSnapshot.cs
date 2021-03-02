@@ -89,6 +89,9 @@ namespace DBServer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FruitId")
+                        .HasFilter("[FruitId] IS NOT NULL");
+
                     b.ToTable("WatermelonConfig");
 
                     b

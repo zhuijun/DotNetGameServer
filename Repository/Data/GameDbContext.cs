@@ -32,6 +32,9 @@ namespace Repository.Data
             modelBuilder.Entity<WatermelonConfig>()
                 .Property(b => b.Id)
                 .HasDefaultValueSql("newid()");
+            modelBuilder.Entity<WatermelonConfig>()
+                .HasIndex(b => b.FruitId)
+                .HasFilter("[FruitId] IS NOT NULL");
         }
     }
 }

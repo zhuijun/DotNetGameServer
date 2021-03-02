@@ -39,7 +39,7 @@ namespace DBServer
             });
 
             services.AddDbContext<GameDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DBServerContext"), b => b.MigrationsAssembly("DBServer")));
+                    options.UseSqlServer(Configuration.GetConnectionString("GameDbContext"), b => b.MigrationsAssembly("DBServer")));
 
             services.AddTransient<IMessageHandle, MessageHandleImpl>();
         }
