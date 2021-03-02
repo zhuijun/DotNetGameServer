@@ -34,6 +34,16 @@ namespace GameServer.Game
         private readonly Dictionary<long, Desk> _desks = new Dictionary<long, Desk>();
         private long _deskId = 0;
 
+        public GameType GameType { get;  }
+        public int MaxRoleCount { get; }
+
+        public Room(GameType gameType, int maxRoleCount)
+        {
+            GameType = gameType;
+            MaxRoleCount = maxRoleCount;
+        }
+
+
         public Desk CreateDesk(object gameLogic, int maxRoleCount)
         {
             var deskId = ++_deskId;
@@ -75,7 +85,7 @@ namespace GameServer.Game
 
     public partial class RoomManager : AbstractManager<int, Room>
     {
-        private readonly Room _room = new Room();
+        private readonly Room _room = new Room(GameType.Watermelon, 1);
         private readonly GameFactory _gameFactory;
 
         public RoomManager(GameFactory gameFactory)

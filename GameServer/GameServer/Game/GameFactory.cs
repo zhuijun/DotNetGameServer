@@ -7,11 +7,11 @@ namespace GameServer.Game
 {
     public class GameFactory
     {
-        public object CreateGame(int type)
+        public object CreateGame(GameType type)
         {
             switch (type)
             {
-                case 1:
+                case GameType.Watermelon:
                     return new WatermelonGame();
                 default:
                     break;

@@ -15,6 +15,12 @@ namespace GameServer.Game
         {
             switch (mail.Id)
             {
+                case (int)ClientServerProto.MessageId.CtoSjoinRoomRequestId:
+                    OnJoinRoomRequest(mail);
+                    break;
+                case (int)ClientServerProto.MessageId.CtoSleaveRoomRequestId:
+                    OnLeaveRoomRequest(mail);
+                    break;
                 case (int)ClientServerProto.MessageId.CtoScreateDeskRequestId:
                     OnCreateDeskRequest(mail);
                     break;
@@ -78,6 +84,60 @@ namespace GameServer.Game
             }
         }
 
+        private void OnJoinRoomRequest(MailPacket mail)
+        {
+            var stoc = new ClientServerProto.StoCJoinRoomReply();
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+            var deskId = _room.GetRoleDesk(roleId);
+            if (deskId == 0)
+            {
+                deskId = CreateRoleDesk(roleId, _room.GameType, _room.MaxRoleCount);
+            }
+
+            if (!(deskId > 0))
+            {
+                stoc.Result = new ClientServerProto.ReplayResult { ErrorCode = 1, ErrorInfo = "cannot create desk" };
+            }
+
+            Dispatcher.WriteAgentMail(new MailPacket
+            {
+                Id = (int)ClientServerProto.MessageId.StoCjoinRoomReplyId,
+                Content = stoc.ToByteArray(),
+                Reserve = mail.Reserve,
+                UserId = mail.UserId,
+                ClientId = mail.ClientId
+            });
+        }
+
+        private void OnLeaveRoomRequest(MailPacket mail)
+        {
+            var stoc = new ClientServerProto.StoCLeaveRoomReply();
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
+            if (desk != null)
+            {
+                if (desk.GameLogic is IAgentMail agentMail)
+                {
+                    var request = new LeaveGameRequest { UserId = mail.UserId };
+                    agentMail.OnLeaveGame(request, mail.ClientId);
+                }
+                desk.RemoveRole(roleId);
+                if (desk.RoleCount() == 0)
+                {
+                    _room.RemoveDesk(desk.DeskId);
+                }
+                _room.RemoveRoleDesk(roleId);
+            }
+            Dispatcher.WriteAgentMail(new MailPacket
+            {
+                Id = (int)ClientServerProto.MessageId.StoCleaveRoomReplyId,
+                Content = stoc.ToByteArray(),
+                Reserve = mail.Reserve,
+                UserId = mail.UserId,
+                ClientId = mail.ClientId
+            });
+        }
+
         private void OnCreateDeskRequest(MailPacket mail)
         {
             var stoc = new ClientServerProto.StoCCreateDeskReply();
@@ -85,7 +145,7 @@ namespace GameServer.Game
             var deskId = _room.GetRoleDesk(roleId);
             if (deskId == 0)
             {
-                deskId = CreateRoleDesk(roleId, 1);
+                deskId = CreateRoleDesk(roleId, _room.GameType, _room.MaxRoleCount);
 
                 stoc.DeskId = deskId;
             }
@@ -104,11 +164,11 @@ namespace GameServer.Game
             });
         }
 
-        private long CreateRoleDesk(long roleId, int gameType)
+        private long CreateRoleDesk(long roleId, GameType gameType, int maxRoleCount)
         {
             long deskId;
             var game = _gameFactory.CreateGame(gameType);
-            var desk = _room.CreateDesk(game, 1);
+            var desk = _room.CreateDesk(game, maxRoleCount);
             deskId = desk.DeskId;
             desk.AddRole(roleId);
             _room.AddRoleDesk(roleId, deskId);

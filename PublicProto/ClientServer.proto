@@ -11,18 +11,25 @@ enum MessageId
 	CtoSRoleInfoRequestId = 0X0103; //请求角色信息
 	StoCRoleInfoReplyId = 0X0104; //请求角色信息返回
 
-	CtoSCreateDeskRequestId = 0X0107; //创建游戏桌子
-	StoCCreateDeskReplyId = 0X0108;//创建游戏桌子返回
+	CtoSJoinRoomRequestId = 0X0105; //加入游戏房间
+	StoCJoinRoomReplyId = 0X0106; //加入游戏房间返回
 
-	CtoSJoinDeskRequestId = 0X0109; //加入游戏桌子
-	StoCJoinDeskReplyId = 0X0110; //加入游戏桌子返回
+	CtoSLeaveRoomRequestId = 0X0107; //退出游戏房间
+	StoCLeaveRoomReplyId = 0X0108; //退出游戏房间返回
 
-	CtoSLeaveDeskRequestId = 0X0111; //离开游戏桌子
-	StoCLeaveDeskReplyId = 0X0112; //离开游戏桌子返回
 
-	StoCBeginTestNetworkDelayId = 0X0114; //通知客户端开始测试网络延迟
-	CtoSTestNetwordDelayRequestId = 0X0115; //测试网络延迟
-	StoCTestNetworkDelayReplyId = 0X0116; //测试网络延迟返回
+	CtoSCreateDeskRequestId = 0X0111; //创建游戏桌子
+	StoCCreateDeskReplyId = 0X0112;//创建游戏桌子返回
+
+	CtoSJoinDeskRequestId = 0X0113; //加入游戏桌子
+	StoCJoinDeskReplyId = 0X0114; //加入游戏桌子返回
+
+	CtoSLeaveDeskRequestId = 0X0115; //离开游戏桌子
+	StoCLeaveDeskReplyId = 0X0116; //离开游戏桌子返回
+
+	StoCBeginTestNetworkDelayId = 0X0118; //通知客户端开始测试网络延迟
+	CtoSTestNetwordDelayRequestId = 0X0119; //测试网络延迟
+	StoCTestNetworkDelayReplyId = 0X0120; //测试网络延迟返回
 }
 
 message ReplayResult
@@ -53,9 +60,29 @@ message StoCRoleInfoReply
 	string NickName = 2;
 }
 
-message CtoSCreateDeskRequest
+message CtoSJoinRoomRequest
 {
 	int32 GameId = 1; //游戏Id
+}
+
+message StoCJoinRoomReply
+{
+	ReplayResult Result = 1;
+}
+
+message CtoSLeaveRoomRequest
+{
+
+}
+
+message StoCLeaveRoomReply
+{
+	ReplayResult Result = 1;
+}
+
+message CtoSCreateDeskRequest
+{
+
 }
 
 message StoCCreateDeskReply
