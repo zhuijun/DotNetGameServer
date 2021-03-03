@@ -5,25 +5,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.Models
 {
-    [Comment("游戏角色表")]
-    public class GameRole : IdEntity
+    [Comment("大转盘记录表")]
+    public class GameTruntable : IdEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("角色Id")]
         public long RoleId { get; set; }
 
-        [Required]
-        [Comment("用户Id")]
-        public long UserId { get; set; }
-
-        [Required]
-        [StringLength(50, MinimumLength = 1)]
-        [Comment("昵称")]
-        public string NickName { get; set; }
+        [Comment("奖励Id")]
+        [MaxLength(50)]
+        public string AwardId { get; set; }
 
         [DataType(DataType.DateTime)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -32,5 +27,6 @@ namespace Repository.Models
         [DataType(DataType.DateTime)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpateTime { get; set; }
+
     }
 }

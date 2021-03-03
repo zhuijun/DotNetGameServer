@@ -13,9 +13,12 @@ namespace Repository.Data
             : base(options)
         {
         }
-
-        public DbSet<GameRole> GameRole { get; set; }
         public DbSet<FruitConfig> FruitConfig { get; set; }
+        public DbSet<TruntableConfig> TruntableConfig { get; set; }
+        public DbSet<GameRole> GameRole { get; set; }
+        public DbSet<GameBox> GameBox { get; set; }
+        public DbSet<GameScore> GameScore { get; set; }
+        public DbSet<GameTruntable> GameTruntable { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -5,25 +5,27 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.Models
 {
-    [Comment("游戏角色表")]
-    public class GameRole : IdEntity
+    [Comment("合成大西瓜大转盘配置表")]
+    public class TruntableConfig : IdEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Comment("角色Id")]
-        public long RoleId { get; set; }
+        [Comment("奖励描述")]
+        [MaxLength(100)]
+        public string AwardDesc { get; set; }
 
-        [Required]
-        [Comment("用户Id")]
-        public long UserId { get; set; }
+        [Comment("图片路径")]
+        [MaxLength(100)]
+        public string ImagePath { get; set; }
 
-        [Required]
-        [StringLength(50, MinimumLength = 1)]
-        [Comment("昵称")]
-        public string NickName { get; set; }
+        [Comment("价值（单位：分）")]
+        public long Price { get; set; }
+
+        [Comment("是否开启")]
+        public bool IsValid { get; set; }
 
         [DataType(DataType.DateTime)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

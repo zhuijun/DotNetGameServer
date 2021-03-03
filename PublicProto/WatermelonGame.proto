@@ -10,8 +10,8 @@ enum MessageId
 	CtoSGetConfigRequestId = 0X0301; //获取游戏配置
 	StoCGetConfigReplyId = 0X0302; //获取游戏配置返回
 
-	CtoSDropFruitRequestId = 0X0303; //掉落水果
-	StoCDropFruitReplyId = 0X0304; //掉落水果返回
+	CtoSDropBoxRequestId = 0X0303; //掉落宝箱
+	StoCDropBoxReplyId = 0X0304; //掉落宝箱返回
 
 	CtoSCombineFruitRequestId = 0X0305; //合成水果
 	StoCCombineFruitReplyId = 0X0306; //合成水果返回
@@ -34,12 +34,11 @@ message StoCGetConfigReply
 	WatermelonConfigProto.FruitConfig FruitConfig = 2; //水果配置
 }
 
-message CtoSDropFruitRequest
+message CtoSDropBoxRequest
 {
-	int32 FruitId = 1;	//掉落的水果Id
 }
 
-message StoCDropFruitReply
+message StoCDropBoxReply
 {
 	ReplayResult Result = 1;
 	int32 BoxId = 2; //宝箱Id
@@ -47,10 +46,11 @@ message StoCDropFruitReply
 
 message CtoSCombineFruitRequest
 {
-	int32 CombineFruitId = 1; //合成的水果Id
+	int32 FruitId = 1; //水果Id
+	int32 CombineFruitId = 2; //合成的水果Id
 }
 
 message StoCCombineFruitReply
 {
-
+	int32 Score = 1; //得到积分
 }

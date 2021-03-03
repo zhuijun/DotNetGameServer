@@ -9,21 +9,18 @@ using System.Threading.Tasks;
 
 namespace Repository.Models
 {
-    [Comment("游戏角色表")]
-    public class GameRole : IdEntity
+    [Comment("游戏宝箱表")]
+    public class GameBox : IdEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Comment("角色Id")]
         public long RoleId { get; set; }
 
-        [Required]
-        [Comment("用户Id")]
-        public long UserId { get; set; }
+        [Comment("优惠券Id")]
+        [MaxLength(50)]
+        public string CouponsId { get; set; }
 
-        [Required]
-        [StringLength(50, MinimumLength = 1)]
-        [Comment("昵称")]
-        public string NickName { get; set; }
+        [Comment("优惠金额")]
+        public long Amount { get; set; }
 
         [DataType(DataType.DateTime)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
