@@ -8,19 +8,12 @@ namespace GameServer.Game
 {
     public class GameFactory
     {
-        public ManagerMediator ManagerMediator { get; }
-
-        public GameFactory(ManagerMediator managerMediator)
-        {
-            ManagerMediator = managerMediator;
-        }
-
-        public object CreateGame(GameType type)
+        public object CreateGame(GameType type, ManagerMediator managerMediator)
         {
             switch (type)
             {
                 case GameType.Watermelon:
-                    return new WatermelonGame(ManagerMediator);
+                    return new WatermelonGame(managerMediator);
                 default:
                     break;
             }

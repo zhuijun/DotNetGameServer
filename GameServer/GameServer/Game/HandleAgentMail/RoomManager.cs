@@ -194,7 +194,7 @@ namespace GameServer.Game
         private long CreateRoleDesk(long roleId, GameType gameType, int maxRoleCount)
         {
             long deskId;
-            var game = _gameFactory.CreateGame(gameType);
+            var game = _gameFactory.CreateGame(gameType, ManagerMediator);
             var desk = _room.CreateDesk(game, maxRoleCount);
             deskId = desk.DeskId;
             desk.AddRole(roleId);
