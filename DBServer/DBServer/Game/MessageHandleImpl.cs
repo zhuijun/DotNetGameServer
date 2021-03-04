@@ -23,6 +23,7 @@ namespace DBServer.Game
             _context = context;
             _Handles += OnEnterRole;
             _Handles += OnLoadConfigRequest;
+            _Handles += OnSaveRoleScoreRequest;
         }
 
 
@@ -75,6 +76,30 @@ namespace DBServer.Game
                     UserId = forwardMail.UserId,
                     ClientId = forwardMail.ClientId
                 });
+            }
+        }
+
+        private async Task OnSaveRoleScoreRequest(ForwardMailMessage forwardMail, Func<MailboxMessage, Task> replyMailAction)
+        {
+            if (forwardMail.Id == (int)GameDBProto.MessageId.SaveRoleScoreRequestId)
+            {
+                var request = GameDBProto.SaveRoleScoreRequest.Parser.ParseFrom(forwardMail.Content);
+                var roleScore = await _context.GameScore.AsNoTracking().FirstOrDefaultAsync(s => s.RoleId == request.RoleId);
+                if (roleScore != null)
+                {
+                    if (roleScore.Score < request.Score)
+                    {
+                        roleScore.Score = request.Score;
+                        roleScore.UpateTime = DateTime.Now;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    roleScore = new GameScore { RoleId = request.RoleId, Score = request.Score, CreateTime = DateTime.Now, UpateTime = DateTime.Now };
+                    await _context.AddAsync(roleScore);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
     }

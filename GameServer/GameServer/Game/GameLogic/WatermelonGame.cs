@@ -13,7 +13,7 @@ namespace GameServer.Game
     public class WatermelonGame : IAgentMail, IDBMail, IInnerMail
     {
         public ManagerMediator ManagerMediator { get; }
-        private Dictionary<long, int> _roleScoreDict = new Dictionary<long, int>();
+        private Dictionary<long, long> _roleScoreDict = new Dictionary<long, long>();
 
         public WatermelonGame(ManagerMediator managerMediator)
         {
@@ -50,6 +50,25 @@ namespace GameServer.Game
             //throw new NotImplementedException();
         }
 
+        public void BeforeLeaveGame(BeforeLeaveGameRequest request, long clientId)
+        {
+            var role = ManagerMediator.RoleManager.GetRoleByClientId(clientId);
+            if (role != null)
+            {
+                var score = _roleScoreDict[role.RoleId];
+                _roleScoreDict.Remove(role.RoleId);
+                var dbRequest = new GameDBProto.SaveRoleScoreRequest { RoleId = role.RoleId, Score = score };
+                var dbMail = new MailPacket
+                {
+                    Id = (int)GameDBProto.MessageId.SaveRoleScoreRequestId,
+                    Content = dbRequest.ToByteArray(),
+                    UserId = role.UserId,
+                    ClientId = role.ClientId
+                };
+                ManagerMediator.Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
+            }
+        }
+
         private void AgentDropBoxRequest(MailPacket mail)
         {
 
@@ -77,16 +96,6 @@ namespace GameServer.Game
                 UserId = mail.UserId,
                 ClientId = mail.ClientId
             });
-        }
-
-        public void BeforeLeaveGame(BeforeLeaveGameRequest request, long clientId)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnInnerMail(MailPacket mail)
-        {
-            //throw new NotImplementedException();
         }
     }
 }
