@@ -131,7 +131,7 @@ message StoCTestNetworkDelayReply
 
 message StoCRoleAttributeNotice
 {
-	oneof Value {
+	oneof Attribute {
 		int64 Score = 1; //积分
 	}
 }

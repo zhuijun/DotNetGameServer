@@ -13,6 +13,7 @@ namespace GameServer.Services
     {
         public event Action<MailPacket>? EventAgentMail;
         public event Action<MailPacket>? EventDBMail;
+        public event Action<MailPacket>? EventInnerMail;
 
         public void OnAgentMail(MailPacket mail)
         {
@@ -22,6 +23,11 @@ namespace GameServer.Services
         public void OnDBMail(MailPacket mail)
         {
             EventDBMail?.Invoke(mail);
+        }
+
+        public void OnInnerMail(MailPacket mail)
+        {
+            EventInnerMail?.Invoke(mail);
         }
     }
 }

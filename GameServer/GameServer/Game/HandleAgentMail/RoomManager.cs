@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameServer.Game
 {
-    public partial class RoomManager : IAgentMail
+    public partial class RoomManager : IAgentMail, IInnerMail
     {
         public void OnAgentMail(MailPacket mail)
         {
@@ -58,9 +58,9 @@ namespace GameServer.Game
             var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
             if (desk != null)
             {
-                if (desk.GameLogic is IAgentMail agentMail)
+                if (desk.GameLogic is IInnerMail innerMail)
                 {
-                    agentMail.OnJoinGame(request, clientId);
+                    innerMail.OnJoinGame(request, clientId);
                 }
             }
         }
@@ -71,9 +71,9 @@ namespace GameServer.Game
             var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
             if (desk != null)
             {
-                if (desk.GameLogic is IAgentMail agentMail)
+                if (desk.GameLogic is IInnerMail innerMail)
                 {
-                    agentMail.OnLeaveGame(request, clientId);
+                    innerMail.OnLeaveGame(request, clientId);
                 }
                 desk.RemoveRole(roleId);
                 if (desk.RoleCount() == 0)
@@ -81,6 +81,19 @@ namespace GameServer.Game
                     _room.RemoveDesk(desk.DeskId);
                 }
                 _room.RemoveRoleDesk(roleId);
+            }
+        }
+
+        public void BeforeLeaveGame(BeforeLeaveGameRequest request, long clientId)
+        {
+            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(clientId);
+            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
+            if (desk != null)
+            {
+                if (desk.GameLogic is IInnerMail innerMail)
+                {
+                    innerMail.BeforeLeaveGame(request, clientId);
+                }
             }
         }
 
@@ -111,23 +124,9 @@ namespace GameServer.Game
 
         private void OnLeaveRoomRequest(MailPacket mail)
         {
+            PostLeaveGameMail(mail.UserId, mail.ClientId);
+
             var stoc = new ClientServerProto.StoCLeaveRoomReply();
-            var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(mail.ClientId);
-            var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
-            if (desk != null)
-            {
-                if (desk.GameLogic is IAgentMail agentMail)
-                {
-                    var request = new LeaveGameRequest { UserId = mail.UserId };
-                    agentMail.OnLeaveGame(request, mail.ClientId);
-                }
-                desk.RemoveRole(roleId);
-                if (desk.RoleCount() == 0)
-                {
-                    _room.RemoveDesk(desk.DeskId);
-                }
-                _room.RemoveRoleDesk(roleId);
-            }
             Dispatcher.WriteAgentMail(new MailPacket
             {
                 Id = (int)ClientServerProto.MessageId.StoCleaveRoomReplyId,
@@ -136,6 +135,34 @@ namespace GameServer.Game
                 UserId = mail.UserId,
                 ClientId = mail.ClientId
             });
+        }
+
+        private void PostLeaveGameMail(long userId, long clientId)
+        {
+            //退出游戏
+            var mail1 = new MailPacket
+            {
+                Id = (int)AgentGameProto.MessageId.BeforeLeaveGameRequestId,
+                Content = new AgentGameProto.BeforeLeaveGameRequest
+                {
+                    UserId = userId
+                }.ToByteArray(),
+                ClientId = clientId,
+                UserId = userId
+            };
+            Dispatcher.WriteInnerMail(mail1);
+
+            var mail2 = new MailPacket
+            {
+                Id = (int)AgentGameProto.MessageId.LeaveGameRequestId,
+                Content = new AgentGameProto.LeaveGameRequest
+                {
+                    UserId = userId
+                }.ToByteArray(),
+                ClientId = clientId,
+                UserId = userId
+            };
+            Dispatcher.WriteInnerMail(mail2);
         }
 
         private void OnCreateDeskRequest(MailPacket mail)
@@ -221,10 +248,10 @@ namespace GameServer.Game
                 var desk = _room.GetDesk(deskId);
                 if (desk != null)
                 {
-                    if (desk.GameLogic is IAgentMail agentMail)
+                    if (desk.GameLogic is IInnerMail innerMail)
                     {
                         var request = new LeaveGameRequest { UserId = mail.UserId };
-                        agentMail.OnLeaveGame(request, mail.ClientId);
+                        innerMail.OnLeaveGame(request, mail.ClientId);
                     }
                     desk.RemoveRole(roleId);
                     if (desk.RoleCount() == 0)

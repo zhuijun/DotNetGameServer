@@ -62,7 +62,8 @@ namespace DBServer.Game
                 var fruitConfigProto = new WatermelonConfigProto.FruitConfig();
                 foreach (var item in fruitConfig)
                 {
-                    fruitConfigProto.Items.Add(item.FruitId, new WatermelonConfigProto.Fruit { Id = item.FruitId, Rate = item.Rate, Image = item.Image, Name = item.Name, Score = item.Score });
+                    fruitConfigProto.Items.Add(item.FruitId, new WatermelonConfigProto.Fruit { Id = item.FruitId, Rate = item.Rate, Image = item.Image, Name = item.Name, 
+                        Score = item.Score, CombineFruitId = item.CombineFruitId });
                 }
 
                 var replay = new GameDBProto.LoadConfigReply { FruitConfig = Google.Protobuf.WellKnownTypes.Any.Pack(fruitConfigProto) };

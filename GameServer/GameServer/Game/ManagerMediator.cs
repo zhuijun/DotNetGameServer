@@ -78,7 +78,7 @@ namespace GameServer.Game
             {
                 if (manager is IAgentMail agentMail)
                 {
-                    agentMail.OnAgentMailEx(mail);
+                    agentMail.OnAgentMail(mail);
                 }
             }
             ForEachMananger(doAction);
@@ -91,6 +91,18 @@ namespace GameServer.Game
                 if (manager is IDBMail dbMail)
                 {
                     dbMail.OnDBMail(mail);
+                }
+            }
+            ForEachMananger(doAction);
+        }
+
+        public void OnInnerMail(MailPacket mail)
+        {
+            void doAction(IManager manager)
+            {
+                if (manager is IInnerMail innerMail)
+                {
+                    innerMail.OnInnerMailEx(mail);
                 }
             }
             ForEachMananger(doAction);

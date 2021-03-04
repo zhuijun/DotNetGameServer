@@ -52,5 +52,6 @@ message CtoSCombineFruitRequest
 
 message StoCCombineFruitReply
 {
-	int32 Score = 1; //得到积分
+	ReplayResult Result = 1;
+	int32 Score = 2; //得到积分
 }

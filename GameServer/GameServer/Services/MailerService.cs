@@ -15,14 +15,17 @@ namespace GameServer.Services
         private readonly ILogger _logger;
         private readonly AgentMailQueueRepository _agentMailQueueRepository;
         private readonly AgentClientIdProvider _agentClientIdProvider;
+        public Dispatcher Dispatcher { get; }
 
         public MailerService(ILoggerFactory loggerFactory, 
             AgentMailQueueRepository agentMailQueueRepository,
-            AgentClientIdProvider agentClientIdProvider)
+            AgentClientIdProvider agentClientIdProvider,
+            Dispatcher dispatcher)
         {
             _logger = loggerFactory.CreateLogger<MailerService>();
             _agentMailQueueRepository = agentMailQueueRepository;
             _agentClientIdProvider = agentClientIdProvider;
+            Dispatcher = dispatcher;
         }
 
         public async override Task Mailbox(
@@ -125,13 +128,29 @@ namespace GameServer.Services
                                 ClientId = clientId,
                                 UserId = userId
                             };
-                            await incomeMailQueue.WriteAsync(mail);
+                            Dispatcher.WriteInnerMail(mail);
+                            await Task.CompletedTask;
+                            //await incomeMailQueue.WriteAsync(mail);
                         }
 
                         async Task LeaveGame()
                         {
                             //退出游戏
-                            var mail = new MailPacket
+                            var mail1 = new MailPacket
+                            {
+                                Id = (int)AgentGameProto.MessageId.BeforeLeaveGameRequestId,
+                                Content = new AgentGameProto.BeforeLeaveGameRequest
+                                {
+                                    UserId = userId
+                                }.ToByteArray(),
+                                ClientId = clientId,
+                                UserId = userId
+                            };
+                            Dispatcher.WriteInnerMail(mail1);
+                            await Task.CompletedTask;
+                            //await incomeMailQueue.WriteAsync(mail1);
+
+                            var mail2 = new MailPacket
                             {
                                 Id = (int)AgentGameProto.MessageId.LeaveGameRequestId,
                                 Content = new AgentGameProto.LeaveGameRequest
@@ -141,7 +160,9 @@ namespace GameServer.Services
                                 ClientId = clientId,
                                 UserId = userId
                             };
-                            await incomeMailQueue.WriteAsync(mail);
+                            Dispatcher.WriteInnerMail(mail2);
+                            await Task.CompletedTask;
+                            //await incomeMailQueue.WriteAsync(mail2);
                         }
                     }
 

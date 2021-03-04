@@ -1,4 +1,5 @@
-﻿using GameServer.Common;
+﻿using AgentGameProto;
+using GameServer.Common;
 using GameServer.Interfaces;
 using GameServer.Services;
 using Google.Protobuf;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GameServer.Game
 {
-    public partial class RoleManager : IAgentMail
+    public partial class RoleManager : IAgentMail, IInnerMail
     {
         public void OnAgentMail(MailPacket mail)
         {
@@ -40,6 +41,11 @@ namespace GameServer.Game
                 Items.Remove(roleId);
                 _clientRoleDict.Remove(clientId);
             }
+        }
+
+        public void BeforeLeaveGame(BeforeLeaveGameRequest request, long clientId)
+        {
+            //throw new NotImplementedException();
         }
 
         public void NoticeRoleInfo(long roleId)

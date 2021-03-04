@@ -52,5 +52,10 @@ namespace GameServer.Services
             await _mailChannel.Writer.WriteAsync(mail);
             Interlocked.Increment(ref _totalMailCount);
         }
+
+        public bool TryWrite(MailPacket mail)
+        {
+            return _mailChannel.Writer.TryWrite(mail);
+        }
     }
 }

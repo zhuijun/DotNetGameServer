@@ -1,4 +1,5 @@
-﻿using GameServer.Common;
+﻿using AgentGameProto;
+using GameServer.Common;
 using GameServer.Interfaces;
 using GameServer.Services;
 using Google.Protobuf;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GameServer.Game
 {
-    public partial class UserManager : IAgentMail
+    public partial class UserManager : IAgentMail, IInnerMail
     {
         public void OnAgentMail(MailPacket mail)
         {
@@ -59,6 +60,11 @@ namespace GameServer.Game
             }
 
             _userTick.Remove(clientId);
+        }
+
+        public void BeforeLeaveGame(BeforeLeaveGameRequest request, long clientId)
+        {
+            //throw new NotImplementedException();
         }
 
         private void OnTestNetwordDelayRequest(MailPacket mail)

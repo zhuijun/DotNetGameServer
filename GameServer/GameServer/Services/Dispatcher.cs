@@ -17,7 +17,7 @@ namespace GameServer.Services
         private readonly DBMailQueueRepository _dbMailQueueRepository;
         private readonly MailDispatcher _mailDispatcher;
         private readonly AgentClientIdProvider _agentClientIdProvider;
-
+        private readonly IncomeMailQueue _innerMailQueue = new IncomeMailQueue();
         private readonly ConcurrentQueue<Action> _performAtNextLoop = new ConcurrentQueue<Action>();
 
         public TicksProvider TicksProvider { get; }
@@ -69,6 +69,11 @@ namespace GameServer.Services
                 {
                     _mailDispatcher.OnDBMail(mail);
                 }
+
+                while (TryReadInnerMail(out var mail))
+                {
+                    _mailDispatcher.OnInnerMail(mail);
+                }
             }
         }
 
@@ -119,5 +124,14 @@ namespace GameServer.Services
             _performAtNextLoop.Enqueue(action);
         }
 
+        public bool WriteInnerMail(MailPacket mail)
+        {
+            return _innerMailQueue.TryWrite(mail);
+        }
+
+        private bool TryReadInnerMail([NotNullWhen(true)] out MailPacket? mail)
+        {
+            return _innerMailQueue.TryReadMail(out mail);
+        }
     }
 }

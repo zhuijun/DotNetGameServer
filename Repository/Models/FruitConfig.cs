@@ -27,5 +27,8 @@ namespace Repository.Models
 
         [Comment("合成可得的积分")]
         public int Score { get; set; }
+
+        [Comment("合成后的水果Id")]
+        public int CombineFruitId { get; set; }
     }
 }

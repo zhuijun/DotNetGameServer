@@ -10,6 +10,9 @@ enum MessageId
 
 	LeaveGameRequestId = 0XFF03;
 	LeaveGameReplyId = 0XFF04;
+
+	BeforeLeaveGameRequestId = 0XFF05;
+	BeforeLeaveGameReplyId = 0XFF06;
 }
 
 message JoinGameRequest
@@ -32,4 +35,14 @@ message LeaveGameRequest
 message LeaveGameReply
 {
 	
+}
+
+message BeforeLeaveGameRequest
+{
+	int64 UserId = 1;
+}
+
+message BeforeLeaveGameReply
+{
+
 }

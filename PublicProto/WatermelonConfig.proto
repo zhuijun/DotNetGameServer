@@ -9,6 +9,7 @@ message Fruit
 	string Name = 3; //名称
 	string Image = 4; //图片
 	int32 Score = 5; //合成可得的积分
+	int32 CombineFruitId = 6; //合成后的水果Id
 }
 
 message FruitConfig

@@ -10,6 +10,11 @@ namespace GameServer.Game
 {
     public class ShootGame : IAgentMail, IDBMail
     {
+        public void BeforeLeaveGame(BeforeLeaveGameRequest request, long clientId)
+        {
+            //throw new NotImplementedException();
+        }
+
         public void OnAgentMail(MailPacket mail)
         {
             //throw new NotImplementedException();

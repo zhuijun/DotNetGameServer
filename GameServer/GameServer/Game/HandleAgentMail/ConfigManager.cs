@@ -1,4 +1,5 @@
-﻿using GameServer.Common;
+﻿using AgentGameProto;
+using GameServer.Common;
 using GameServer.Interfaces;
 using GameServer.Services;
 using Google.Protobuf;
@@ -22,16 +23,6 @@ namespace GameServer.Game
                 default:
                     break;
             }
-        }
-
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId)
-        {
-
-        }
-
-        public void OnLeaveGame(AgentGameProto.LeaveGameRequest request, long clientId)
-        {
-
         }
 
         private void OnGetConfigRequest(MailPacket mail)
