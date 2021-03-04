@@ -26,7 +26,12 @@ namespace GameServer.Game
         private void DBEnterRoleReply(MailPacket mail)
         {
             var replay = GameDBProto.EnterRoleReply.Parser.ParseFrom(mail.Content);
-            var stoc = new ClientServerProto.StoCEnterRoleReply {Result =  new ClientServerProto.ReplayResult { ErrorCode = replay.Result.ErrorCode, ErrorInfo = replay.Result.ErrorInfo }, RoleId = replay.RoleId, NickName = replay.NickName };
+            var stoc = new ClientServerProto.StoCEnterRoleReply {
+                Result =  new ClientServerProto.ReplayResult { ErrorCode = replay.Result.ErrorCode, ErrorInfo = replay.Result.ErrorInfo }, 
+                RoleId = replay.RoleId, 
+                NickName = replay.NickName 
+            };
+
             Dispatcher.WriteAgentMail(new MailPacket { 
                 Id = (int)ClientServerProto.MessageId.StoCenterRoleReplyId, 
                 Content = stoc.ToByteArray(), 
@@ -36,7 +41,7 @@ namespace GameServer.Game
             });
 
             _clientRoleDict.Add(mail.ClientId, replay.RoleId);
-            var role = new Role { RoleId = replay.RoleId, NickName = replay.NickName, ClientId = mail.ClientId };
+            var role = new Role { RoleId = replay.RoleId, NickName = replay.NickName, UserId = mail.UserId, ClientId = mail.ClientId };
             AddItem(replay.RoleId, role);
         }
     }

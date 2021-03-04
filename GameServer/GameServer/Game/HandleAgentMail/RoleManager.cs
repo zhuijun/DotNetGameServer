@@ -42,7 +42,7 @@ namespace GameServer.Game
             }
         }
 
-        public void PushRoleInfo(long roleId)
+        public void NoticeRoleInfo(long roleId)
         {
             var role = GetItem(roleId);
             if (role != null)
@@ -50,8 +50,24 @@ namespace GameServer.Game
                 var stoc = new ClientServerProto.StoCRoleInfoReply { RoleId = role.RoleId, NickName = role.NickName };
                 Dispatcher.WriteAgentMail(new MailPacket { 
                     Id = (int)ClientServerProto.MessageId.StoCroleInfoReplyId, 
-                    Content = stoc.ToByteArray(), 
-                    ClientId = role.ClientId 
+                    Content = stoc.ToByteArray(),
+                    UserId = role.UserId,
+                    ClientId = role.ClientId
+                });
+            }
+        }
+
+        public void NoticeRoleAttribute(long roleId, ClientServerProto.StoCRoleAttributeNotice attributeNotice)
+        {
+            var role = GetItem(roleId);
+            if (role != null)
+            {
+                Dispatcher.WriteAgentMail(new MailPacket
+                {
+                    Id = (int)ClientServerProto.MessageId.StoCroleAttributeNoticeId,
+                    Content = attributeNotice.ToByteArray(),
+                    UserId = role.UserId,
+                    ClientId = role.ClientId
                 });
             }
         }

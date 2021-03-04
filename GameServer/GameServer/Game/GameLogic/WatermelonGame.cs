@@ -12,7 +12,17 @@ namespace GameServer.Game
     {
         public void OnAgentMail(MailPacket mail)
         {
-            //throw new NotImplementedException();
+            switch (mail.Id)
+            {
+                case (int)WatermelonGameProto.MessageId.CtoSdropBoxRequestId:
+                    AgentDropBoxRequest(mail);
+                    break;
+                case (int)WatermelonGameProto.MessageId.CtoScombineFruitRequestId:
+                    AgentCombineFruitRequest(mail);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void OnDBMail(MailPacket mail)
@@ -28,6 +38,16 @@ namespace GameServer.Game
         public void OnLeaveGame(LeaveGameRequest request, long clientId)
         {
             //throw new NotImplementedException();
+        }
+
+        private void AgentDropBoxRequest(MailPacket mail)
+        {
+
+        }
+
+        private void AgentCombineFruitRequest(MailPacket mail)
+        {
+
         }
     }
 }

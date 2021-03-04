@@ -30,6 +30,8 @@ enum MessageId
 	StoCBeginTestNetworkDelayId = 0X0118; //通知客户端开始测试网络延迟
 	CtoSTestNetwordDelayRequestId = 0X0119; //测试网络延迟
 	StoCTestNetworkDelayReplyId = 0X0120; //测试网络延迟返回
+
+	StoCRoleAttributeNoticeId = 0X0122; //角色属性推送
 }
 
 message ReplayResult
@@ -125,4 +127,11 @@ message StoCTestNetworkDelayReply
 {
 	int64 CurrentTicks = 1; //TicksPerSecond = 10000000;
 	int64 DelayTicks = 2;
+}
+
+message StoCRoleAttributeNotice
+{
+	oneof Value {
+		int64 Score = 1; //积分
+	}
 }
