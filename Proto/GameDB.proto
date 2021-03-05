@@ -18,6 +18,9 @@ enum MessageId
 
 	SaveDropBoxRequestId = 0X0107; //保存掉落宝箱
 	SaveDropBoxReplyId = 0X0108; //保存掉落宝箱返回
+
+	GetRankRequestId = 0X0109; //获取排行榜
+	GetRankReplyId = 0X0110; //获取排行榜返回
 }
 
 message ReplayResult
@@ -72,4 +75,21 @@ message SaveDropBoxRequest
 message SaveDropBoxReply
 {
 
+}
+
+message GetRankRequest
+{
+
+}
+
+message RoleScore
+{
+	int64 RoleId = 1;
+	string NickName = 2;
+	int64 Score = 3;
+}
+
+message GetRankReply
+{
+	repeated RoleScore RoleScores = 1; //玩家分数列表
 }

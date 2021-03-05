@@ -33,6 +33,9 @@ namespace GameServer.Game
                 case (int)WatermelonGameProto.MessageId.CtoSgameOverRequestId:
                     AgentGameOverRequest(mail);
                     break;
+                case (int)WatermelonGameProto.MessageId.CtoSgetRankRequestId:
+                    AgentGetRankRequest(mail);
+                    break;
                 default:
                     break;
             }
@@ -40,7 +43,14 @@ namespace GameServer.Game
 
         public void OnDBMail(MailPacket mail)
         {
-            //throw new NotImplementedException();
+            switch (mail.Id)
+            {
+                case (int)GameDBProto.MessageId.GetRankReplyId:
+                    DBGetRankReply(mail);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void OnJoinGame(JoinGameRequest request, long clientId)
@@ -98,8 +108,8 @@ namespace GameServer.Game
                 {
                     Id = (int)GameDBProto.MessageId.SaveDropBoxRequestId,
                     Content = dbRequest.ToByteArray(),
-                    UserId = role.UserId,
-                    ClientId = role.ClientId
+                    UserId = mail.UserId,
+                    ClientId = mail.ClientId
                 };
                 ManagerMediator.Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Role);
             }
@@ -159,5 +169,36 @@ namespace GameServer.Game
             });
         }
         
+        private void AgentGetRankRequest(MailPacket mail)
+        {
+            var dbRequest = new GameDBProto.GetRankRequest { };
+            var dbMail = new MailPacket
+            {
+                Id = (int)GameDBProto.MessageId.GetRankRequestId,
+                Content = dbRequest.ToByteArray(),
+                UserId = mail.UserId,
+                ClientId = mail.ClientId
+            };
+            ManagerMediator.Dispatcher.WriteDBMail(dbMail, DBMailQueueType.Other);
+        }
+
+        private void DBGetRankReply(MailPacket mail)
+        {
+            var replay = GameDBProto.GetRankReply.Parser.ParseFrom(mail.Content);
+            var stoc = new WatermelonGameProto.StoCGetRankReply();
+
+            foreach (var item in replay.RoleScores)
+            {
+                stoc.RoleScores.Add(new WatermelonGameProto.RoleScore { RoleId = item.RoleId, NickName = item.NickName, Score = item.Score });
+            }
+            ManagerMediator.Dispatcher.WriteAgentMail(new MailPacket
+            {
+                Id = (int)WatermelonGameProto.MessageId.StoCgetRankReplyId,
+                Content = stoc.ToByteArray(),
+                UserId = mail.UserId,
+                ClientId = mail.ClientId
+            });
+        }
+
     }
 }

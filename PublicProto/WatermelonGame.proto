@@ -18,6 +18,9 @@ enum MessageId
 
 	CtoSGameOverRequestId = 0X0307; //游戏结束
 	StoCGameOverReplyId = 0X0308; //游戏结束返回
+
+	CtoSGetRankRequestId = 0X0309; //获取排行榜
+	StoCGetRankReplyId = 0X0310; //获取排行榜返回
 }
 
 message ReplayResult
@@ -70,4 +73,21 @@ message CtoSGameOverRequest
 message StoCGameOverReply
 {
 	ReplayResult Result = 1;
+}
+
+message CtoSGetRankRequest
+{
+
+}
+
+message RoleScore
+{
+	int64 RoleId = 1;
+	string NickName = 2;
+	int64 Score = 3;
+}
+
+message StoCGetRankReply
+{
+	repeated RoleScore RoleScores = 1; //玩家分数列表
 }

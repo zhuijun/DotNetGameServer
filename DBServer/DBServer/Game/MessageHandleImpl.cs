@@ -25,6 +25,7 @@ namespace DBServer.Game
             _Handles += OnLoadConfigRequest;
             _Handles += OnSaveRoleScoreRequest;
             _Handles += OnSaveDropBoxRequest;
+            _Handles += OnGetRankRequest;
         }
 
 
@@ -49,8 +50,8 @@ namespace DBServer.Game
                     role = r.Entity;
                 }
 
-                var replay = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 1 }, RoleId = role.RoleId,  NickName = role.NickName};
-                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = replay.ToByteString(), 
+                var reply = new GameDBProto.EnterRoleReply { Result = new GameDBProto.ReplayResult { ErrorCode = 1 }, RoleId = role.RoleId,  NickName = role.NickName};
+                await replyMailAction(new MailboxMessage { Id = (int)GameDBProto.MessageId.EnterRoleReplyId, Content = reply.ToByteString(), 
                     Reserve = forwardMail.Reserve, UserId = forwardMail.UserId, ClientId = forwardMail.ClientId });
             }
         }
@@ -60,22 +61,22 @@ namespace DBServer.Game
             if (forwardMail.Id == (int)GameDBProto.MessageId.LoadConfigRequestId)
             {
                 var fruitConfigProto = new WatermelonConfigProto.FruitConfig();
-                var fruitConfigQuery = _context.FruitConfig.AsNoTracking().OrderBy(s => s.FruitId);
-                foreach (var item in fruitConfigQuery)
+                var fruitConfigQuery = _context.FruitConfig.AsNoTracking().OrderBy(s => s.FruitId).AsAsyncEnumerable(); ;
+                await foreach(var item in fruitConfigQuery)
                 {
                     fruitConfigProto.Items.Add(item.FruitId, new WatermelonConfigProto.Fruit { Id = item.FruitId, Rate = item.Rate, Image = item.Image, Name = item.Name, 
                         Score = item.Score, CombineFruitId = item.CombineFruitId });
                 }
 
                 var truntableConfigProto = new WatermelonConfigProto.TruntableConfig();
-                var truntableConfigQuery = _context.TruntableConfig.AsNoTracking();
-                foreach (var item in truntableConfigQuery)
+                var truntableConfigQuery = _context.TruntableConfig.AsNoTracking().AsAsyncEnumerable(); ;
+                await foreach (var item in truntableConfigQuery)
                 {
                     truntableConfigProto.Items.Add(item.Id, new WatermelonConfigProto.TruntableItem { Id = item.Id, AwardDesc = item.AwardDesc, ImagePath = item.ImagePath, Price = item.Price });
                 }
 
 
-                var replay = new GameDBProto.LoadConfigReply { 
+                var reply = new GameDBProto.LoadConfigReply { 
                     FruitConfig = Google.Protobuf.WellKnownTypes.Any.Pack(fruitConfigProto),
                     TruntableConfig = Google.Protobuf.WellKnownTypes.Any.Pack(truntableConfigProto),
                 };
@@ -83,7 +84,7 @@ namespace DBServer.Game
                 await replyMailAction(new MailboxMessage
                 {
                     Id = (int)GameDBProto.MessageId.LoadConfigReplyId,
-                    Content = replay.ToByteString(),
+                    Content = reply.ToByteString(),
                     Reserve = forwardMail.Reserve,
                     UserId = forwardMail.UserId,
                     ClientId = forwardMail.ClientId
@@ -125,5 +126,30 @@ namespace DBServer.Game
                 await _context.SaveChangesAsync();
             }
          }
+
+        private async Task OnGetRankRequest(ForwardMailMessage forwardMail, Func<MailboxMessage, Task> replyMailAction)
+        {
+            if (forwardMail.Id == (int)GameDBProto.MessageId.GetRankRequestId)
+            {
+                var roleScores = _context.GameScore.AsNoTracking().OrderBy(gameScore => gameScore.Score).Take(10)
+                    .Join(_context.GameRole.AsNoTracking(), gameScore => gameScore.RoleId, gameRole => gameRole.RoleId, 
+                    (gameScore, gameRole) => new GameDBProto.RoleScore { RoleId = gameRole.RoleId, NickName = gameRole.NickName, Score = gameScore.Score })
+                    .AsAsyncEnumerable();
+
+                var reply = new GameDBProto.GetRankReply();
+                await foreach (var item in roleScores)
+                {
+                    reply.RoleScores.Add(item);
+                }
+                await replyMailAction(new MailboxMessage
+                {
+                    Id = (int)GameDBProto.MessageId.GetRankReplyId,
+                    Content = reply.ToByteString(),
+                    Reserve = forwardMail.Reserve,
+                    UserId = forwardMail.UserId,
+                    ClientId = forwardMail.ClientId
+                });
+            }
+        }
      }
 }
