@@ -12,7 +12,23 @@ message Fruit
 	int32 CombineFruitId = 6; //合成后的水果Id
 }
 
+//水果配置
 message FruitConfig
 {
-	map<int32, Fruit> items = 1;
+	map<int32, Fruit> Items = 1;
 }
+
+message TruntableItem
+{
+	string Id = 1;
+	string AwardDesc = 2; //奖励描述
+	string ImagePath = 3; //图片路径
+	int64 Price = 4; //价值（单位：分）
+}
+
+//大转盘配置
+message TruntableConfig
+{
+	map<string, TruntableItem> Items = 1;
+}
+

@@ -47,6 +47,7 @@ message LoadConfigRequest
 message LoadConfigReply
 {
 	google.protobuf.Any FruitConfig = 1; //水果配置
+	google.protobuf.Any TruntableConfig = 2; //大转盘配置
 }
 
 message SaveRoleScoreRequest

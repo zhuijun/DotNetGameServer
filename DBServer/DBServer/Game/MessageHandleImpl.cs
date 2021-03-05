@@ -44,7 +44,7 @@ namespace DBServer.Game
                 var role = await _context.GameRole.AsNoTracking().FirstOrDefaultAsync(r => r.UserId == request.UserId);
                 if (role == null)
                 {
-                    var r = await _context.GameRole.AddAsync(new GameRole { UserId = request.UserId, NickName = request.NickName });
+                    var r = _context.GameRole.Add(new GameRole { UserId = request.UserId, NickName = request.NickName });
                     await _context.SaveChangesAsync();
                     role = r.Entity;
                 }
@@ -59,16 +59,27 @@ namespace DBServer.Game
         {
             if (forwardMail.Id == (int)GameDBProto.MessageId.LoadConfigRequestId)
             {
-                var fruitConfig = await _context.FruitConfig.AsNoTracking().OrderBy(s => s.FruitId).ToListAsync();
-
                 var fruitConfigProto = new WatermelonConfigProto.FruitConfig();
-                foreach (var item in fruitConfig)
+                var fruitConfigQuery = _context.FruitConfig.AsNoTracking().OrderBy(s => s.FruitId);
+                foreach (var item in fruitConfigQuery)
                 {
                     fruitConfigProto.Items.Add(item.FruitId, new WatermelonConfigProto.Fruit { Id = item.FruitId, Rate = item.Rate, Image = item.Image, Name = item.Name, 
                         Score = item.Score, CombineFruitId = item.CombineFruitId });
                 }
 
-                var replay = new GameDBProto.LoadConfigReply { FruitConfig = Google.Protobuf.WellKnownTypes.Any.Pack(fruitConfigProto) };
+                var truntableConfigProto = new WatermelonConfigProto.TruntableConfig();
+                var truntableConfigQuery = _context.TruntableConfig.AsNoTracking();
+                foreach (var item in truntableConfigQuery)
+                {
+                    truntableConfigProto.Items.Add(item.Id, new WatermelonConfigProto.TruntableItem { Id = item.Id, AwardDesc = item.AwardDesc, ImagePath = item.ImagePath, Price = item.Price });
+                }
+
+
+                var replay = new GameDBProto.LoadConfigReply { 
+                    FruitConfig = Google.Protobuf.WellKnownTypes.Any.Pack(fruitConfigProto),
+                    TruntableConfig = Google.Protobuf.WellKnownTypes.Any.Pack(truntableConfigProto),
+                };
+
                 await replyMailAction(new MailboxMessage
                 {
                     Id = (int)GameDBProto.MessageId.LoadConfigReplyId,
@@ -98,7 +109,7 @@ namespace DBServer.Game
                 else
                 {
                     roleScore = new GameScore { RoleId = request.RoleId, Score = request.Score, CreateTime = DateTime.Now, UpateTime = DateTime.Now };
-                    await _context.AddAsync(roleScore);
+                    _context.Add(roleScore);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -110,7 +121,7 @@ namespace DBServer.Game
             {
                 var request = GameDBProto.SaveDropBoxRequest.Parser.ParseFrom(forwardMail.Content);
                 var roleBox = new GameBox { Id = request.BoxId, RoleId = request.RoleId, Amount = request.Amount, CouponsId = request.CouponsId, CreateTime = DateTime.Now, UpateTime = DateTime.Now };
-                await _context.AddAsync(roleBox);
+                _context.Add(roleBox);
                 await _context.SaveChangesAsync();
             }
          }

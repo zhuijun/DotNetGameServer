@@ -27,7 +27,10 @@ namespace GameServer.Game
 
         private void OnGetConfigRequest(MailPacket mail)
         {
-            var stoc = new WatermelonGameProto.StoCGetConfigReply { FruitConfig = FruitConfig};
+            var stoc = new WatermelonGameProto.StoCGetConfigReply { 
+                FruitConfig = FruitConfig,
+                TruntableConfig = TruntableConfig
+            };
             Dispatcher.WriteAgentMail(new MailPacket
             {
                 Id = (int)WatermelonGameProto.MessageId.StoCgetConfigReplyId,

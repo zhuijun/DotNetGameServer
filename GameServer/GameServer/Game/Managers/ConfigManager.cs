@@ -20,6 +20,7 @@ namespace GameServer.Game
 
         public GameConfig.TestConfig TestConfig { get; } = new GameConfig.TestConfig();
         public WatermelonConfigProto.FruitConfig FruitConfig { get; set; }
+        public WatermelonConfigProto.TruntableConfig TruntableConfig { get; set; }
 
         public ConfigManager(IConfiguration configuration)
         {

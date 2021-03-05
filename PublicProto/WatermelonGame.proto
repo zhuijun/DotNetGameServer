@@ -35,6 +35,7 @@ message StoCGetConfigReply
 {
 	ReplayResult Result = 1;
 	WatermelonConfigProto.FruitConfig FruitConfig = 2; //水果配置
+	WatermelonConfigProto.TruntableConfig TruntableConfig = 3; //大转盘配置
 }
 
 message CtoSDropBoxRequest

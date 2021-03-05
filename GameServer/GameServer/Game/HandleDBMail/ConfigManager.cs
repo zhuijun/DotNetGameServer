@@ -27,6 +27,7 @@ namespace GameServer.Game
         {
             var replay = GameDBProto.LoadConfigReply.Parser.ParseFrom(mail.Content);
             FruitConfig = replay.FruitConfig.Unpack<WatermelonConfigProto.FruitConfig>();
+            TruntableConfig = replay.TruntableConfig.Unpack<WatermelonConfigProto.TruntableConfig>();
         }
     }
 }
