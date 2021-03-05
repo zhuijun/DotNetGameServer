@@ -15,6 +15,9 @@ enum MessageId
 
 	CtoSCombineFruitRequestId = 0X0305; //合成水果
 	StoCCombineFruitReplyId = 0X0306; //合成水果返回
+
+	CtoSGameOverRequestId = 0X0307; //游戏结束
+	StoCGameOverReplyId = 0X0308; //游戏结束返回
 }
 
 message ReplayResult
@@ -41,7 +44,9 @@ message CtoSDropBoxRequest
 message StoCDropBoxReply
 {
 	ReplayResult Result = 1;
-	int32 BoxId = 2; //宝箱Id
+	string BoxId = 2; //宝箱Id
+	string CouponsId = 3; //优惠券Id
+	int64 Amount = 4; //优惠券金额
 }
 
 message CtoSCombineFruitRequest
@@ -54,4 +59,14 @@ message StoCCombineFruitReply
 {
 	ReplayResult Result = 1;
 	int64 Score = 2; //得到积分
+}
+
+message CtoSGameOverRequest
+{
+
+}
+
+message StoCGameOverReply
+{
+	ReplayResult Result = 1;
 }

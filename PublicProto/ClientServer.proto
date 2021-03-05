@@ -64,7 +64,7 @@ message StoCRoleInfoReply
 
 message CtoSJoinRoomRequest
 {
-	int32 GameId = 1; //游戏Id
+	int32 RoomId = 1; //游戏房间Id
 }
 
 message StoCJoinRoomReply

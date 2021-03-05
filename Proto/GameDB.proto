@@ -14,7 +14,10 @@ enum MessageId
 	LoadConfigReplyId = 0X0104; //加载配置返回
 
 	SaveRoleScoreRequestId = 0X0105; //保存分数
-	SaveRoleScoreReplyId = 0X0106;//保存分数返回
+	SaveRoleScoreReplyId = 0X0106; //保存分数返回
+
+	SaveDropBoxRequestId = 0X0107; //保存掉落宝箱
+	SaveDropBoxReplyId = 0X0108; //保存掉落宝箱返回
 }
 
 message ReplayResult
@@ -53,6 +56,19 @@ message SaveRoleScoreRequest
 }
 
 message SaveRoleScoreReply
+{
+
+}
+
+message SaveDropBoxRequest
+{
+	int64 RoleId = 1;
+    string CouponsId = 2;
+	int64 Amount = 3;
+	string BoxId = 4;
+}
+
+message SaveDropBoxReply
 {
 
 }

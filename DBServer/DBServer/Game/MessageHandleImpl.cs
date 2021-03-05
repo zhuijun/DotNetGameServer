@@ -24,6 +24,7 @@ namespace DBServer.Game
             _Handles += OnEnterRole;
             _Handles += OnLoadConfigRequest;
             _Handles += OnSaveRoleScoreRequest;
+            _Handles += OnSaveDropBoxRequest;
         }
 
 
@@ -102,5 +103,16 @@ namespace DBServer.Game
                 }
             }
         }
-    }
+
+        private async Task OnSaveDropBoxRequest(ForwardMailMessage forwardMail, Func<MailboxMessage, Task> replyMailAction)
+        {
+            if (forwardMail.Id == (int)GameDBProto.MessageId.SaveDropBoxRequestId)
+            {
+                var request = GameDBProto.SaveDropBoxRequest.Parser.ParseFrom(forwardMail.Content);
+                var roleBox = new GameBox { Id = request.BoxId, RoleId = request.RoleId, Amount = request.Amount, CouponsId = request.CouponsId, CreateTime = DateTime.Now, UpateTime = DateTime.Now };
+                await _context.AddAsync(roleBox);
+                await _context.SaveChangesAsync();
+            }
+         }
+     }
 }

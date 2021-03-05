@@ -23,11 +23,11 @@ namespace Repository.Models
         public long Amount { get; set; }
 
         [DataType(DataType.DateTime)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreateTime { get; set; }
 
         [DataType(DataType.DateTime)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpateTime { get; set; }
     }
 }
