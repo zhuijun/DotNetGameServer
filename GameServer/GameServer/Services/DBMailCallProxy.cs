@@ -1,4 +1,4 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using Google.Protobuf;
 using Grpc.Core;
 using Mail;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using ServicesCore.Services;
 
 #nullable enable
 namespace GameServer.Services

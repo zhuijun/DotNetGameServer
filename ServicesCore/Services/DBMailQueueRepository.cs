@@ -1,17 +1,12 @@
-﻿using System;
+﻿using ServicesCore.Common;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GameServer.Services
+namespace ServicesCore.Services
 {
-    public enum DBMailQueueType
-    {
-        Role = 1,
-        Other,
-    }
-
     public class DBMailQueueRepository
     {
         private readonly ConcurrentDictionary<DBMailQueueType, OutgoMailQueue<DBMailQueueType>> _outgoMailQueues = new ConcurrentDictionary<DBMailQueueType, OutgoMailQueue<DBMailQueueType>>();

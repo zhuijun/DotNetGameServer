@@ -1,6 +1,6 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using GameServer.Interfaces;
-using GameServer.Services;
+using ServicesCore.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

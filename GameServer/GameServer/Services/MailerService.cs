@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GameServer.Common;
+using ServicesCore.Common;
 using Google.Protobuf;
 using Grpc.Core;
 using Mail;
 using Microsoft.Extensions.Logging;
+using ServicesCore.Services;
 
 namespace GameServer.Services
 {
@@ -130,7 +131,6 @@ namespace GameServer.Services
                             };
                             Dispatcher.WriteInnerMail(mail);
                             await Task.CompletedTask;
-                            //await incomeMailQueue.WriteAsync(mail);
                         }
 
                         async Task LeaveGame()
@@ -148,7 +148,6 @@ namespace GameServer.Services
                             };
                             Dispatcher.WriteInnerMail(mail1);
                             await Task.CompletedTask;
-                            //await incomeMailQueue.WriteAsync(mail1);
 
                             var mail2 = new MailPacket
                             {
@@ -162,7 +161,6 @@ namespace GameServer.Services
                             };
                             Dispatcher.WriteInnerMail(mail2);
                             await Task.CompletedTask;
-                            //await incomeMailQueue.WriteAsync(mail2);
                         }
                     }
 

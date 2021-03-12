@@ -1,5 +1,5 @@
 ﻿using AgentGameProto;
-using GameServer.Common;
+using ServicesCore.Common;
 using GameServer.Interfaces;
 using GameServer.Services;
 using Google.Protobuf;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ServicesCore.Services;
 
 namespace GameServer.Game
 {

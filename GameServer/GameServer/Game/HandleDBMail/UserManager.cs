@@ -1,4 +1,4 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using GameServer.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;

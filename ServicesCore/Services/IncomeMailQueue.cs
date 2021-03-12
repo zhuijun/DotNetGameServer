@@ -16,7 +16,7 @@
 
 #endregion
 
-using GameServer.Common;
+using ServicesCore.Common;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -24,7 +24,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 
 #nullable enable
-namespace GameServer.Services
+namespace ServicesCore.Services
 {
     public class IncomeMailQueue
     {

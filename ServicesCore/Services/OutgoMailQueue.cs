@@ -1,4 +1,4 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 
 #nullable enable
-namespace GameServer.Services
+namespace ServicesCore.Services
 {
     public class OutgoMailQueue<TKey>
     {

@@ -1,4 +1,4 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -19,7 +19,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace GameServer.Services
+namespace ServicesCore.Services
 {
     public class AgentMailQueueRepository
     {

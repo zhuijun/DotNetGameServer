@@ -1,4 +1,4 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using GameServer.Game;
 using Google.Protobuf;
 using Grpc.Core;
@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ServicesCore.Services;
 
 namespace GameServer.Services
 {

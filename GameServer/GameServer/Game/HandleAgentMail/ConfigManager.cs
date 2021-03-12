@@ -1,5 +1,5 @@
 ﻿using AgentGameProto;
-using GameServer.Common;
+using ServicesCore.Common;
 using GameServer.Interfaces;
 using GameServer.Services;
 using Google.Protobuf;

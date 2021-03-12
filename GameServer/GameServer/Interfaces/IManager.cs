@@ -1,5 +1,5 @@
 ﻿using GameServer.Game;
-using GameServer.Services;
+using ServicesCore.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

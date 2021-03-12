@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ServicesCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +34,10 @@ namespace GameServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GameServer", Version = "v1" });
             });
 
-            services.AddGrpc();
+            services.AddServicesCore();
             services.AddHostedService<MainHostedService>();
-            services.AddSingleton<AgentMailQueueRepository>();
-            services.AddSingleton<DBMailQueueRepository>();
+            services.AddGrpc();
             services.AddSingleton<DBGrpcChannel>();
-            services.AddSingleton<Dispatcher>();
-            services.AddSingleton<MailDispatcher>();
-            services.AddSingleton<TicksProvider>();
-            services.AddSingleton<QuickTimer>();
-            services.AddSingleton<AgentClientIdProvider>();
-            
             services.AddGame();
         }
 

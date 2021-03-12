@@ -5,11 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using GameServer.Common;
-using Google.Protobuf;
+using ServicesCore.Common;
 
 #nullable enable
-namespace GameServer.Services
+namespace ServicesCore.Services
 {
     public class Dispatcher
     {
@@ -100,12 +99,12 @@ namespace GameServer.Services
             return WriteAgentMail(mail);
         }
 
-        public bool WriteAgentMail(int id, IMessage message, long reserve, long userId)
-        {
-            var clientId = _agentClientIdProvider.GetUserClientId(userId);
-            var mail = new MailPacket { Id = id, Content = message.ToByteArray(), Reserve = reserve, UserId = userId, ClientId = clientId };
-            return WriteAgentMail(mail);
-        }
+        //public bool WriteAgentMail(int id, IMessage message, long reserve, long userId)
+        //{
+        //    var clientId = _agentClientIdProvider.GetUserClientId(userId);
+        //    var mail = new MailPacket { Id = id, Content = message.ToByteArray(), Reserve = reserve, UserId = userId, ClientId = clientId };
+        //    return WriteAgentMail(mail);
+        //}
 
         private bool TryReadDBMail([NotNullWhen(true)] out MailPacket? mail)
         {

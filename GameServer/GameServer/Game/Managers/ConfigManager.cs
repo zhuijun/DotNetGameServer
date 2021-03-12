@@ -1,6 +1,6 @@
-﻿using GameServer.Common;
+﻿using ServicesCore.Common;
 using GameServer.Interfaces;
-using GameServer.Services;
+using ServicesCore.Services;
 using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using System;

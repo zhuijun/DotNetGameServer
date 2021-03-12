@@ -18,6 +18,10 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\ServicesCore\ServicesCore.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Protobuf Include="..\..\Proto\mail.proto" GrpcServices="Both" Link="Protos\mail.proto" />
 		<Protobuf Include="..\..\Proto\GameConfig.proto" Link="Protos\GameConfig.proto" />
 		<Protobuf Include="..\..\Proto\AgentGame.proto" Link="Protos\AgentGame.proto" />

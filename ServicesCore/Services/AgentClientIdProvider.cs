@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GameServer.Services
+namespace ServicesCore.Services
 {
     public class AgentClientIdProvider
     {

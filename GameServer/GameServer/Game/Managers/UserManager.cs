@@ -1,4 +1,4 @@
-﻿using GameServer.Services;
+﻿using ServicesCore.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

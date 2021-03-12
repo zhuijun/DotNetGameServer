@@ -131,13 +131,13 @@ namespace DBServer.Game
         {
             if (forwardMail.Id == (int)GameDBProto.MessageId.GetRankRequestId)
             {
-                var roleScores = _context.GameScore.AsNoTracking().OrderBy(gameScore => gameScore.Score).Take(10)
+                var roleScoresQuery = _context.GameScore.AsNoTracking().OrderBy(gameScore => gameScore.Score).Take(10)
                     .Join(_context.GameRole.AsNoTracking(), gameScore => gameScore.RoleId, gameRole => gameRole.RoleId, 
                     (gameScore, gameRole) => new GameDBProto.RoleScore { RoleId = gameRole.RoleId, NickName = gameRole.NickName, Score = gameScore.Score })
                     .AsAsyncEnumerable();
 
                 var reply = new GameDBProto.GetRankReply();
-                await foreach (var item in roleScores)
+                await foreach (var item in roleScoresQuery)
                 {
                     reply.RoleScores.Add(item);
                 }
