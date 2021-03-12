@@ -5,8 +5,8 @@ package AgentGameProto;
 enum MessageId
 {
 	UNDEFINE = 0;
-	JoinGameRequestId = 0XFF01;
-	JoinGameReplyId = 0XFF02;
+	EnterGameRequestId = 0XFF01;
+	EnterGameReplyId = 0XFF02;
 
 	LeaveGameRequestId = 0XFF03;
 	LeaveGameReplyId = 0XFF04;
@@ -15,7 +15,7 @@ enum MessageId
 	BeforeLeaveGameReplyId = 0XFF06;
 }
 
-message JoinGameRequest
+message EnterGameRequest
 {
 	int64 UserId = 1;
 	string NickName = 2;

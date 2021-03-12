@@ -54,7 +54,7 @@ namespace GameServer.Game
             }
         }
 
-        public void OnJoinGame(JoinGameRequest request, long clientId)
+        public void OnEnterGame(EnterGameRequest request, long clientId)
         {
             //throw new NotImplementedException();
         }

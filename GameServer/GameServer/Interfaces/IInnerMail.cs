@@ -8,10 +8,10 @@ namespace GameServer.Interfaces
         {
             switch (mail.Id)
             {
-                case (int)AgentGameProto.MessageId.JoinGameRequestId:
+                case (int)AgentGameProto.MessageId.EnterGameRequestId:
                     {
-                        var request = AgentGameProto.JoinGameRequest.Parser.ParseFrom(mail.Content);
-                        OnJoinGame(request, mail.ClientId);
+                        var request = AgentGameProto.EnterGameRequest.Parser.ParseFrom(mail.Content);
+                        OnEnterGame(request, mail.ClientId);
                     }
                     break;
                 case (int)AgentGameProto.MessageId.BeforeLeaveGameRequestId:
@@ -37,7 +37,7 @@ namespace GameServer.Interfaces
 
         }
 
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId);
+        public void OnEnterGame(AgentGameProto.EnterGameRequest request, long clientId);
         public void OnLeaveGame(AgentGameProto.LeaveGameRequest request, long clientId);
         public void BeforeLeaveGame(AgentGameProto.BeforeLeaveGameRequest request, long clientId);
     }

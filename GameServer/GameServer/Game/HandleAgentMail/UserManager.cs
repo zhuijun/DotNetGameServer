@@ -27,7 +27,7 @@ namespace GameServer.Game
             }
         }
 
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId)
+        public void OnEnterGame(AgentGameProto.EnterGameRequest request, long clientId)
         {
             var user = new User { UserId = request.UserId, NickName = request.NickName, HeadIcon = request.HeadIcon };
             AddItem(user.UserId, user);

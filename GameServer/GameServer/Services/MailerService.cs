@@ -119,8 +119,8 @@ namespace GameServer.Services
                             //进入游戏
                             var mail = new MailPacket
                             {
-                                Id = (int)AgentGameProto.MessageId.JoinGameRequestId,
-                                Content = new AgentGameProto.JoinGameRequest
+                                Id = (int)AgentGameProto.MessageId.EnterGameRequestId,
+                                Content = new AgentGameProto.EnterGameRequest
                                 {
                                     UserId = userId,
                                     NickName = nickname,

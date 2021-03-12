@@ -52,7 +52,7 @@ namespace GameServer.Game
             }
         }
 
-        public void OnJoinGame(JoinGameRequest request, long clientId)
+        public void OnEnterGame(EnterGameRequest request, long clientId)
         {
             var roleId = ManagerMediator.RoleManager.GetRoleIdByClientId(clientId);
             var desk = _room.GetDesk(_room.GetRoleDesk(roleId));
@@ -60,7 +60,7 @@ namespace GameServer.Game
             {
                 if (desk.GameLogic is IInnerMail innerMail)
                 {
-                    innerMail.OnJoinGame(request, clientId);
+                    innerMail.OnEnterGame(request, clientId);
                 }
             }
         }

@@ -31,7 +31,7 @@ namespace GameServer.Game
             }
         }
 
-        public void OnJoinGame(AgentGameProto.JoinGameRequest request, long clientId)
+        public void OnEnterGame(AgentGameProto.EnterGameRequest request, long clientId)
         {
         }
 
