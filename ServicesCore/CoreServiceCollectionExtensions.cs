@@ -1,14 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ServicesCore.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ServicesCore
 {
-    public static class ServiceCollectionExtensions
+    public static class CoreServiceCollectionExtensions
     {
         public static IServiceCollection AddServicesCore(this IServiceCollection services)
         {

@@ -1,15 +1,12 @@
-﻿using ServicesCore.Common;
-using Google.Protobuf;
-using Grpc.Core;
+﻿using Grpc.Core;
 using Mail;
 using Microsoft.Extensions.Logging;
+using ServicesCore.Common;
+using ServicesCore.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using ServicesCore.Services;
 
 #nullable enable
 namespace GameServer.Services

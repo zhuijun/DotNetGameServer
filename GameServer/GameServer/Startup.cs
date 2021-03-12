@@ -34,9 +34,9 @@ namespace GameServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GameServer", Version = "v1" });
             });
 
+            services.AddGrpc();
             services.AddServicesCore();
             services.AddHostedService<MainHostedService>();
-            services.AddGrpc();
             services.AddSingleton<DBGrpcChannel>();
             services.AddGame();
         }

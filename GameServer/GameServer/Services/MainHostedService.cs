@@ -1,18 +1,13 @@
-﻿using ServicesCore.Common;
-using GameServer.Game;
-using Google.Protobuf;
-using Grpc.Core;
+﻿using GameServer.Game;
 using Mail;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ServicesCore.Common;
+using ServicesCore.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ServicesCore.Services;
 
 namespace GameServer.Services
 {

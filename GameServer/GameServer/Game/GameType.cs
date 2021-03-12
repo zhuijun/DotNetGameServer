@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GameServer.Game
+﻿namespace GameServer.Game
 {
     public enum GameType
     {
