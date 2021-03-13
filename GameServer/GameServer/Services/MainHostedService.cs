@@ -89,6 +89,7 @@ namespace GameServer.Services
             {
                 _mailDispatcher.EventAgentMail -= _managerMediator.OnAgentMail;
                 _mailDispatcher.EventDBMail -= _managerMediator.OnDBMail;
+                _mailDispatcher.EventInnerMail -= _managerMediator.OnInnerMail;
             }
         }
     }
