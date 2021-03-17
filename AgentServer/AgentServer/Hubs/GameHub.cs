@@ -29,9 +29,15 @@ namespace AgentServer.Hubs
 
         public override async Task OnConnectedAsync()
         {
+            var userId = long.Parse(Context.UserIdentifier);
+            var nickname = Context.User.FindFirst("nickname").Value;
+            var headicon = Context.User.FindFirst("headicon").Value;
+            var mailMetadata = new Mail.MailMetadata { UserId = userId, NickName = nickname, HeadIcon = headicon};
+
             var _client = new Mailer.MailerClient(ChannelService.Channel);
-            var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent"), new Metadata.Entry("user-identifier", Context.UserIdentifier), 
-                new Metadata.Entry("nickname", Context.User.FindFirst("nickname").Value), new Metadata.Entry("headicon", Context.User.FindFirst("headicon").Value) });
+            var _call = _client.Mailbox(headers: new Metadata { new Metadata.Entry("mailbox-name", "agent"), 
+                new Metadata.Entry("metadata" + Metadata.BinaryHeaderSuffix, mailMetadata.ToByteArray()) });
+
             Context.Items.Add("_client", _client);
             Context.Items.Add("_call", _call);
 

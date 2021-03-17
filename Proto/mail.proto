@@ -36,3 +36,10 @@ message MailboxMessage {
     int64 userId = 4;
     int64 clientId = 5;
 }
+
+message MailMetadata
+{
+	int64 UserId = 1;
+	string NickName = 2;
+	string HeadIcon = 3;
+}

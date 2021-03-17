@@ -40,10 +40,12 @@ namespace GameServer.Services
             {
                 case "agent":
                     {
-                        var userIdentifier = context.RequestHeaders.SingleOrDefault(e => e.Key == "user-identifier").Value;
-                        var nickname = context.RequestHeaders.SingleOrDefault(e => e.Key == "nickname").Value;
-                        var headicon = context.RequestHeaders.SingleOrDefault(e => e.Key == "headicon").Value;
-                        long userId = long.Parse(userIdentifier);
+                        var metadata = context.RequestHeaders.SingleOrDefault(e => e.Key == "metadata" + Metadata.BinaryHeaderSuffix).ValueBytes;
+                        var mailMetadata = Mail.MailMetadata.Parser.ParseFrom(metadata);
+                        long userId = mailMetadata.UserId;
+                        var nickname = mailMetadata.NickName;
+                        var headicon = mailMetadata.HeadIcon;
+
                         long oldClientId = _agentClientIdProvider.GetUserClientId(userId);
                         if (oldClientId > 0)
                         {
