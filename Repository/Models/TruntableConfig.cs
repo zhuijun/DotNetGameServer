@@ -24,6 +24,9 @@ namespace Repository.Models
         [Comment("价值（单位：分）")]
         public long Price { get; set; }
 
+        [Comment("权重")]
+        public int Weight { get; set; }
+
         [Comment("是否开启")]
         public bool IsValid { get; set; }
 

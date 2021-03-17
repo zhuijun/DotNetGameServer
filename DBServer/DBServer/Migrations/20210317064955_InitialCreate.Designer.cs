@@ -10,8 +10,8 @@ using Repository.Data;
 namespace DBServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20210304064946_WatermelonConfig_CombineFruitId")]
-    partial class WatermelonConfig_CombineFruitId
+    [Migration("20210317064955_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,7 +83,6 @@ namespace DBServer.Migrations
                         .HasComment("优惠券Id");
 
                     b.Property<DateTime>("CreateTime")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<long>("RoleId")
@@ -91,7 +90,6 @@ namespace DBServer.Migrations
                         .HasComment("角色Id");
 
                     b.Property<DateTime>("UpateTime")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -128,7 +126,7 @@ namespace DBServer.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("UpateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
@@ -151,7 +149,6 @@ namespace DBServer.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreateTime")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<long>("RoleId")
@@ -163,7 +160,6 @@ namespace DBServer.Migrations
                         .HasComment("积分");
 
                     b.Property<DateTime>("UpateTime")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -186,7 +182,6 @@ namespace DBServer.Migrations
                         .HasComment("奖励Id");
 
                     b.Property<DateTime>("CreateTime")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<long>("RoleId")
@@ -194,7 +189,6 @@ namespace DBServer.Migrations
                         .HasComment("角色Id");
 
                     b.Property<DateTime>("UpateTime")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -217,7 +211,6 @@ namespace DBServer.Migrations
                         .HasComment("奖励描述");
 
                     b.Property<DateTime>("CreateTime")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImagePath")
@@ -234,8 +227,11 @@ namespace DBServer.Migrations
                         .HasComment("价值（单位：分）");
 
                     b.Property<DateTime>("UpateTime")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("int")
+                        .HasComment("权重");
 
                     b.HasKey("Id");
 

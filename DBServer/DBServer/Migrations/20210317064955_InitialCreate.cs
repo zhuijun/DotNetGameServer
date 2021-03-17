@@ -16,7 +16,8 @@ namespace DBServer.Migrations
                     Rate = table.Column<int>(type: "int", nullable: false, comment: "概率"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "名称"),
                     Image = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "图片"),
-                    Score = table.Column<int>(type: "int", nullable: false, comment: "合成可得的积分")
+                    Score = table.Column<int>(type: "int", nullable: false, comment: "合成可得的积分"),
+                    CombineFruitId = table.Column<int>(type: "int", nullable: false, comment: "合成后的水果Id")
                 },
                 constraints: table =>
                 {
@@ -99,6 +100,7 @@ namespace DBServer.Migrations
                     AwardDesc = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "奖励描述"),
                     ImagePath = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "图片路径"),
                     Price = table.Column<long>(type: "bigint", nullable: false, comment: "价值（单位：分）"),
+                    Weight = table.Column<int>(type: "int", nullable: false, comment: "权重"),
                     IsValid = table.Column<bool>(type: "bit", nullable: false, comment: "是否开启"),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
