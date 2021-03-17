@@ -92,6 +92,22 @@ namespace IdentityServer
                     // scopes that client has access to
                     AllowedScopes = { "game", "api1" }
                 },
+                new Client
+                {
+                    ClientId = "login_openid",
+
+                    // no interactive user, use the clientid/secret for authentication
+                    AllowedGrantTypes = { "login_openid" },
+                    RequireClientSecret = false,
+                    //// secret for authentication
+                    //ClientSecrets =
+                    //{
+                    //    new Secret("secret".Sha256())
+                    //},
+
+                    // scopes that client has access to
+                    AllowedScopes = { "game", "api1" }
+                },
             };
     }
 }

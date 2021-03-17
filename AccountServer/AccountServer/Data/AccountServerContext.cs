@@ -15,5 +15,7 @@ namespace AccountServer.Data
         }
 
         public DbSet<AccountServer.Models.UserAccount> UserAccount { get; set; }
+        public DbSet<AccountServer.Models.UserAccountWx> UserAccountWx { get; set; }
+        
     }
 }

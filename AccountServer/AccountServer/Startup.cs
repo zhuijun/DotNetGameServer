@@ -60,6 +60,7 @@ namespace AccountServer
             .AddInMemoryClients(Config.Clients)
             .AddExtensionGrantValidator<Extensions.LoginPasswordGrantValidator>()
             .AddExtensionGrantValidator<Extensions.LoginTokenGrantValidator>()
+            .AddExtensionGrantValidator<Extensions.OpenIdGrantValidator>()
             .AddCustomTokenRequestValidator<CustomLifeTimeTokenRequestValidator>();
 
             // not recommended for production - you need to store your key material somewhere secure
