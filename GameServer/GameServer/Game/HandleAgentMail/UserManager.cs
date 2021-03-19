@@ -32,20 +32,20 @@ namespace GameServer.Game
             var user = new User { UserId = request.UserId, NickName = request.NickName, HeadIcon = request.HeadIcon };
             AddItem(user.UserId, user);
 
-            var timeoutLinker = Dispatcher.QuickTimer.SetTimeoutWithLinker(() => {
-                var ticks = Dispatcher.TicksProvider.TicksCache;
-                _userTick[clientId] = ticks;
+            //var timeoutLinker = Dispatcher.QuickTimer.SetTimeoutWithLinker(() => {
+            //    var ticks = Dispatcher.TicksProvider.TicksCache;
+            //    _userTick[clientId] = ticks;
 
-                var stoc = new ClientServerProto.StoCBeginTestNetworkDelay();
-                Dispatcher.WriteAgentMail(new MailPacket
-                {
-                    Id = (int)ClientServerProto.MessageId.StoCbeginTestNetworkDelayId,
-                    Content = stoc.ToByteArray(),
-                    UserId = request.UserId,
-                    ClientId = clientId
-                });
-            }, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-            _userTimeoutLinker.Add(clientId, timeoutLinker);
+            //    var stoc = new ClientServerProto.StoCBeginTestNetworkDelay();
+            //    Dispatcher.WriteAgentMail(new MailPacket
+            //    {
+            //        Id = (int)ClientServerProto.MessageId.StoCbeginTestNetworkDelayId,
+            //        Content = stoc.ToByteArray(),
+            //        UserId = request.UserId,
+            //        ClientId = clientId
+            //    });
+            //}, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            //_userTimeoutLinker.Add(clientId, timeoutLinker);
         }
 
         public void OnLeaveGame(AgentGameProto.LeaveGameRequest request, long clientId)

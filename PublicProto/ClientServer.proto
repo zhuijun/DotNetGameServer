@@ -5,33 +5,33 @@ package ClientServerProto;
 enum MessageId
 {
 	UNDEFINE = 0;
-	CtoSEnterRoleRequestId = 0X0101; //进入角色
-	StoCEnterRoleReplyId = 0X0102; //进入角色返回
+	CtoSEnterRoleRequestId = 0x0101; //进入角色
+	StoCEnterRoleReplyId = 0x0102; //进入角色返回
 
-	CtoSRoleInfoRequestId = 0X0103; //请求角色信息
-	StoCRoleInfoReplyId = 0X0104; //请求角色信息返回
+	CtoSRoleInfoRequestId = 0x0103; //请求角色信息
+	StoCRoleInfoReplyId = 0x0104; //请求角色信息返回
 
-	CtoSJoinRoomRequestId = 0X0105; //加入游戏房间
-	StoCJoinRoomReplyId = 0X0106; //加入游戏房间返回
+	CtoSJoinRoomRequestId = 0x0105; //加入游戏房间
+	StoCJoinRoomReplyId = 0x0106; //加入游戏房间返回
 
-	CtoSLeaveRoomRequestId = 0X0107; //退出游戏房间
-	StoCLeaveRoomReplyId = 0X0108; //退出游戏房间返回
+	CtoSLeaveRoomRequestId = 0x0107; //退出游戏房间
+	StoCLeaveRoomReplyId = 0x0108; //退出游戏房间返回
 
 
-	CtoSCreateDeskRequestId = 0X0111; //创建游戏桌子
-	StoCCreateDeskReplyId = 0X0112;//创建游戏桌子返回
+	CtoSCreateDeskRequestId = 0x0111; //创建游戏桌子
+	StoCCreateDeskReplyId = 0x0112;//创建游戏桌子返回
 
-	CtoSJoinDeskRequestId = 0X0113; //加入游戏桌子
-	StoCJoinDeskReplyId = 0X0114; //加入游戏桌子返回
+	CtoSJoinDeskRequestId = 0x0113; //加入游戏桌子
+	StoCJoinDeskReplyId = 0x0114; //加入游戏桌子返回
 
-	CtoSLeaveDeskRequestId = 0X0115; //离开游戏桌子
-	StoCLeaveDeskReplyId = 0X0116; //离开游戏桌子返回
+	CtoSLeaveDeskRequestId = 0x0115; //离开游戏桌子
+	StoCLeaveDeskReplyId = 0x0116; //离开游戏桌子返回
 
-	StoCBeginTestNetworkDelayId = 0X0118; //通知客户端开始测试网络延迟
-	CtoSTestNetwordDelayRequestId = 0X0119; //测试网络延迟
-	StoCTestNetworkDelayReplyId = 0X0120; //测试网络延迟返回
+	StoCBeginTestNetworkDelayId = 0x0118; //通知客户端开始测试网络延迟
+	CtoSTestNetwordDelayRequestId = 0x0119; //测试网络延迟
+	StoCTestNetworkDelayReplyId = 0x0120; //测试网络延迟返回
 
-	StoCRoleAttributeNoticeId = 0X0122; //角色属性推送
+	StoCRoleAttributeNoticeId = 0x0122; //角色属性推送
 }
 
 message ReplayResult
