@@ -84,7 +84,12 @@ namespace ServicesCore.Services
 
         public bool WriteAgentMail(MailPacket mail)
         {
-            var outgoMailQueue = _agentMailQueueRepository.TryGetOutgoMailQueue(mail.ClientId);
+            var clientId = mail.ClientId;
+            if (clientId == 0)
+            {
+                clientId = _agentClientIdProvider.GetUserClientId(mail.UserId);
+            }
+            var outgoMailQueue = _agentMailQueueRepository.TryGetOutgoMailQueue(clientId);
             if (outgoMailQueue != null)
             {
                 return outgoMailQueue.TryWriteMail(mail);
