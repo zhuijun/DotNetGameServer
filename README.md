@@ -12,7 +12,12 @@
 
 #### 软件架构
 AccountServer 账号登陆验证服务器
+
 AgentServer 网关服务器，负责客户端连接
+
 GameServer 游戏逻辑服务器
+
 DBServer 数据库服务器
+
 HttpServer Http服务器，处理外部http消息
+
